@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UniversalChat.Core;
+using UniversalChat.Translation;
 
 namespace UniversalChat.UI
 {
@@ -25,6 +26,7 @@ namespace UniversalChat.UI
 
         public string MessageId { get; private set; }
         public string SenderId { get; private set; }
+        public TranslatableMessage TranslatableMessage { get; private set; }
 
         #endregion
 
@@ -44,6 +46,11 @@ namespace UniversalChat.UI
         }
 
         public void Setup(ChannelMessage message, ChatUIConfig config, string currentUserId = null)
+        {
+            Setup(message, config, currentUserId, enableTranslation: false, sourceLang: null);
+        }
+
+        public void Setup(ChannelMessage message, ChatUIConfig config, string currentUserId, bool enableTranslation, string sourceLang = null)
         {
             MessageId = message.MessageId;
             SenderId = message.SenderId;
@@ -95,6 +102,48 @@ namespace UniversalChat.UI
             if (_bubbleBackground != null && config != null)
             {
                 _bubbleBackground.color = GetBubbleColor(message, config, isMyMessage);
+            }
+
+            // Setup translation (for non-system messages, not my message)
+            if (enableTranslation && !isMyMessage && message.MessageType != 1 && message.SenderId != "SYSTEM")
+            {
+                SetupTranslation(message.Content, sourceLang);
+            }
+        }
+
+        /// <summary>
+        /// 번역 기능 설정
+        /// </summary>
+        private void SetupTranslation(string content, string sourceLang)
+        {
+            TranslatableMessage = GetComponent<TranslatableMessage>();
+            if (TranslatableMessage == null)
+            {
+                TranslatableMessage = gameObject.AddComponent<TranslatableMessage>();
+            }
+
+            TranslatableMessage.Initialize(content, sourceLang);
+        }
+
+        /// <summary>
+        /// 메시지 번역 요청
+        /// </summary>
+        public void Translate()
+        {
+            if (TranslatableMessage != null)
+            {
+                TranslatableMessage.Translate();
+            }
+        }
+
+        /// <summary>
+        /// 원본/번역 토글
+        /// </summary>
+        public void ToggleTranslation()
+        {
+            if (TranslatableMessage != null)
+            {
+                TranslatableMessage.ToggleTranslation();
             }
         }
 

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UniversalChat.Core;
+using UniversalChat.Translation;
 
 namespace UniversalChat.UI
 {
@@ -48,6 +49,20 @@ namespace UniversalChat.UI
 
         #endregion
 
+        #region Inspector - Translation
+
+        [Header("Translation")]
+        [Tooltip("번역 기능 활성화 여부")]
+        [SerializeField] private bool _enableTranslation = false;
+
+        [Tooltip("번역 설정 (TranslationConfig ScriptableObject)")]
+        [SerializeField] private TranslationConfig _translationConfig;
+
+        [Tooltip("메시지 수신 시 자동 번역 (AutoTranslate 설정 필요)")]
+        [SerializeField] private bool _autoTranslateOnReceive = false;
+
+        #endregion
+
         #region Inspector - Events
 
         [Header("Events")]
@@ -74,6 +89,16 @@ namespace UniversalChat.UI
         public bool IsAuthenticated => ChatManager.Instance?.IsAuthenticated ?? false;
         public string CurrentChannelId => ChatManager.Instance?.CurrentChannelId;
 
+        /// <summary>
+        /// 번역 기능이 활성화되어 있는지 여부
+        /// </summary>
+        public bool IsTranslationEnabled => _enableTranslation && _translationConfig != null;
+
+        /// <summary>
+        /// 번역 설정
+        /// </summary>
+        public TranslationConfig TranslationConfig => _translationConfig;
+
         #endregion
 
         #region Fields
@@ -89,6 +114,7 @@ namespace UniversalChat.UI
         {
             SetupAudioSource();
             SetupUIComponents();
+            SetupTranslation();
         }
 
         private void Start()
@@ -141,6 +167,14 @@ namespace UniversalChat.UI
             }
 
             UpdateConnectionStatus();
+        }
+
+        private void SetupTranslation()
+        {
+            if (!_enableTranslation || _translationConfig == null) return;
+
+            // Initialize TranslationManager with config
+            TranslationManager.Instance.Initialize(_translationConfig);
         }
 
         private void SubscribeToEvents()
@@ -381,6 +415,16 @@ namespace UniversalChat.UI
             AddMessageToPanel(message);
             PlaySound(_uiConfig?.MessageReceivedSound);
             OnMessageReceivedEvent?.Invoke(message);
+
+            // 자동 번역 (설정이 켜져 있고, 내 메시지가 아닌 경우)
+            if (_autoTranslateOnReceive && IsTranslationEnabled && _translationConfig.AutoTranslate)
+            {
+                string myUserId = ChatManager.Instance?.UserId;
+                if (message.SenderId != myUserId)
+                {
+                    _ = AutoTranslateMessageAsync(message);
+                }
+            }
         }
 
         private void HandleChannelJoined(string channelId, string channelName)
@@ -454,6 +498,55 @@ namespace UniversalChat.UI
             {
                 _audioSource.PlayOneShot(clip);
             }
+        }
+
+        private async Task AutoTranslateMessageAsync(ChannelMessage message)
+        {
+            if (string.IsNullOrEmpty(message.Content)) return;
+
+            try
+            {
+                var result = await TranslationManager.Instance.TranslateToMyLanguageAsync(message.Content, null);
+                if (result.Success && result.TranslatedText != message.Content)
+                {
+                    Debug.Log($"[ChatUIManager] Auto-translated message from {message.SenderNickname}: {result.TranslatedText}");
+                    // Note: 실제 UI 업데이트는 TranslatableMessage 컴포넌트에서 처리
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[ChatUIManager] Auto-translate failed: {ex.Message}");
+            }
+        }
+
+        #endregion
+
+        #region Translation Public Methods
+
+        /// <summary>
+        /// 메시지를 수동으로 번역 요청
+        /// </summary>
+        public async Task<TranslationResult> TranslateMessageAsync(string content, string sourceLang = null)
+        {
+            if (!IsTranslationEnabled)
+            {
+                return TranslationResult.Error("Translation is not enabled");
+            }
+
+            return await TranslationManager.Instance.TranslateToMyLanguageAsync(content, sourceLang);
+        }
+
+        /// <summary>
+        /// 지원 언어 목록 조회
+        /// </summary>
+        public async Task<string[]> GetSupportedLanguagesAsync()
+        {
+            if (!IsTranslationEnabled)
+            {
+                return new[] { "ko", "en", "zh", "ja" };
+            }
+
+            return await TranslationManager.Instance.GetSupportedLanguagesAsync();
         }
 
         #endregion

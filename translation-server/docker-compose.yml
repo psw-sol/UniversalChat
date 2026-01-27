@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  translation-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: translation-server
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_NAME=${MODEL_NAME:-facebook/m2m100_418M}
+      - DEVICE=${DEVICE:-cuda}
+      - REDIS_URL=redis://redis:6379/0
+      - MAX_LENGTH=${MAX_LENGTH:-256}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    volumes:
+      # Cache models to avoid re-downloading
+      - model-cache:/home/appuser/.cache/huggingface
+    depends_on:
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    networks:
+      - translation-net
+
+  # CPU-only version (fallback)
+  translation-server-cpu:
+    build:
+      context: .
+      dockerfile: Dockerfile.cpu
+    container_name: translation-server-cpu
+    ports:
+      - "8001:8000"
+    environment:
+      - MODEL_NAME=${MODEL_NAME:-facebook/m2m100_418M}
+      - DEVICE=cpu
+      - REDIS_URL=redis://redis:6379/0
+      - MAX_LENGTH=${MAX_LENGTH:-256}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    volumes:
+      - model-cache:/home/appuser/.cache/huggingface
+    depends_on:
+      redis:
+        condition: service_healthy
+    profiles:
+      - cpu
+    restart: unless-stopped
+    networks:
+      - translation-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: translation-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - translation-net
+
+volumes:
+  model-cache:
+    driver: local
+  redis-data:
+    driver: local
+
+networks:
+  translation-net:
+    driver: bridge
