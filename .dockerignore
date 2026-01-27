@@ -1,0 +1,62 @@
+# =============================================================================
+# Docker Ignore File
+# =============================================================================
+
+# Build directories
+build/
+out/
+cmake-build-*/
+.vs/
+.vscode/
+
+# IDE files
+*.user
+*.suo
+*.sln.docstates
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# Tests (not needed in runtime image)
+tests/
+
+# Local config
+config/server.json
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Compiled files
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+*.pdb
+
+# Package manager
+vcpkg_installed/
+packages/

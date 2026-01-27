@@ -1,0 +1,25 @@
+{
+    "name": "com.universalchat.client",
+    "version": "1.0.0",
+    "displayName": "Universal Chat Client",
+    "description": "TCP-based chat client for Unity with customizable UI components",
+    "unity": "2020.3",
+    "unityRelease": "0f1",
+    "documentationUrl": "https://github.com/your-repo/universalchat",
+    "changelogUrl": "https://github.com/your-repo/universalchat/releases",
+    "licensesUrl": "https://github.com/your-repo/universalchat/blob/main/LICENSE",
+    "keywords": [
+        "chat",
+        "networking",
+        "tcp",
+        "multiplayer",
+        "ui"
+    ],
+    "author": {
+        "name": "UniversalChat Team",
+        "email": "support@universalchat.dev",
+        "url": "https://universalchat.dev"
+    },
+    "type": "library",
+    "hideInEditor": false
+}

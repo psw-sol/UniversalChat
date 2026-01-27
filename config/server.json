@@ -1,0 +1,97 @@
+{
+    "server": {
+        "host": "0.0.0.0",
+        "port": 7777,
+        "io_threads": 4,
+        "max_connections": 10000,
+        "max_packet_size": 65535
+    },
+
+    "connection": {
+        "heartbeat_interval": 30,
+        "heartbeat_timeout": 90,
+        "heartbeat_check_interval": 10,
+        "read_buffer_size": 8192,
+        "write_buffer_size": 16384
+    },
+
+    "channel": {
+        "default_max_members": 100,
+        "message_history_size": 50,
+        "predefined_channels": [
+            {
+                "id": "world",
+                "name": "World Chat",
+                "max_members": 1000,
+                "is_system": true
+            },
+            {
+                "id": "trade",
+                "name": "Trade Chat",
+                "max_members": 500,
+                "is_system": true
+            },
+            {
+                "id": "help",
+                "name": "Help Channel",
+                "max_members": 200,
+                "is_system": true
+            }
+        ]
+    },
+
+    "auth": {
+        "provider": "simple",
+        "token_validation": false
+    },
+
+    "redis": {
+        "enabled": false,
+        "host": "127.0.0.1",
+        "port": 6379,
+        "password": "",
+        "db": 0,
+        "connect_timeout_ms": 5000,
+        "command_timeout_ms": 1000
+    },
+
+    "scale_out": {
+        "server_id": ""
+    },
+
+    "pubsub": {
+        "enabled": true,
+        "reconnect_interval_ms": 5000,
+        "channel_patterns": [
+            "chat:channel:*",
+            "chat:whisper:*",
+            "chat:system"
+        ]
+    },
+
+    "session_registry": {
+        "enabled": true,
+        "ttl_seconds": 120,
+        "refresh_on_heartbeat": true
+    },
+
+    "channel_registry": {
+        "enabled": true,
+        "sync_member_count": true
+    },
+
+    "message_storage": {
+        "enabled": false,
+        "key_prefix": "chat:messages:",
+        "max_per_channel": 1000,
+        "ttl_seconds": 604800
+    },
+
+    "logging": {
+        "level": "info",
+        "file": "logs/chat_server.log",
+        "console": true,
+        "max_size_mb": 100,
+        "max_files": 10
+    }
+}

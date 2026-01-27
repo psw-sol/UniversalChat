@@ -1,0 +1,82 @@
+# Build directories
+build/
+build2/
+out/
+bin/
+lib/
+
+# IDE
+.vs/
+.vscode/
+*.suo
+*.user
+*.sln.docstates
+.idea/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+nul
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Unity
+unity-client/Library/
+unity-client/Temp/
+unity-client/Obj/
+unity-client/Build/
+unity-client/Builds/
+unity-client/Logs/
+unity-client/UserSettings/
+unity-client/MemoryCaptures/
+unity-client/*.csproj
+unity-client/*.sln
+unity-client/.vsconfig
+
+# Playwright MCP
+.playwright-mcp/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Dependencies (if any)
+node_modules/
+vcpkg_installed/
+
+# .NET build artifacts
+obj/
+bin/
+*.pdb
+
+# Compiled objects
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+
+# Generated protobuf (keep proto/ source)
+# build/generated/
+
+# Serena config (keep if needed, remove if private)
+# .serena/
+
+# Claude local settings
+.claude/

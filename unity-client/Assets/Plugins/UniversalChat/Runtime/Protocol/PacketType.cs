@@ -1,0 +1,54 @@
+namespace UniversalChat.Protocol
+{
+    /// <summary>
+    /// 서버와 통신하는 패킷 타입 정의
+    /// 서버의 PacketTypes.hpp와 동기화됨
+    /// </summary>
+    public enum PacketType : ushort
+    {
+        // === Connection (0x00xx) ===
+        Heartbeat           = 0x0001,
+        HeartbeatAck        = 0x0002,
+        Disconnect          = 0x0003,
+
+        // === Authentication (0x01xx) ===
+        AuthRequest         = 0x0101,
+        AuthResponse        = 0x0102,
+        Logout              = 0x0103,
+        LogoutAck           = 0x0104,
+
+        // === Channel (0x02xx) ===
+        ChannelListRequest  = 0x0201,
+        ChannelListResponse = 0x0202,
+        ChannelJoin         = 0x0203,
+        ChannelJoinAck      = 0x0204,
+        ChannelLeave        = 0x0205,
+        ChannelLeaveAck     = 0x0206,
+        ChannelMemberUpdate = 0x0207,
+        ChannelCreate       = 0x0208,
+        ChannelCreateAck    = 0x0209,
+        ChannelAutoAssign   = 0x020A,  // 자동 채널 배정 요청
+        ChannelAutoAssignAck = 0x020B, // 자동 채널 배정 응답
+
+        // === Message (0x03xx) ===
+        MessageSend         = 0x0301,
+        MessageReceive      = 0x0302,
+        MessageAck          = 0x0303,
+
+        // === Whisper (0x04xx) ===
+        WhisperSend         = 0x0401,
+        WhisperReceive      = 0x0402,
+        WhisperAck          = 0x0403,
+
+        // === Profile (0x05xx) ===
+        ProfileUpdateRequest  = 0x0501,
+        ProfileUpdateResponse = 0x0502,
+        ProfileChanged        = 0x0503,
+
+        // === Error (0xFFxx) ===
+        Error               = 0xFF01,
+
+        // === Unknown ===
+        Unknown             = 0xFFFF,
+    }
+}

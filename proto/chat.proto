@@ -1,0 +1,252 @@
+syntax = "proto3";
+
+package chat.protocol;
+
+option cc_enable_arenas = true;
+option optimize_for = SPEED;
+
+// ============================================
+// Common Types
+// ============================================
+
+message UserInfo {
+    string user_id = 1;
+    string nickname = 2;
+    string profile_image = 3;   // 프로필 이미지 URL 또는 ID
+    string frame_image = 4;     // 프레임 이미지 URL 또는 ID
+    string extra_data = 5;      // 기타 정보 (JSON 등 자유 형식)
+    int64 joined_at = 6;
+}
+
+message ChannelInfo {
+    string channel_id = 1;
+    string channel_name = 2;
+    int32 member_count = 3;
+    int32 max_members = 4;
+    bool is_system = 5;
+}
+
+message ChatMessageData {
+    string message_id = 1;
+    string channel_id = 2;
+    string sender_id = 3;
+    string sender_nickname = 4;
+    string sender_profile_image = 5;  // 발신자 프로필 이미지
+    string sender_frame_image = 6;    // 발신자 프레임 이미지
+    string sender_extra_data = 7;     // 발신자 기타 정보
+    string content = 8;
+    int64 timestamp = 9;
+    MessageType message_type = 10;
+}
+
+enum MessageType {
+    TEXT = 0;
+    SYSTEM = 1;
+    EMOTE = 2;
+    IMAGE = 3;
+}
+
+// ============================================
+// Connection (0x00xx)
+// ============================================
+
+// 0x0001 - Heartbeat (client -> server)
+message Heartbeat {
+    int64 client_time = 1;
+}
+
+// 0x0002 - HeartbeatAck (server -> client)
+message HeartbeatAck {
+    int64 server_time = 1;
+}
+
+// ============================================
+// Authentication (0x01xx)
+// ============================================
+
+// 0x0101 - AuthRequest (client -> server)
+message AuthRequest {
+    string user_id = 1;
+    string nickname = 2;
+    string auth_token = 3;      // Optional: for external auth
+    string device_id = 4;       // Optional: device identifier
+    string client_version = 5;  // Client version string
+    string profile_image = 6;   // Profile image URL or ID
+    string frame_image = 7;     // Frame image URL or ID
+    string extra_data = 8;      // Extra user data (JSON format)
+}
+
+// 0x0102 - AuthResponse (server -> client)
+message AuthResponse {
+    bool success = 1;
+    string session_id = 2;
+    string error_message = 3;
+    int32 error_code = 4;
+    int64 server_time = 5;
+    int32 heartbeat_interval = 6;  // Recommended heartbeat interval in seconds
+}
+
+// ============================================
+// Channel (0x02xx)
+// ============================================
+
+// 0x0201 - ChannelListRequest (client -> server)
+message ChannelListRequest {
+    bool include_member_count = 1;
+}
+
+// 0x0202 - ChannelListResponse (server -> client)
+message ChannelListResponse {
+    repeated ChannelInfo channels = 1;
+}
+
+// 0x0203 - ChannelJoin (client -> server)
+message ChannelJoin {
+    string channel_id = 1;
+    string password = 2;  // Optional: for password-protected channels
+}
+
+// 0x0204 - ChannelJoinAck (server -> client)
+message ChannelJoinAck {
+    bool success = 1;
+    string channel_id = 2;
+    string error_message = 3;
+    int32 error_code = 4;
+    repeated UserInfo members = 5;
+    repeated ChatMessageData recent_messages = 6;
+}
+
+// 0x0205 - ChannelLeave (client -> server)
+message ChannelLeave {
+    string channel_id = 1;
+}
+
+// 0x0206 - ChannelLeaveAck (server -> client)
+message ChannelLeaveAck {
+    bool success = 1;
+    string channel_id = 2;
+    string error_message = 3;
+}
+
+// 0x0207 - ChannelMemberUpdate (server -> client)
+message ChannelMemberUpdate {
+    string channel_id = 1;
+    UpdateType update_type = 2;
+    UserInfo user = 3;
+
+    enum UpdateType {
+        JOIN = 0;
+        LEAVE = 1;
+        KICK = 2;
+    }
+}
+
+// 0x020A - ChannelAutoAssign (client -> server)
+// 서버가 적절한 월드 채널을 자동으로 배정
+message ChannelAutoAssign {
+    string channel_type = 1;  // "world", "trade", "help" 등
+}
+
+// 0x020B - ChannelAutoAssignAck (server -> client)
+// 자동 배정 결과 (성공 시 ChannelJoinAck와 동일한 정보 포함)
+message ChannelAutoAssignAck {
+    bool success = 1;
+    string assigned_channel_id = 2;  // 배정된 채널 ID (예: "world-1")
+    string error_message = 3;
+    int32 error_code = 4;
+    repeated UserInfo members = 5;
+    repeated ChatMessageData recent_messages = 6;
+}
+
+// ============================================
+// Message (0x03xx)
+// ============================================
+
+// 0x0301 - MessageSend (client -> server)
+message MessageSend {
+    string channel_id = 1;
+    string content = 2;
+    MessageType message_type = 3;
+    string client_message_id = 4;  // Optional: for deduplication
+}
+
+// 0x0302 - MessageReceive (server -> client)
+message MessageReceive {
+    ChatMessageData message = 1;
+}
+
+// 0x0303 - MessageAck (server -> client)
+message MessageAck {
+    bool success = 1;
+    string message_id = 2;
+    string client_message_id = 3;
+    string error_message = 4;
+    int32 error_code = 5;
+}
+
+// ============================================
+// Whisper / Private Message (0x04xx)
+// ============================================
+
+// 0x0401 - WhisperSend (client -> server)
+message WhisperSend {
+    string target_user_id = 1;
+    string content = 2;
+}
+
+// 0x0402 - WhisperReceive (server -> client)
+message WhisperReceive {
+    string message_id = 1;
+    string sender_id = 2;
+    string sender_nickname = 3;
+    string sender_profile_image = 4;  // 발신자 프로필 이미지
+    string sender_frame_image = 5;    // 발신자 프레임 이미지
+    string sender_extra_data = 6;     // 발신자 기타 정보
+    string content = 7;
+    int64 timestamp = 8;
+}
+
+// 0x0403 - WhisperAck (server -> client)
+message WhisperAck {
+    bool success = 1;
+    string message_id = 2;
+    string error_message = 3;
+    int32 error_code = 4;
+}
+
+// ============================================
+// Profile (0x05xx)
+// ============================================
+
+// 0x0501 - ProfileUpdateRequest (client -> server)
+message ProfileUpdateRequest {
+    optional string nickname = 1;        // 변경할 닉네임 (없으면 변경 안함)
+    optional string profile_image = 2;   // 변경할 프로필 이미지
+    optional string frame_image = 3;     // 변경할 프레임 이미지
+    optional string extra_data = 4;      // 변경할 기타 정보
+}
+
+// 0x0502 - ProfileUpdateResponse (server -> client)
+message ProfileUpdateResponse {
+    bool success = 1;
+    string error_message = 2;
+    int32 error_code = 3;
+    UserInfo updated_profile = 4;  // 업데이트된 전체 프로필 정보
+}
+
+// 0x0503 - ProfileChanged (server -> client, broadcast)
+message ProfileChanged {
+    string user_id = 1;
+    UserInfo new_profile = 2;
+}
+
+// ============================================
+// Error (0xFFxx)
+// ============================================
+
+// 0xFF01 - Error (server -> client)
+message Error {
+    int32 error_code = 1;
+    string error_message = 2;
+    string details = 3;
+}
