@@ -1,0 +1,121 @@
+# M2M-100 QLoRA Fine-tuning Configuration
+# Optimized for RTX 3060 12GB VRAM
+
+# Model settings
+model:
+  name: "facebook/m2m100_418M"
+  max_length: 256
+  device_map: "auto"
+
+# QLoRA settings
+qlora:
+  # 4-bit quantization config
+  load_in_4bit: true
+  bnb_4bit_quant_type: "nf4"
+  bnb_4bit_compute_dtype: "bfloat16"
+  bnb_4bit_use_double_quant: true
+
+  # LoRA config
+  lora_r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  target_modules:
+    - "q_proj"
+    - "k_proj"
+    - "v_proj"
+    - "o_proj"
+    - "fc1"
+    - "fc2"
+  bias: "none"
+  task_type: "SEQ_2_SEQ_LM"
+
+# Training settings
+training:
+  output_dir: "./outputs/m2m100-finetuned"
+  num_train_epochs: 3
+  per_device_train_batch_size: 4
+  per_device_eval_batch_size: 4
+  gradient_accumulation_steps: 8
+  gradient_checkpointing: true
+
+  # Learning rate
+  learning_rate: 2.0e-4
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  lr_scheduler_type: "cosine"
+
+  # Optimizer
+  optim: "paged_adamw_8bit"
+
+  # Precision
+  fp16: false
+  bf16: true
+
+  # Logging
+  logging_dir: "./logs"
+  logging_steps: 10
+  eval_strategy: "steps"
+  eval_steps: 100
+  save_strategy: "steps"
+  save_steps: 500
+  save_total_limit: 3
+
+  # Early stopping
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_loss"
+  greater_is_better: false
+
+  # Performance
+  dataloader_num_workers: 4
+  dataloader_pin_memory: true
+  remove_unused_columns: false
+
+# Data settings
+data:
+  train_file: "data/cleaned/train.jsonl"
+  valid_file: "data/cleaned/valid.jsonl"
+  test_file: "data/cleaned/test.jsonl"
+  source_key: "source"
+  target_key: "target"
+  source_lang_key: "source_lang"
+  target_lang_key: "target_lang"
+
+  # Preprocessing
+  max_source_length: 256
+  max_target_length: 256
+  padding: "max_length"
+  truncation: true
+
+# Languages
+languages:
+  primary:
+    - "ko"
+    - "en"
+    - "zh"
+    - "ja"
+  m2m100_mapping:
+    ko: "ko"
+    en: "en"
+    zh: "zh"
+    ja: "ja"
+
+# Evaluation settings
+evaluation:
+  metrics:
+    - "bleu"
+    - "chrf"
+  num_beams: 5
+  max_new_tokens: 256
+
+# Memory optimization (for 12GB VRAM)
+memory:
+  # Expected VRAM usage: ~4-5GB
+  max_memory: "11GiB"
+  offload_folder: "./offload"
+
+# Experiment tracking (optional)
+wandb:
+  enabled: false
+  project: "m2m100-finetune"
+  entity: null
+  run_name: null

@@ -1,0 +1,35 @@
+# M2M-100 QLoRA Fine-tuning Requirements
+# Optimized for RTX 3060 (12GB VRAM)
+
+# PyTorch with CUDA support
+torch>=2.1.0
+torchvision>=0.16.0
+torchaudio>=2.1.0
+
+# Transformers and PEFT
+transformers>=4.37.0
+peft>=0.8.0
+accelerate>=0.26.0
+
+# Quantization (4-bit)
+bitsandbytes>=0.41.0
+
+# Dataset handling
+datasets>=2.16.0
+sentencepiece>=0.1.99
+
+# Evaluation metrics
+sacrebleu>=2.4.0
+evaluate>=0.4.1
+
+# Training utilities
+tqdm>=4.66.0
+wandb>=0.16.0  # Optional: for experiment tracking
+
+# Data processing
+httpx>=0.26.0  # For API calls in data collection
+aiofiles>=23.2.0
+
+# General utilities
+pyyaml>=6.0.1
+python-dotenv>=1.0.0
