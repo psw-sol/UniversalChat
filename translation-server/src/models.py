@@ -29,6 +29,7 @@ class TranslationResponse(BaseModel):
     provider: str = Field(default="m2m100", description="Translation provider used")
     cache_hit: bool = Field(default=False, description="Whether result was from cache")
     latency_ms: float = Field(..., description="Processing time in milliseconds")
+    fallback_used: bool = Field(default=False, description="Whether fallback provider was used")
 
     class Config:
         json_schema_extra = {
@@ -38,7 +39,8 @@ class TranslationResponse(BaseModel):
                 "target_lang": "en",
                 "provider": "m2m100",
                 "cache_hit": False,
-                "latency_ms": 125.5
+                "latency_ms": 125.5,
+                "fallback_used": False
             }
         }
 
@@ -67,6 +69,10 @@ class HealthResponse(BaseModel):
     gpu_available: bool = Field(..., description="Whether GPU is available")
     redis_connected: bool = Field(..., description="Whether Redis is connected")
     version: str = Field(..., description="API version")
+    available_providers: List[str] = Field(
+        default_factory=list,
+        description="List of available translation providers"
+    )
 
 
 class LanguagesResponse(BaseModel):

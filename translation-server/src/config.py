@@ -33,6 +33,12 @@ class Settings(BaseSettings):
     azure_translator_endpoint: str = "https://api.cognitive.microsofttranslator.com"
 
     gemini_api_key: str = ""
+    gemini_model: str = "gemini-2.0-flash-lite"
+
+    # Fallback timeouts
+    primary_timeout: float = 5.0
+    azure_timeout: float = 5.0
+    gemini_timeout: float = 10.0
 
     # Server settings
     host: str = "0.0.0.0"
@@ -48,6 +54,10 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """Get cached settings instance"""
     return Settings()
+
+
+# Convenience alias for direct import
+settings = get_settings()
 
 
 # Language mapping for M2M-100
