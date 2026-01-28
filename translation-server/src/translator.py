@@ -1,10 +1,12 @@
 """
-M2M-100 Translation Engine
+M2M-100 Translation Engine with Fine-tuned LoRA Support
 """
 import logging
+from pathlib import Path
 from typing import Optional, List
 import torch
-from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
+from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer, BitsAndBytesConfig
+from peft import PeftModel
 
 from .config import get_settings, LANGUAGE_MAP
 
@@ -31,13 +33,11 @@ class TranslationEngine:
         return cls._instance
 
     def load_model(self) -> bool:
-        """Load the translation model"""
+        """Load the translation model (with optional fine-tuned LoRA adapter)"""
         if self._loaded:
             return True
 
         try:
-            logger.info(f"Loading model: {self.settings.model_name}")
-
             # Check GPU availability
             if self.settings.device == "cuda" and torch.cuda.is_available():
                 self.device = "cuda"
@@ -46,15 +46,64 @@ class TranslationEngine:
                 self.device = "cpu"
                 logger.info("Using CPU")
 
-            # Load tokenizer
-            logger.info("Loading tokenizer...")
-            self.tokenizer = M2M100Tokenizer.from_pretrained(self.settings.model_name)
+            # Check if fine-tuned model path is set
+            finetuned_path = self.settings.finetuned_model_path
+            use_finetuned = finetuned_path and Path(finetuned_path).exists()
 
-            # Load model
-            logger.info("Loading model weights...")
-            self.model = M2M100ForConditionalGeneration.from_pretrained(
-                self.settings.model_name
-            ).to(self.device)
+            if use_finetuned:
+                logger.info(f"Loading fine-tuned model from: {finetuned_path}")
+
+                # Load tokenizer from fine-tuned model
+                logger.info("Loading tokenizer...")
+                self.tokenizer = M2M100Tokenizer.from_pretrained(finetuned_path)
+
+                # Setup quantization config for memory efficiency
+                if self.settings.use_quantization and self.device == "cuda":
+                    logger.info("Using 4-bit quantization...")
+                    bnb_config = BitsAndBytesConfig(
+                        load_in_4bit=True,
+                        bnb_4bit_quant_type="nf4",
+                        bnb_4bit_compute_dtype=torch.float16,
+                        bnb_4bit_use_double_quant=True
+                    )
+                    # Load base model with quantization
+                    logger.info(f"Loading base model: {self.settings.model_name}")
+                    base_model = M2M100ForConditionalGeneration.from_pretrained(
+                        self.settings.model_name,
+                        quantization_config=bnb_config,
+                        device_map="auto",
+                        torch_dtype=torch.float16
+                    )
+                else:
+                    # Load base model without quantization
+                    logger.info(f"Loading base model: {self.settings.model_name}")
+                    # Use float32 for CPU (float16 not supported on CPU)
+                    dtype = torch.float32 if self.device == "cpu" else torch.float16
+                    base_model = M2M100ForConditionalGeneration.from_pretrained(
+                        self.settings.model_name,
+                        device_map="auto" if self.device == "cuda" else None,
+                        torch_dtype=dtype
+                    )
+                    if self.device == "cpu":
+                        base_model = base_model.to(self.device)
+
+                # Load LoRA adapter
+                logger.info("Loading LoRA adapter...")
+                self.model = PeftModel.from_pretrained(base_model, finetuned_path)
+                logger.info("Fine-tuned model loaded successfully")
+
+            else:
+                logger.info(f"Loading base model: {self.settings.model_name}")
+
+                # Load tokenizer
+                logger.info("Loading tokenizer...")
+                self.tokenizer = M2M100Tokenizer.from_pretrained(self.settings.model_name)
+
+                # Load model
+                logger.info("Loading model weights...")
+                self.model = M2M100ForConditionalGeneration.from_pretrained(
+                    self.settings.model_name
+                ).to(self.device)
 
             # Set to evaluation mode
             self.model.eval()

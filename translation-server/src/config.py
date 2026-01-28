@@ -11,6 +11,8 @@ class Settings(BaseSettings):
 
     # Model settings
     model_name: str = "facebook/m2m100_418M"
+    finetuned_model_path: str = ""  # Path to fine-tuned LoRA adapter (empty = use base model)
+    use_quantization: bool = True  # Use 4-bit quantization for fine-tuned model
     device: Literal["cuda", "cpu"] = "cuda"
     max_length: int = 256
     batch_size: int = 8

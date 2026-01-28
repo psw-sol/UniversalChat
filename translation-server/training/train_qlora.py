@@ -172,6 +172,7 @@ class TranslationDataset:
 
             # Set target language for labels
             tgt_code = self.LANG_CODES.get(tgt_lang, tgt_lang)
+            self.tokenizer.tgt_lang = tgt_code
 
             # Tokenize target with target language prefix
             with self.tokenizer.as_target_tokenizer():
@@ -258,7 +259,10 @@ class QLoRATrainer:
         )
 
         # Prepare for k-bit training
-        self.model = prepare_model_for_kbit_training(self.model)
+        self.model = prepare_model_for_kbit_training(
+            self.model,
+            use_gradient_checkpointing=True
+        )
 
         # Apply LoRA
         lora_config = self.setup_lora()
@@ -315,6 +319,7 @@ class QLoRATrainer:
             per_device_eval_batch_size=self.config.batch_size,
             gradient_accumulation_steps=self.config.gradient_accumulation_steps,
             gradient_checkpointing=True,
+            gradient_checkpointing_kwargs={"use_reentrant": False},
             learning_rate=self.config.learning_rate,
             weight_decay=0.01,
             warmup_ratio=self.config.warmup_ratio,
@@ -332,7 +337,7 @@ class QLoRATrainer:
             load_best_model_at_end=True,
             metric_for_best_model="eval_loss",
             greater_is_better=False,
-            dataloader_num_workers=4,
+            dataloader_num_workers=0,  # Windows compatibility with PEFT
             dataloader_pin_memory=True,
             remove_unused_columns=False,
             report_to="none"  # Disable wandb by default

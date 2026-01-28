@@ -80,3 +80,19 @@ bin/
 
 # Claude local settings
 .claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+*.egg-info/
+dist/
+.eggs/
+
+# Translation server
+translation-server/training/outputs/
+translation-server/.env
