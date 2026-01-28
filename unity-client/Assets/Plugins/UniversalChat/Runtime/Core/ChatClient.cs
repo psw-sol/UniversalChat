@@ -29,6 +29,8 @@ namespace UniversalChat.Core
         public event Action<ProfileUpdateResponse> OnProfileUpdated;
         public event Action<ProfileChanged> OnProfileChanged;
         public event Action<ChannelAutoAssignAck> OnChannelAutoAssigned;
+        public event Action<AnnouncementReceive> OnAnnouncementReceived;
+        public event Action<UserActionNotificationReceive> OnUserActionNotificationReceived;
 
         #endregion
 
@@ -442,6 +444,14 @@ namespace UniversalChat.Core
                         HandleProfileChanged(data);
                         break;
 
+                    case PacketType.AnnouncementReceive:
+                        HandleAnnouncementReceive(data);
+                        break;
+
+                    case PacketType.UserActionNotificationReceive:
+                        HandleUserActionNotificationReceive(data);
+                        break;
+
                     case PacketType.HeartbeatAck:
                         // Heartbeat acknowledged
                         break;
@@ -536,6 +546,18 @@ namespace UniversalChat.Core
         {
             var changed = _serializer.Deserialize<ProfileChanged>(data);
             OnProfileChanged?.Invoke(changed);
+        }
+
+        private void HandleAnnouncementReceive(byte[] data)
+        {
+            var announcement = _serializer.Deserialize<AnnouncementReceive>(data);
+            OnAnnouncementReceived?.Invoke(announcement);
+        }
+
+        private void HandleUserActionNotificationReceive(byte[] data)
+        {
+            var notification = _serializer.Deserialize<UserActionNotificationReceive>(data);
+            OnUserActionNotificationReceived?.Invoke(notification);
         }
 
         private void HandleErrorResponse(byte[] data)

@@ -14,6 +14,8 @@ class SessionManager;
 class ChannelManager;
 class WorldChannelManager;
 class Config;
+class AnnouncementService;
+class UserActionService;
 
 #ifdef ENABLE_REDIS
 class SessionRegistry;
@@ -37,6 +39,18 @@ public:
                       const Config& config);
 
     ~MessageDispatcher() = default;
+
+    /**
+     * Set Announcement service for system announcements
+     * @param announcement_service The announcement service instance
+     */
+    void setAnnouncementService(std::shared_ptr<AnnouncementService> announcement_service);
+
+    /**
+     * Set UserAction service for user action notifications
+     * @param user_action_service The user action service instance
+     */
+    void setUserActionService(std::shared_ptr<UserActionService> user_action_service);
 
 #ifdef ENABLE_REDIS
     /**
@@ -73,6 +87,8 @@ private:
     void handleWhisperSend(SessionPtr session, const Packet& packet);
     void handleProfileUpdate(SessionPtr session, const Packet& packet);
     void handleChannelAutoAssign(SessionPtr session, const Packet& packet);
+    void handleAnnouncementSend(SessionPtr session, const Packet& packet);
+    void handleUserActionNotificationSend(SessionPtr session, const Packet& packet);
 
     // === Helper Functions ===
     void sendError(SessionPtr session, int error_code, const std::string& message);
@@ -88,6 +104,12 @@ private:
 
     // Rate limiting
     RateLimiter rate_limiter_;
+
+    // Announcement service
+    std::shared_ptr<AnnouncementService> announcement_service_;
+
+    // User action notification service
+    std::shared_ptr<UserActionService> user_action_service_;
 
 #ifdef ENABLE_REDIS
     // Cross-server components

@@ -241,6 +241,115 @@ message ProfileChanged {
 }
 
 // ============================================
+// Announcement (0x06xx)
+// ============================================
+
+enum AnnouncementType {
+    ANNOUNCEMENT_NORMAL = 0;      // 일반 공지
+    ANNOUNCEMENT_URGENT = 1;      // 긴급 공지 (빨간색 강조)
+    ANNOUNCEMENT_MAINTENANCE = 2; // 점검 공지
+    ANNOUNCEMENT_EVENT = 3;       // 이벤트 공지
+}
+
+// 0x0601 - AnnouncementSend (게임서버/관리자 -> 채팅서버)
+message AnnouncementSend {
+    string announcement_id = 1;      // 고유 ID (중복 방지)
+    string content = 2;              // 공지 내용
+    AnnouncementType type = 3;       // 공지 타입
+    string sender_name = 4;          // 발신자 이름 (GM, System 등)
+    int32 duration_seconds = 5;      // 표시 지속 시간 (0 = 무제한)
+    string target_channel = 6;       // 대상 채널 (빈값 = 전체)
+    string admin_token = 7;          // 관리자 인증 토큰
+    string extra_data = 8;           // 추가 데이터 (JSON)
+}
+
+// 0x0602 - AnnouncementReceive (채팅서버 -> 클라이언트)
+message AnnouncementReceive {
+    string announcement_id = 1;
+    string content = 2;
+    AnnouncementType type = 3;
+    string sender_name = 4;
+    int32 duration_seconds = 5;
+    int64 timestamp = 6;             // 전송 시간
+    string extra_data = 7;
+}
+
+// 0x0603 - AnnouncementAck (채팅서버 -> 게임서버)
+message AnnouncementAck {
+    bool success = 1;
+    string announcement_id = 2;
+    int32 delivered_count = 3;       // 전송된 클라이언트 수
+    string error_message = 4;
+    int32 error_code = 5;
+}
+
+// ============================================
+// User Action Notification (0x07xx)
+// ============================================
+
+enum UserActionType {
+    ACTION_ITEM_ACQUIRE = 0;         // 레어 아이템 획득
+    ACTION_RANKING_BREAKTHROUGH = 1; // 랭킹 돌파
+    ACTION_MISSION_COMPLETE = 2;     // 최고 미션 달성
+    ACTION_ACHIEVEMENT = 3;          // 업적 달성
+    ACTION_CUSTOM = 99;              // 커스텀 (게임 정의)
+}
+
+// 0x0701 - UserActionNotificationSend (게임서버 -> 채팅서버)
+message UserActionNotificationSend {
+    string notification_id = 1;      // 고유 ID (중복 방지)
+    UserActionType action_type = 2;  // 행동 타입
+
+    // 행동 주체 정보
+    string actor_user_id = 3;        // 행동한 유저 ID
+    string actor_nickname = 4;       // 행동한 유저 닉네임
+    string actor_profile_image = 5;  // 프로필 이미지
+    string actor_frame_image = 6;    // 프레임 이미지
+
+    // 알림 내용
+    string title = 7;                // 제목 (팝업용)
+    string content = 8;              // 내용 (채팅 메시지)
+    string icon_id = 9;              // 아이콘 ID (아이템 아이콘 등)
+    string extra_data = 10;          // 추가 데이터 (JSON)
+
+    // 대상 설정
+    string target_channel = 11;      // 대상 채널 (빈값 = 전체)
+    bool exclude_actor = 12;         // 행동 주체 제외 여부
+
+    // 인증
+    string admin_token = 13;         // 관리자 토큰
+}
+
+// 0x0702 - UserActionNotificationReceive (채팅서버 -> 클라이언트)
+message UserActionNotificationReceive {
+    string notification_id = 1;
+    UserActionType action_type = 2;
+
+    // 행동 주체 정보
+    string actor_user_id = 3;
+    string actor_nickname = 4;
+    string actor_profile_image = 5;
+    string actor_frame_image = 6;
+
+    // 알림 내용
+    string title = 7;
+    string content = 8;
+    string icon_id = 9;
+    string extra_data = 10;
+
+    int64 timestamp = 11;
+}
+
+// 0x0703 - UserActionNotificationAck (채팅서버 -> 게임서버)
+message UserActionNotificationAck {
+    bool success = 1;
+    string notification_id = 2;
+    int32 delivered_count = 3;
+    string error_message = 4;
+    int32 error_code = 5;
+}
+
+// ============================================
 // Error (0xFFxx)
 // ============================================
 

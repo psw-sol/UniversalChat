@@ -17,7 +17,8 @@ enum class PubSubMessageType : uint8_t {
     Whisper = 4,            // Private message (whisper)
     ProfileUpdate = 5,      // User profile update notification
     SystemBroadcast = 6,    // System-wide broadcast
-    Presence = 7            // User presence update (online/offline)
+    Presence = 7,           // User presence update (online/offline)
+    UserActionNotification = 8  // User action notification (item acquire, ranking, etc.)
 };
 
 /**
@@ -32,6 +33,7 @@ inline const char* pubSubMessageTypeToString(PubSubMessageType type) {
         case PubSubMessageType::ProfileUpdate:    return "ProfileUpdate";
         case PubSubMessageType::SystemBroadcast:  return "SystemBroadcast";
         case PubSubMessageType::Presence:         return "Presence";
+        case PubSubMessageType::UserActionNotification: return "UserActionNotification";
         default:                                   return "Unknown";
     }
 }
@@ -245,6 +247,126 @@ struct ChannelMemberPayload {
     }
 
     static std::optional<ChannelMemberPayload> tryDeserialize(const std::string& json_str) {
+        try {
+            return deserialize(json_str);
+        } catch (const nlohmann::json::exception&) {
+            return std::nullopt;
+        }
+    }
+};
+
+/**
+ * Announcement payload (for SystemBroadcast type - announcements)
+ */
+struct AnnouncementPayload {
+    std::string announcement_id;
+    std::string content;
+    int type = 0;             // AnnouncementType: 0=NORMAL, 1=URGENT, 2=MAINTENANCE, 3=EVENT
+    std::string sender_name;
+    int duration_seconds = 0;
+    std::string target_channel; // 빈 값이면 전체 브로드캐스트
+    std::string extra_data;
+    int64_t timestamp = 0;
+
+    std::string serialize() const {
+        nlohmann::json j;
+        j["announcement_id"] = announcement_id;
+        j["content"] = content;
+        j["type"] = type;
+        j["sender_name"] = sender_name;
+        j["duration_seconds"] = duration_seconds;
+        j["target_channel"] = target_channel;
+        j["extra_data"] = extra_data;
+        j["timestamp"] = timestamp;
+        return j.dump();
+    }
+
+    static AnnouncementPayload deserialize(const std::string& json_str) {
+        auto j = nlohmann::json::parse(json_str);
+        AnnouncementPayload p;
+        p.announcement_id = j.value("announcement_id", "");
+        p.content = j.value("content", "");
+        p.type = j.value("type", 0);
+        p.sender_name = j.value("sender_name", "");
+        p.duration_seconds = j.value("duration_seconds", 0);
+        p.target_channel = j.value("target_channel", "");
+        p.extra_data = j.value("extra_data", "");
+        p.timestamp = j.value("timestamp", int64_t(0));
+        return p;
+    }
+
+    static std::optional<AnnouncementPayload> tryDeserialize(const std::string& json_str) {
+        try {
+            return deserialize(json_str);
+        } catch (const nlohmann::json::exception&) {
+            return std::nullopt;
+        }
+    }
+};
+
+/**
+ * User action notification payload (for UserActionNotification type)
+ */
+struct UserActionPayload {
+    std::string notification_id;
+    int action_type = 0;  // UserActionType: 0=ITEM_ACQUIRE, 1=RANKING, 2=MISSION, 3=ACHIEVEMENT, 99=CUSTOM
+
+    // 행동 주체 정보
+    std::string actor_user_id;
+    std::string actor_nickname;
+    std::string actor_profile_image;
+    std::string actor_frame_image;
+
+    // 알림 내용
+    std::string title;
+    std::string content;
+    std::string icon_id;
+    std::string extra_data;
+
+    // 대상 설정
+    std::string target_channel;  // 빈 값이면 전체 브로드캐스트
+    bool exclude_actor = false;
+
+    int64_t timestamp = 0;
+
+    std::string serialize() const {
+        nlohmann::json j;
+        j["notification_id"] = notification_id;
+        j["action_type"] = action_type;
+        j["actor_user_id"] = actor_user_id;
+        j["actor_nickname"] = actor_nickname;
+        j["actor_profile_image"] = actor_profile_image;
+        j["actor_frame_image"] = actor_frame_image;
+        j["title"] = title;
+        j["content"] = content;
+        j["icon_id"] = icon_id;
+        j["extra_data"] = extra_data;
+        j["target_channel"] = target_channel;
+        j["exclude_actor"] = exclude_actor;
+        j["timestamp"] = timestamp;
+        return j.dump();
+    }
+
+    static UserActionPayload deserialize(const std::string& json_str) {
+        auto j = nlohmann::json::parse(json_str);
+        UserActionPayload p;
+        p.notification_id = j.value("notification_id", "");
+        p.action_type = j.value("action_type", 0);
+        p.actor_user_id = j.value("actor_user_id", "");
+        p.actor_nickname = j.value("actor_nickname", "");
+        p.actor_profile_image = j.value("actor_profile_image", "");
+        p.actor_frame_image = j.value("actor_frame_image", "");
+        p.title = j.value("title", "");
+        p.content = j.value("content", "");
+        p.icon_id = j.value("icon_id", "");
+        p.extra_data = j.value("extra_data", "");
+        p.target_channel = j.value("target_channel", "");
+        p.exclude_actor = j.value("exclude_actor", false);
+        p.timestamp = j.value("timestamp", int64_t(0));
+        return p;
+    }
+
+    static std::optional<UserActionPayload> tryDeserialize(const std::string& json_str) {
         try {
             return deserialize(json_str);
         } catch (const nlohmann::json::exception&) {

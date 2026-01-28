@@ -46,6 +46,12 @@ public:
     std::string auth_provider = "simple";
     bool token_validation = false;
 
+    // === Announcement Settings ===
+    std::vector<std::string> admin_tokens;  // Admin tokens for announcement authorization
+
+    // Get admin tokens
+    const std::vector<std::string>& getAdminTokens() const { return admin_tokens; }
+
     // === Redis Settings ===
     bool redis_enabled = false;
     std::string redis_host = "127.0.0.1";

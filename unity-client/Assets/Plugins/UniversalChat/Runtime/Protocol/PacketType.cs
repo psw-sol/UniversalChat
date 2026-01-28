@@ -45,6 +45,16 @@ namespace UniversalChat.Protocol
         ProfileUpdateResponse = 0x0502,
         ProfileChanged        = 0x0503,
 
+        // === Announcement (0x06xx) ===
+        AnnouncementSend      = 0x0601,  // 게임서버/관리자 -> 채팅서버
+        AnnouncementReceive   = 0x0602,  // 채팅서버 -> 클라이언트
+        AnnouncementAck       = 0x0603,  // 채팅서버 -> 게임서버
+
+        // === UserAction (0x07xx) ===
+        UserActionNotificationSend    = 0x0701,  // 게임서버 -> 채팅서버
+        UserActionNotificationReceive = 0x0702,  // 채팅서버 -> 클라이언트
+        UserActionNotificationAck     = 0x0703,  // 채팅서버 -> 게임서버
+
         // === Error (0xFFxx) ===
         Error               = 0xFF01,
 

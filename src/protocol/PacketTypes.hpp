@@ -58,6 +58,16 @@ enum class PacketType : uint16_t {
     ProfileUpdateResponse = 0x0502,
     ProfileChanged        = 0x0503,
 
+    // === Announcement (0x06xx) ===
+    AnnouncementSend      = 0x0601,  // 게임서버/관리자 -> 채팅서버
+    AnnouncementReceive   = 0x0602,  // 채팅서버 -> 클라이언트
+    AnnouncementAck       = 0x0603,  // 채팅서버 -> 게임서버
+
+    // === UserAction (0x07xx) ===
+    UserActionNotificationSend    = 0x0701,  // 게임서버 -> 채팅서버
+    UserActionNotificationReceive = 0x0702,  // 채팅서버 -> 클라이언트
+    UserActionNotificationAck     = 0x0703,  // 채팅서버 -> 게임서버
+
     // === Error (0xFFxx) ===
     Error               = 0xFF01,
 
@@ -130,6 +140,12 @@ inline const char* getPacketTypeName(PacketType type) {
         case PacketType::ProfileUpdateRequest:  return "ProfileUpdateRequest";
         case PacketType::ProfileUpdateResponse: return "ProfileUpdateResponse";
         case PacketType::ProfileChanged:        return "ProfileChanged";
+        case PacketType::AnnouncementSend:      return "AnnouncementSend";
+        case PacketType::AnnouncementReceive:   return "AnnouncementReceive";
+        case PacketType::AnnouncementAck:       return "AnnouncementAck";
+        case PacketType::UserActionNotificationSend:    return "UserActionNotificationSend";
+        case PacketType::UserActionNotificationReceive: return "UserActionNotificationReceive";
+        case PacketType::UserActionNotificationAck:     return "UserActionNotificationAck";
         case PacketType::Error:               return "Error";
         default:                              return "Unknown";
     }
@@ -144,6 +160,8 @@ inline bool requiresAuth(PacketType type) {
         case PacketType::HeartbeatAck:
         case PacketType::AuthRequest:
         case PacketType::AuthResponse:
+        case PacketType::AnnouncementSend:  // Uses admin_token instead of session auth
+        case PacketType::UserActionNotificationSend:  // Uses admin_token instead of session auth
         case PacketType::Error:
             return false;
         default:

@@ -132,6 +132,17 @@ void Config::parseJson(const nlohmann::json& j) {
         if (auth.contains("token_validation")) token_validation = auth["token_validation"];
     }
 
+    // Announcement settings
+    if (j.contains("announcement")) {
+        const auto& announcement = j["announcement"];
+        if (announcement.contains("admin_tokens")) {
+            admin_tokens.clear();
+            for (const auto& token : announcement["admin_tokens"]) {
+                admin_tokens.push_back(token.get<std::string>());
+            }
+        }
+    }
+
     // Redis settings
     if (j.contains("redis")) {
         const auto& redis = j["redis"];
@@ -237,6 +248,9 @@ nlohmann::json Config::toJson() const {
     // Auth
     j["auth"]["provider"] = auth_provider;
     j["auth"]["token_validation"] = token_validation;
+
+    // Announcement
+    j["announcement"]["admin_tokens"] = admin_tokens;
 
     // Redis
     j["redis"]["enabled"] = redis_enabled;

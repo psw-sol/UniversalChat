@@ -4,6 +4,8 @@
 #include "../channel/ChannelManager.hpp"
 #include "../channel/WorldChannelManager.hpp"
 #include "../channel/Channel.hpp"
+#include "../announcement/AnnouncementService.hpp"
+#include "../notification/UserActionService.hpp"
 #include "../protocol/PacketCodec.hpp"
 #include "../util/Config.hpp"
 #include "../util/Logger.hpp"
@@ -50,8 +52,24 @@ MessageDispatcher::MessageDispatcher(SessionManager& session_manager,
         [this](auto s, const auto& p) { handleProfileUpdate(s, p); });
     registerHandler(PacketType::ChannelAutoAssign,
         [this](auto s, const auto& p) { handleChannelAutoAssign(s, p); });
+    registerHandler(PacketType::AnnouncementSend,
+        [this](auto s, const auto& p) { handleAnnouncementSend(s, p); });
+    registerHandler(PacketType::UserActionNotificationSend,
+        [this](auto s, const auto& p) { handleUserActionNotificationSend(s, p); });
 
     LOG_INFO("MessageDispatcher initialized with {} handlers", handlers_.size());
+}
+
+void MessageDispatcher::setAnnouncementService(std::shared_ptr<AnnouncementService> announcement_service) {
+    announcement_service_ = std::move(announcement_service);
+    LOG_INFO("MessageDispatcher: AnnouncementService set (available={})",
+             announcement_service_ ? "true" : "false");
+}
+
+void MessageDispatcher::setUserActionService(std::shared_ptr<UserActionService> user_action_service) {
+    user_action_service_ = std::move(user_action_service);
+    LOG_INFO("MessageDispatcher: UserActionService set (available={})",
+             user_action_service_ ? "true" : "false");
 }
 
 #ifdef ENABLE_REDIS
@@ -758,6 +776,121 @@ void MessageDispatcher::handleChannelAutoAssign(SessionPtr session, const Packet
     resp_packet.data = std::vector<char>(data.begin(), data.end());
 
     session->send(resp_packet);
+}
+
+void MessageDispatcher::handleAnnouncementSend(SessionPtr session, const Packet& packet) {
+    // Note: AnnouncementSend doesn't require regular user authentication
+    // It uses admin_token for authorization instead
+
+    protocol::AnnouncementSend request;
+    if (!request.ParseFromArray(packet.data.data(), static_cast<int>(packet.data.size()))) {
+        LOG_WARN("Failed to parse AnnouncementSend from session {}", session->sessionId());
+        sendError(session, toInt(ErrorCode::InvalidPacket), "Invalid announcement request");
+        return;
+    }
+
+    // Check if announcement service is available
+    if (!announcement_service_) {
+        LOG_ERROR("AnnouncementService not available");
+        sendError(session, toInt(ErrorCode::InternalError), "Announcement service unavailable");
+        return;
+    }
+
+    // Process the announcement
+    int delivered_count = announcement_service_->processAnnouncement(
+        request.announcement_id(),
+        request.content(),
+        static_cast<int>(request.type()),
+        request.sender_name(),
+        request.duration_seconds(),
+        request.target_channel(),
+        request.admin_token(),
+        request.extra_data()
+    );
+
+    // Send acknowledgment
+    protocol::AnnouncementAck ack;
+    ack.set_announcement_id(request.announcement_id());
+
+    if (delivered_count >= 0) {
+        ack.set_success(true);
+        ack.set_delivered_count(delivered_count);
+        LOG_INFO("Announcement {} processed successfully, delivered to {} local users",
+                 request.announcement_id(), delivered_count);
+    } else {
+        ack.set_success(false);
+        ack.set_error_message("Invalid admin token");
+        ack.set_error_code(toInt(ErrorCode::AuthRequired));
+        LOG_WARN("Announcement {} rejected: invalid admin token", request.announcement_id());
+    }
+
+    Packet ack_packet;
+    ack_packet.type = PacketType::AnnouncementAck;
+    std::string ack_data;
+    ack.SerializeToString(&ack_data);
+    ack_packet.data = std::vector<char>(ack_data.begin(), ack_data.end());
+
+    session->send(ack_packet);
+}
+
+void MessageDispatcher::handleUserActionNotificationSend(SessionPtr session, const Packet& packet) {
+    // Note: UserActionNotificationSend doesn't require regular user authentication
+    // It uses admin_token for authorization instead
+
+    protocol::UserActionNotificationSend request;
+    if (!request.ParseFromArray(packet.data.data(), static_cast<int>(packet.data.size()))) {
+        LOG_WARN("Failed to parse UserActionNotificationSend from session {}", session->sessionId());
+        sendError(session, toInt(ErrorCode::InvalidPacket), "Invalid user action notification request");
+        return;
+    }
+
+    // Check if user action service is available
+    if (!user_action_service_) {
+        LOG_ERROR("UserActionService not available");
+        sendError(session, toInt(ErrorCode::InternalError), "User action service unavailable");
+        return;
+    }
+
+    // Process the notification
+    int delivered_count = user_action_service_->processNotification(
+        request.notification_id(),
+        static_cast<int>(request.action_type()),
+        request.actor_user_id(),
+        request.actor_nickname(),
+        request.actor_profile_image(),
+        request.actor_frame_image(),
+        request.title(),
+        request.content(),
+        request.icon_id(),
+        request.extra_data(),
+        request.target_channel(),
+        request.exclude_actor(),
+        request.admin_token()
+    );
+
+    // Send acknowledgment
+    protocol::UserActionNotificationAck ack;
+    ack.set_notification_id(request.notification_id());
+
+    if (delivered_count >= 0) {
+        ack.set_success(true);
+        ack.set_delivered_count(delivered_count);
+        LOG_INFO("UserAction notification {} processed successfully, delivered to {} local users",
+                 request.notification_id(), delivered_count);
+    } else {
+        ack.set_success(false);
+        ack.set_error_message("Invalid admin token");
+        ack.set_error_code(toInt(ErrorCode::AuthRequired));
+        LOG_WARN("UserAction notification {} rejected: invalid admin token", request.notification_id());
+    }
+
+    Packet ack_packet;
+    ack_packet.type = PacketType::UserActionNotificationAck;
+    std::string ack_data;
+    ack.SerializeToString(&ack_data);
+    ack_packet.data = std::vector<char>(ack_data.begin(), ack_data.end());
+
+    session->send(ack_packet);
 }
 
 // ==========================================

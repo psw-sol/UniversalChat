@@ -320,4 +320,95 @@ namespace UniversalChat.Core
             }
         }
     }
+
+    /// <summary>
+    /// 공지사항 타입
+    /// </summary>
+    public enum AnnouncementType
+    {
+        Normal = 0,
+        Urgent = 1,
+        Maintenance = 2,
+        Event = 3
+    }
+
+    /// <summary>
+    /// 공지사항 메시지 (proto: AnnouncementReceive)
+    /// </summary>
+    [Serializable]
+    public class AnnouncementMessage
+    {
+        public string AnnouncementId { get; set; }
+        public string Content { get; set; }
+        public AnnouncementType Type { get; set; }
+        public string SenderName { get; set; }
+        public int DurationSeconds { get; set; }
+        public string TargetChannel { get; set; }
+        public string ExtraData { get; set; }
+        public long Timestamp { get; set; }
+        public DateTime DateTime => DateTimeOffset.FromUnixTimeMilliseconds(Timestamp).LocalDateTime;
+
+        public AnnouncementMessage() { }
+
+        public AnnouncementMessage(AnnouncementReceive proto)
+        {
+            AnnouncementId = proto.AnnouncementId;
+            Content = proto.Content;
+            Type = (AnnouncementType)proto.Type;
+            SenderName = proto.SenderName;
+            DurationSeconds = proto.DurationSeconds;
+            TargetChannel = proto.TargetChannel;
+            ExtraData = proto.ExtraData;
+            Timestamp = proto.Timestamp;
+        }
+    }
+
+    /// <summary>
+    /// 유저 행동 알림 타입
+    /// </summary>
+    public enum UserActionType
+    {
+        ItemAcquire = 0,       // 레어 아이템 획득
+        RankingBreakthrough = 1, // 랭킹 돌파
+        MissionComplete = 2,   // 최고 미션 달성
+        Achievement = 3,       // 업적 달성
+        Custom = 99            // 커스텀 (게임 정의)
+    }
+
+    /// <summary>
+    /// 유저 행동 알림 메시지 (proto: UserActionNotificationReceive)
+    /// </summary>
+    [Serializable]
+    public class UserActionNotificationMessage
+    {
+        public string NotificationId { get; set; }
+        public UserActionType ActionType { get; set; }
+        public string ActorUserId { get; set; }
+        public string ActorNickname { get; set; }
+        public string ActorProfileImage { get; set; }
+        public string ActorFrameImage { get; set; }
+        public string Title { get; set; }
+        public string Content { get; set; }
+        public string IconId { get; set; }
+        public string ExtraData { get; set; }
+        public long Timestamp { get; set; }
+        public DateTime DateTime => DateTimeOffset.FromUnixTimeMilliseconds(Timestamp).LocalDateTime;
+
+        public UserActionNotificationMessage() { }
+
+        public UserActionNotificationMessage(UserActionNotificationReceive proto)
+        {
+            NotificationId = proto.NotificationId;
+            ActionType = (UserActionType)proto.ActionType;
+            ActorUserId = proto.ActorUserId;
+            ActorNickname = proto.ActorNickname;
+            ActorProfileImage = proto.ActorProfileImage;
+            ActorFrameImage = proto.ActorFrameImage;
+            Title = proto.Title;
+            Content = proto.Content;
+            IconId = proto.IconId;
+            ExtraData = proto.ExtraData;
+            Timestamp = proto.Timestamp;
+        }
+    }
 }

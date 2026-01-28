@@ -5,6 +5,8 @@
 #include "../channel/ChannelManager.hpp"
 #include "../channel/WorldChannelManager.hpp"
 #include "../message/MessageDispatcher.hpp"
+#include "../announcement/AnnouncementService.hpp"
+#include "../notification/UserActionService.hpp"
 #include "../util/Config.hpp"
 #include "../util/Logger.hpp"
 
@@ -91,6 +93,16 @@ Server::Server(const Config& config)
     message_dispatcher_ = std::make_unique<MessageDispatcher>(
         *session_manager_, *channel_manager_, *world_channel_manager_, config);
 
+    // Initialize AnnouncementService
+    announcement_service_ = std::make_shared<AnnouncementService>(
+        *session_manager_, *channel_manager_, config);
+    message_dispatcher_->setAnnouncementService(announcement_service_);
+
+    // Initialize UserActionService
+    user_action_service_ = std::make_shared<UserActionService>(
+        *session_manager_, *channel_manager_, config);
+    message_dispatcher_->setUserActionService(user_action_service_);
+
 #ifdef ENABLE_REDIS
     // Initialize Redis Pub/Sub and Session Registry
     if (redis_client_ && redis_client_->isConnected()) {
@@ -104,6 +116,16 @@ Server::Server(const Config& config)
         // Pass SessionRegistry to SessionManager
         if (session_registry_) {
             session_manager_->setSessionRegistry(session_registry_);
+        }
+
+        // Pass Redis Pub/Sub to AnnouncementService
+        if (pubsub_) {
+            announcement_service_->setRedisPubSub(pubsub_);
+        }
+
+        // Pass Redis Pub/Sub to UserActionService
+        if (pubsub_) {
+            user_action_service_->setRedisPubSub(pubsub_);
         }
     }
 #endif
@@ -354,6 +376,14 @@ void Server::setupPubSubHandlers() {
                 handleIncomingWhisper(channel, message);
                 break;
 
+            case PubSubMessageType::SystemBroadcast:
+                handleIncomingAnnouncement(channel, message);
+                break;
+
+            case PubSubMessageType::UserActionNotification:
+                handleIncomingUserActionNotification(channel, message);
+                break;
+
             // Other message types can be handled here (ChannelMessage, etc.)
             default:
                 LOG_DEBUG("Received Pub/Sub message type {} on channel {}",
@@ -366,6 +396,12 @@ void Server::setupPubSubHandlers() {
     // When a user authenticates, we'll subscribe to their specific whisper channel
     // For now, we use a pattern subscription to catch all whispers routed to this server
     pubsub_->psubscribe("chat:whisper:*");
+
+    // Subscribe to announcement channels for cross-server broadcasting
+    pubsub_->psubscribe("chat:announcement:*");
+
+    // Subscribe to user action notification channels for cross-server broadcasting
+    pubsub_->psubscribe("chat:useraction:*");
 
     // Start listening
     pubsub_->startListening();
@@ -427,6 +463,94 @@ void Server::handleIncomingWhisper(const std::string& channel, const PubSubMessa
 
     LOG_DEBUG("Delivered cross-server whisper from {} to {}",
               message.sender_user_id, target_user_id);
+}
+
+void Server::handleIncomingAnnouncement(const std::string& channel, const PubSubMessage& message) {
+    // Parse announcement payload
+    auto payload_opt = AnnouncementPayload::tryDeserialize(message.payload);
+    if (!payload_opt) {
+        LOG_WARN("Failed to deserialize announcement payload from Pub/Sub");
+        return;
+    }
+
+    const auto& payload = *payload_opt;
+
+    // Check if already processed (deduplication)
+    if (announcement_service_ && announcement_service_->isAlreadyProcessed(payload.announcement_id)) {
+        LOG_DEBUG("Announcement {} already processed, skipping", payload.announcement_id);
+        return;
+    }
+
+    // Mark as processed
+    if (announcement_service_) {
+        announcement_service_->markAsProcessed(payload.announcement_id);
+    }
+
+    // Broadcast to local sessions
+    int delivered = 0;
+    if (announcement_service_) {
+        delivered = announcement_service_->broadcastLocal(
+            payload.announcement_id,
+            payload.content,
+            payload.type,
+            payload.sender_name,
+            payload.duration_seconds,
+            payload.target_channel,
+            payload.extra_data,
+            payload.timestamp
+        );
+    }
+
+    LOG_INFO("Received cross-server announcement {} and delivered to {} local users",
+             payload.announcement_id, delivered);
+}
+
+void Server::handleIncomingUserActionNotification(const std::string& channel, const PubSubMessage& message) {
+    // Parse user action notification payload
+    auto payload_opt = UserActionPayload::tryDeserialize(message.payload);
+    if (!payload_opt) {
+        LOG_WARN("Failed to deserialize user action notification payload from Pub/Sub");
+        return;
+    }
+
+    const auto& payload = *payload_opt;
+
+    // Check if already processed (deduplication)
+    if (user_action_service_ && user_action_service_->isAlreadyProcessed(payload.notification_id)) {
+        LOG_DEBUG("UserAction notification {} already processed, skipping", payload.notification_id);
+        return;
+    }
+
+    // Mark as processed
+    if (user_action_service_) {
+        user_action_service_->markAsProcessed(payload.notification_id);
+    }
+
+    // Determine exclude_user_id based on exclude_actor flag
+    std::string exclude_user_id = payload.exclude_actor ? payload.actor_user_id : "";
+
+    // Broadcast to local sessions
+    int delivered = 0;
+    if (user_action_service_) {
+        delivered = user_action_service_->broadcastLocal(
+            payload.notification_id,
+            payload.action_type,
+            payload.actor_user_id,
+            payload.actor_nickname,
+            payload.actor_profile_image,
+            payload.actor_frame_image,
+            payload.title,
+            payload.content,
+            payload.icon_id,
+            payload.extra_data,
+            payload.target_channel,
+            exclude_user_id,
+            payload.timestamp
+        );
+    }
+
+    LOG_INFO("Received cross-server user action notification {} and delivered to {} local users",
+             payload.notification_id, delivered);
 }
 
 void Server::cleanupRedisOnShutdown() {

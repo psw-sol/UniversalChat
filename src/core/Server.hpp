@@ -17,6 +17,8 @@ class ChannelManager;
 class WorldChannelManager;
 class MessageDispatcher;
 class Session;
+class AnnouncementService;
+class UserActionService;
 
 #ifdef ENABLE_REDIS
 class RedisClient;
@@ -81,6 +83,8 @@ private:
     std::unique_ptr<ChannelManager> channel_manager_;
     std::unique_ptr<WorldChannelManager> world_channel_manager_;
     std::unique_ptr<MessageDispatcher> message_dispatcher_;
+    std::shared_ptr<AnnouncementService> announcement_service_;
+    std::shared_ptr<UserActionService> user_action_service_;
 #ifdef ENABLE_REDIS
     std::shared_ptr<RedisClient> redis_client_;
     std::shared_ptr<RedisPubSub> pubsub_;
@@ -90,6 +94,8 @@ private:
     void initializeRedisPubSub();
     void setupPubSubHandlers();
     void handleIncomingWhisper(const std::string& channel, const class PubSubMessage& message);
+    void handleIncomingAnnouncement(const std::string& channel, const class PubSubMessage& message);
+    void handleIncomingUserActionNotification(const std::string& channel, const class PubSubMessage& message);
     void cleanupRedisOnShutdown();
 #endif
 

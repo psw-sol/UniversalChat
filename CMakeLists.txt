@@ -46,6 +46,14 @@ set(MESSAGE_SOURCES
     src/message/MessageDispatcher.cpp
 )
 
+set(ANNOUNCEMENT_SOURCES
+    src/announcement/AnnouncementService.cpp
+)
+
+set(NOTIFICATION_SOURCES
+    src/notification/UserActionService.cpp
+)
+
 set(PROTOCOL_SOURCES
     src/protocol/PacketCodec.cpp
 )
@@ -62,6 +70,8 @@ set(ALL_SOURCES
     ${CORE_SOURCES}
     ${CHANNEL_SOURCES}
     ${MESSAGE_SOURCES}
+    ${ANNOUNCEMENT_SOURCES}
+    ${NOTIFICATION_SOURCES}
     ${PROTOCOL_SOURCES}
     ${UTIL_SOURCES}
     ${PROTO_SRCS}

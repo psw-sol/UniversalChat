@@ -67,6 +67,8 @@ namespace UniversalChat.Core
         public event Action<List<ChannelInfo>> OnChannelListUpdated;
         public event Action<string, List<UserInfo>> OnUserListUpdated;
         public event Action<bool, string, string> OnChannelAutoAssigned; // success, channelId, errorMessage
+        public event Action<AnnouncementMessage> OnAnnouncementReceived;
+        public event Action<UserActionNotificationMessage> OnUserActionNotificationReceived;
 
         #endregion
 
@@ -155,6 +157,8 @@ namespace UniversalChat.Core
             _client.OnChannelListReceived += HandleChannelListReceived;
             _client.OnMemberUpdated += HandleMemberUpdated;
             _client.OnChannelAutoAssigned += HandleChannelAutoAssigned;
+            _client.OnAnnouncementReceived += HandleAnnouncementReceived;
+            _client.OnUserActionNotificationReceived += HandleUserActionNotificationReceived;
         }
 
         private void Cleanup()
@@ -171,6 +175,8 @@ namespace UniversalChat.Core
                 _client.OnChannelListReceived -= HandleChannelListReceived;
                 _client.OnMemberUpdated -= HandleMemberUpdated;
                 _client.OnChannelAutoAssigned -= HandleChannelAutoAssigned;
+                _client.OnAnnouncementReceived -= HandleAnnouncementReceived;
+                _client.OnUserActionNotificationReceived -= HandleUserActionNotificationReceived;
 
                 _client.Dispose();
                 _client = null;
@@ -436,6 +442,20 @@ namespace UniversalChat.Core
                 OnChannelAutoAssigned?.Invoke(false, null, response.ErrorMessage);
                 OnError?.Invoke(response.ErrorMessage ?? "Auto-assign failed");
             }
+        }
+
+        private void HandleAnnouncementReceived(AnnouncementReceive protoAnnouncement)
+        {
+            var announcement = new AnnouncementMessage(protoAnnouncement);
+            Log($"[Announcement] [{announcement.Type}] {announcement.SenderName}: {announcement.Content}");
+            OnAnnouncementReceived?.Invoke(announcement);
+        }
+
+        private void HandleUserActionNotificationReceived(UserActionNotificationReceive protoNotification)
+        {
+            var notification = new UserActionNotificationMessage(protoNotification);
+            Log($"[UserAction] [{notification.ActionType}] {notification.ActorNickname}: {notification.Title} - {notification.Content}");
+            OnUserActionNotificationReceived?.Invoke(notification);
         }
 
         #endregion
