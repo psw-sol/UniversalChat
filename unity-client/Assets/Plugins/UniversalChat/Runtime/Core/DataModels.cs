@@ -357,7 +357,7 @@ namespace UniversalChat.Core
             Type = (AnnouncementType)proto.Type;
             SenderName = proto.SenderName;
             DurationSeconds = proto.DurationSeconds;
-            TargetChannel = proto.TargetChannel;
+            // TargetChannel is not in proto, keep default
             ExtraData = proto.ExtraData;
             Timestamp = proto.Timestamp;
         }

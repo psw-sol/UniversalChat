@@ -8,6 +8,9 @@
     "documentationUrl": "https://github.com/your-repo/universalchat",
     "changelogUrl": "https://github.com/your-repo/universalchat/releases",
     "licensesUrl": "https://github.com/your-repo/universalchat/blob/main/LICENSE",
+    "dependencies": {
+        "com.unity.textmeshpro": "3.0.6"
+    },
     "keywords": [
         "chat",
         "networking",

@@ -102,16 +102,36 @@ namespace Chat.Protocol {
             "eHRyYV9kYXRhGAcgASgJIn8KD0Fubm91bmNlbWVudEFjaxIPCgdzdWNjZXNz",
             "GAEgASgIEhcKD2Fubm91bmNlbWVudF9pZBgCIAEoCRIXCg9kZWxpdmVyZWRf",
             "Y291bnQYAyABKAUSFQoNZXJyb3JfbWVzc2FnZRgEIAEoCRISCgplcnJvcl9j",
-            "b2RlGAUgASgFIkMKBUVycm9yEhIKCmVycm9yX2NvZGUYASABKAUSFQoNZXJy",
-            "b3JfbWVzc2FnZRgCIAEoCRIPCgdkZXRhaWxzGAMgASgJKjkKC01lc3NhZ2VU",
-            "eXBlEggKBFRFWFQQABIKCgZTWVNURU0QARIJCgVFTU9URRACEgkKBUlNQUdF",
-            "EAMqegoQQW5ub3VuY2VtZW50VHlwZRIXChNBTk5PVU5DRU1FTlRfTk9STUFM",
-            "EAASFwoTQU5OT1VOQ0VNRU5UX1VSR0VOVBABEhwKGEFOTk9VTkNFTUVOVF9N",
-            "QUlOVEVOQU5DRRACEhYKEkFOTk9VTkNFTUVOVF9FVkVOVBADQgVIAfgBAWIG",
-            "cHJvdG8z"));
+            "b2RlGAUgASgFItkCChpVc2VyQWN0aW9uTm90aWZpY2F0aW9uU2VuZBIXCg9u",
+            "b3RpZmljYXRpb25faWQYASABKAkSMgoLYWN0aW9uX3R5cGUYAiABKA4yHS5j",
+            "aGF0LnByb3RvY29sLlVzZXJBY3Rpb25UeXBlEhUKDWFjdG9yX3VzZXJfaWQY",
+            "AyABKAkSFgoOYWN0b3Jfbmlja25hbWUYBCABKAkSGwoTYWN0b3JfcHJvZmls",
+            "ZV9pbWFnZRgFIAEoCRIZChFhY3Rvcl9mcmFtZV9pbWFnZRgGIAEoCRINCgV0",
+            "aXRsZRgHIAEoCRIPCgdjb250ZW50GAggASgJEg8KB2ljb25faWQYCSABKAkS",
+            "EgoKZXh0cmFfZGF0YRgKIAEoCRIWCg50YXJnZXRfY2hhbm5lbBgLIAEoCRIV",
+            "Cg1leGNsdWRlX2FjdG9yGAwgASgIEhMKC2FkbWluX3Rva2VuGA0gASgJIqsC",
+            "Ch1Vc2VyQWN0aW9uTm90aWZpY2F0aW9uUmVjZWl2ZRIXCg9ub3RpZmljYXRp",
+            "b25faWQYASABKAkSMgoLYWN0aW9uX3R5cGUYAiABKA4yHS5jaGF0LnByb3Rv",
+            "Y29sLlVzZXJBY3Rpb25UeXBlEhUKDWFjdG9yX3VzZXJfaWQYAyABKAkSFgoO",
+            "YWN0b3Jfbmlja25hbWUYBCABKAkSGwoTYWN0b3JfcHJvZmlsZV9pbWFnZRgF",
+            "IAEoCRIZChFhY3Rvcl9mcmFtZV9pbWFnZRgGIAEoCRINCgV0aXRsZRgHIAEo",
+            "CRIPCgdjb250ZW50GAggASgJEg8KB2ljb25faWQYCSABKAkSEgoKZXh0cmFf",
+            "ZGF0YRgKIAEoCRIRCgl0aW1lc3RhbXAYCyABKAMiiQEKGVVzZXJBY3Rpb25O",
+            "b3RpZmljYXRpb25BY2sSDwoHc3VjY2VzcxgBIAEoCBIXCg9ub3RpZmljYXRp",
+            "b25faWQYAiABKAkSFwoPZGVsaXZlcmVkX2NvdW50GAMgASgFEhUKDWVycm9y",
+            "X21lc3NhZ2UYBCABKAkSEgoKZXJyb3JfY29kZRgFIAEoBSJDCgVFcnJvchIS",
+            "CgplcnJvcl9jb2RlGAEgASgFEhUKDWVycm9yX21lc3NhZ2UYAiABKAkSDwoH",
+            "ZGV0YWlscxgDIAEoCSo5CgtNZXNzYWdlVHlwZRIICgRURVhUEAASCgoGU1lT",
+            "VEVNEAESCQoFRU1PVEUQAhIJCgVJTUFHRRADKnoKEEFubm91bmNlbWVudFR5",
+            "cGUSFwoTQU5OT1VOQ0VNRU5UX05PUk1BTBAAEhcKE0FOTk9VTkNFTUVOVF9V",
+            "UkdFTlQQARIcChhBTk5PVU5DRU1FTlRfTUFJTlRFTkFOQ0UQAhIWChJBTk5P",
+            "VU5DRU1FTlRfRVZFTlQQAyqSAQoOVXNlckFjdGlvblR5cGUSFwoTQUNUSU9O",
+            "X0lURU1fQUNRVUlSRRAAEh8KG0FDVElPTl9SQU5LSU5HX0JSRUFLVEhST1VH",
+            "SBABEhsKF0FDVElPTl9NSVNTSU9OX0NPTVBMRVRFEAISFgoSQUNUSU9OX0FD",
+            "SElFVkVNRU5UEAMSEQoNQUNUSU9OX0NVU1RPTRBjQgVIAfgBAWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Chat.Protocol.MessageType), typeof(global::Chat.Protocol.AnnouncementType), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Chat.Protocol.MessageType), typeof(global::Chat.Protocol.AnnouncementType), typeof(global::Chat.Protocol.UserActionType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.UserInfo), global::Chat.Protocol.UserInfo.Parser, new[]{ "UserId", "Nickname", "ProfileImage", "FrameImage", "ExtraData", "JoinedAt" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.ChannelInfo), global::Chat.Protocol.ChannelInfo.Parser, new[]{ "ChannelId", "ChannelName", "MemberCount", "MaxMembers", "IsSystem" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.ChatMessageData), global::Chat.Protocol.ChatMessageData.Parser, new[]{ "MessageId", "ChannelId", "SenderId", "SenderNickname", "SenderProfileImage", "SenderFrameImage", "SenderExtraData", "Content", "Timestamp", "MessageType" }, null, null, null, null),
@@ -140,6 +160,9 @@ namespace Chat.Protocol {
             new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.AnnouncementSend), global::Chat.Protocol.AnnouncementSend.Parser, new[]{ "AnnouncementId", "Content", "Type", "SenderName", "DurationSeconds", "TargetChannel", "AdminToken", "ExtraData" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.AnnouncementReceive), global::Chat.Protocol.AnnouncementReceive.Parser, new[]{ "AnnouncementId", "Content", "Type", "SenderName", "DurationSeconds", "Timestamp", "ExtraData" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.AnnouncementAck), global::Chat.Protocol.AnnouncementAck.Parser, new[]{ "Success", "AnnouncementId", "DeliveredCount", "ErrorMessage", "ErrorCode" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.UserActionNotificationSend), global::Chat.Protocol.UserActionNotificationSend.Parser, new[]{ "NotificationId", "ActionType", "ActorUserId", "ActorNickname", "ActorProfileImage", "ActorFrameImage", "Title", "Content", "IconId", "ExtraData", "TargetChannel", "ExcludeActor", "AdminToken" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.UserActionNotificationReceive), global::Chat.Protocol.UserActionNotificationReceive.Parser, new[]{ "NotificationId", "ActionType", "ActorUserId", "ActorNickname", "ActorProfileImage", "ActorFrameImage", "Title", "Content", "IconId", "ExtraData", "Timestamp" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.UserActionNotificationAck), global::Chat.Protocol.UserActionNotificationAck.Parser, new[]{ "Success", "NotificationId", "DeliveredCount", "ErrorMessage", "ErrorCode" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.Error), global::Chat.Protocol.Error.Parser, new[]{ "ErrorCode", "ErrorMessage", "Details" }, null, null, null, null)
           }));
     }
@@ -171,6 +194,29 @@ namespace Chat.Protocol {
     /// 이벤트 공지
     /// </summary>
     [pbr::OriginalName("ANNOUNCEMENT_EVENT")] AnnouncementEvent = 3,
+  }
+
+  public enum UserActionType {
+    /// <summary>
+    /// 레어 아이템 획득
+    /// </summary>
+    [pbr::OriginalName("ACTION_ITEM_ACQUIRE")] ActionItemAcquire = 0,
+    /// <summary>
+    /// 랭킹 돌파
+    /// </summary>
+    [pbr::OriginalName("ACTION_RANKING_BREAKTHROUGH")] ActionRankingBreakthrough = 1,
+    /// <summary>
+    /// 최고 미션 달성
+    /// </summary>
+    [pbr::OriginalName("ACTION_MISSION_COMPLETE")] ActionMissionComplete = 2,
+    /// <summary>
+    /// 업적 달성
+    /// </summary>
+    [pbr::OriginalName("ACTION_ACHIEVEMENT")] ActionAchievement = 3,
+    /// <summary>
+    /// 커스텀 (게임 정의)
+    /// </summary>
+    [pbr::OriginalName("ACTION_CUSTOM")] ActionCustom = 99,
   }
 
   #endregion
@@ -8341,6 +8387,1512 @@ namespace Chat.Protocol {
   }
 
   /// <summary>
+  /// 0x0701 - UserActionNotificationSend (게임서버 -> 채팅서버)
+  /// </summary>
+  public sealed partial class UserActionNotificationSend : pb::IMessage<UserActionNotificationSend>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<UserActionNotificationSend> _parser = new pb::MessageParser<UserActionNotificationSend>(() => new UserActionNotificationSend());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<UserActionNotificationSend> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[28]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public UserActionNotificationSend() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public UserActionNotificationSend(UserActionNotificationSend other) : this() {
+      notificationId_ = other.notificationId_;
+      actionType_ = other.actionType_;
+      actorUserId_ = other.actorUserId_;
+      actorNickname_ = other.actorNickname_;
+      actorProfileImage_ = other.actorProfileImage_;
+      actorFrameImage_ = other.actorFrameImage_;
+      title_ = other.title_;
+      content_ = other.content_;
+      iconId_ = other.iconId_;
+      extraData_ = other.extraData_;
+      targetChannel_ = other.targetChannel_;
+      excludeActor_ = other.excludeActor_;
+      adminToken_ = other.adminToken_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public UserActionNotificationSend Clone() {
+      return new UserActionNotificationSend(this);
+    }
+
+    /// <summary>Field number for the "notification_id" field.</summary>
+    public const int NotificationIdFieldNumber = 1;
+    private string notificationId_ = "";
+    /// <summary>
+    /// 고유 ID (중복 방지)
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string NotificationId {
+      get { return notificationId_; }
+      set {
+        notificationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "action_type" field.</summary>
+    public const int ActionTypeFieldNumber = 2;
+    private global::Chat.Protocol.UserActionType actionType_ = global::Chat.Protocol.UserActionType.ActionItemAcquire;
+    /// <summary>
+    /// 행동 타입
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Chat.Protocol.UserActionType ActionType {
+      get { return actionType_; }
+      set {
+        actionType_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "actor_user_id" field.</summary>
+    public const int ActorUserIdFieldNumber = 3;
+    private string actorUserId_ = "";
+    /// <summary>
+    /// 행동 주체 정보
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ActorUserId {
+      get { return actorUserId_; }
+      set {
+        actorUserId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "actor_nickname" field.</summary>
+    public const int ActorNicknameFieldNumber = 4;
+    private string actorNickname_ = "";
+    /// <summary>
+    /// 행동한 유저 닉네임
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ActorNickname {
+      get { return actorNickname_; }
+      set {
+        actorNickname_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "actor_profile_image" field.</summary>
+    public const int ActorProfileImageFieldNumber = 5;
+    private string actorProfileImage_ = "";
+    /// <summary>
+    /// 프로필 이미지
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ActorProfileImage {
+      get { return actorProfileImage_; }
+      set {
+        actorProfileImage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "actor_frame_image" field.</summary>
+    public const int ActorFrameImageFieldNumber = 6;
+    private string actorFrameImage_ = "";
+    /// <summary>
+    /// 프레임 이미지
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ActorFrameImage {
+      get { return actorFrameImage_; }
+      set {
+        actorFrameImage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "title" field.</summary>
+    public const int TitleFieldNumber = 7;
+    private string title_ = "";
+    /// <summary>
+    /// 알림 내용
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Title {
+      get { return title_; }
+      set {
+        title_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "content" field.</summary>
+    public const int ContentFieldNumber = 8;
+    private string content_ = "";
+    /// <summary>
+    /// 내용 (채팅 메시지)
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Content {
+      get { return content_; }
+      set {
+        content_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "icon_id" field.</summary>
+    public const int IconIdFieldNumber = 9;
+    private string iconId_ = "";
+    /// <summary>
+    /// 아이콘 ID (아이템 아이콘 등)
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string IconId {
+      get { return iconId_; }
+      set {
+        iconId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "extra_data" field.</summary>
+    public const int ExtraDataFieldNumber = 10;
+    private string extraData_ = "";
+    /// <summary>
+    /// 추가 데이터 (JSON)
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ExtraData {
+      get { return extraData_; }
+      set {
+        extraData_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "target_channel" field.</summary>
+    public const int TargetChannelFieldNumber = 11;
+    private string targetChannel_ = "";
+    /// <summary>
+    /// 대상 설정
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string TargetChannel {
+      get { return targetChannel_; }
+      set {
+        targetChannel_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "exclude_actor" field.</summary>
+    public const int ExcludeActorFieldNumber = 12;
+    private bool excludeActor_;
+    /// <summary>
+    /// 행동 주체 제외 여부
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool ExcludeActor {
+      get { return excludeActor_; }
+      set {
+        excludeActor_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "admin_token" field.</summary>
+    public const int AdminTokenFieldNumber = 13;
+    private string adminToken_ = "";
+    /// <summary>
+    /// 인증
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string AdminToken {
+      get { return adminToken_; }
+      set {
+        adminToken_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as UserActionNotificationSend);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(UserActionNotificationSend other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (NotificationId != other.NotificationId) return false;
+      if (ActionType != other.ActionType) return false;
+      if (ActorUserId != other.ActorUserId) return false;
+      if (ActorNickname != other.ActorNickname) return false;
+      if (ActorProfileImage != other.ActorProfileImage) return false;
+      if (ActorFrameImage != other.ActorFrameImage) return false;
+      if (Title != other.Title) return false;
+      if (Content != other.Content) return false;
+      if (IconId != other.IconId) return false;
+      if (ExtraData != other.ExtraData) return false;
+      if (TargetChannel != other.TargetChannel) return false;
+      if (ExcludeActor != other.ExcludeActor) return false;
+      if (AdminToken != other.AdminToken) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (NotificationId.Length != 0) hash ^= NotificationId.GetHashCode();
+      if (ActionType != global::Chat.Protocol.UserActionType.ActionItemAcquire) hash ^= ActionType.GetHashCode();
+      if (ActorUserId.Length != 0) hash ^= ActorUserId.GetHashCode();
+      if (ActorNickname.Length != 0) hash ^= ActorNickname.GetHashCode();
+      if (ActorProfileImage.Length != 0) hash ^= ActorProfileImage.GetHashCode();
+      if (ActorFrameImage.Length != 0) hash ^= ActorFrameImage.GetHashCode();
+      if (Title.Length != 0) hash ^= Title.GetHashCode();
+      if (Content.Length != 0) hash ^= Content.GetHashCode();
+      if (IconId.Length != 0) hash ^= IconId.GetHashCode();
+      if (ExtraData.Length != 0) hash ^= ExtraData.GetHashCode();
+      if (TargetChannel.Length != 0) hash ^= TargetChannel.GetHashCode();
+      if (ExcludeActor != false) hash ^= ExcludeActor.GetHashCode();
+      if (AdminToken.Length != 0) hash ^= AdminToken.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (NotificationId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(NotificationId);
+      }
+      if (ActionType != global::Chat.Protocol.UserActionType.ActionItemAcquire) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) ActionType);
+      }
+      if (ActorUserId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ActorUserId);
+      }
+      if (ActorNickname.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(ActorNickname);
+      }
+      if (ActorProfileImage.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(ActorProfileImage);
+      }
+      if (ActorFrameImage.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(ActorFrameImage);
+      }
+      if (Title.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Title);
+      }
+      if (Content.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(Content);
+      }
+      if (IconId.Length != 0) {
+        output.WriteRawTag(74);
+        output.WriteString(IconId);
+      }
+      if (ExtraData.Length != 0) {
+        output.WriteRawTag(82);
+        output.WriteString(ExtraData);
+      }
+      if (TargetChannel.Length != 0) {
+        output.WriteRawTag(90);
+        output.WriteString(TargetChannel);
+      }
+      if (ExcludeActor != false) {
+        output.WriteRawTag(96);
+        output.WriteBool(ExcludeActor);
+      }
+      if (AdminToken.Length != 0) {
+        output.WriteRawTag(106);
+        output.WriteString(AdminToken);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (NotificationId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(NotificationId);
+      }
+      if (ActionType != global::Chat.Protocol.UserActionType.ActionItemAcquire) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) ActionType);
+      }
+      if (ActorUserId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ActorUserId);
+      }
+      if (ActorNickname.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(ActorNickname);
+      }
+      if (ActorProfileImage.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(ActorProfileImage);
+      }
+      if (ActorFrameImage.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(ActorFrameImage);
+      }
+      if (Title.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Title);
+      }
+      if (Content.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(Content);
+      }
+      if (IconId.Length != 0) {
+        output.WriteRawTag(74);
+        output.WriteString(IconId);
+      }
+      if (ExtraData.Length != 0) {
+        output.WriteRawTag(82);
+        output.WriteString(ExtraData);
+      }
+      if (TargetChannel.Length != 0) {
+        output.WriteRawTag(90);
+        output.WriteString(TargetChannel);
+      }
+      if (ExcludeActor != false) {
+        output.WriteRawTag(96);
+        output.WriteBool(ExcludeActor);
+      }
+      if (AdminToken.Length != 0) {
+        output.WriteRawTag(106);
+        output.WriteString(AdminToken);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (NotificationId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(NotificationId);
+      }
+      if (ActionType != global::Chat.Protocol.UserActionType.ActionItemAcquire) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) ActionType);
+      }
+      if (ActorUserId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ActorUserId);
+      }
+      if (ActorNickname.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ActorNickname);
+      }
+      if (ActorProfileImage.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ActorProfileImage);
+      }
+      if (ActorFrameImage.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ActorFrameImage);
+      }
+      if (Title.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Title);
+      }
+      if (Content.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Content);
+      }
+      if (IconId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(IconId);
+      }
+      if (ExtraData.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ExtraData);
+      }
+      if (TargetChannel.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(TargetChannel);
+      }
+      if (ExcludeActor != false) {
+        size += 1 + 1;
+      }
+      if (AdminToken.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(AdminToken);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(UserActionNotificationSend other) {
+      if (other == null) {
+        return;
+      }
+      if (other.NotificationId.Length != 0) {
+        NotificationId = other.NotificationId;
+      }
+      if (other.ActionType != global::Chat.Protocol.UserActionType.ActionItemAcquire) {
+        ActionType = other.ActionType;
+      }
+      if (other.ActorUserId.Length != 0) {
+        ActorUserId = other.ActorUserId;
+      }
+      if (other.ActorNickname.Length != 0) {
+        ActorNickname = other.ActorNickname;
+      }
+      if (other.ActorProfileImage.Length != 0) {
+        ActorProfileImage = other.ActorProfileImage;
+      }
+      if (other.ActorFrameImage.Length != 0) {
+        ActorFrameImage = other.ActorFrameImage;
+      }
+      if (other.Title.Length != 0) {
+        Title = other.Title;
+      }
+      if (other.Content.Length != 0) {
+        Content = other.Content;
+      }
+      if (other.IconId.Length != 0) {
+        IconId = other.IconId;
+      }
+      if (other.ExtraData.Length != 0) {
+        ExtraData = other.ExtraData;
+      }
+      if (other.TargetChannel.Length != 0) {
+        TargetChannel = other.TargetChannel;
+      }
+      if (other.ExcludeActor != false) {
+        ExcludeActor = other.ExcludeActor;
+      }
+      if (other.AdminToken.Length != 0) {
+        AdminToken = other.AdminToken;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            NotificationId = input.ReadString();
+            break;
+          }
+          case 16: {
+            ActionType = (global::Chat.Protocol.UserActionType) input.ReadEnum();
+            break;
+          }
+          case 26: {
+            ActorUserId = input.ReadString();
+            break;
+          }
+          case 34: {
+            ActorNickname = input.ReadString();
+            break;
+          }
+          case 42: {
+            ActorProfileImage = input.ReadString();
+            break;
+          }
+          case 50: {
+            ActorFrameImage = input.ReadString();
+            break;
+          }
+          case 58: {
+            Title = input.ReadString();
+            break;
+          }
+          case 66: {
+            Content = input.ReadString();
+            break;
+          }
+          case 74: {
+            IconId = input.ReadString();
+            break;
+          }
+          case 82: {
+            ExtraData = input.ReadString();
+            break;
+          }
+          case 90: {
+            TargetChannel = input.ReadString();
+            break;
+          }
+          case 96: {
+            ExcludeActor = input.ReadBool();
+            break;
+          }
+          case 106: {
+            AdminToken = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            NotificationId = input.ReadString();
+            break;
+          }
+          case 16: {
+            ActionType = (global::Chat.Protocol.UserActionType) input.ReadEnum();
+            break;
+          }
+          case 26: {
+            ActorUserId = input.ReadString();
+            break;
+          }
+          case 34: {
+            ActorNickname = input.ReadString();
+            break;
+          }
+          case 42: {
+            ActorProfileImage = input.ReadString();
+            break;
+          }
+          case 50: {
+            ActorFrameImage = input.ReadString();
+            break;
+          }
+          case 58: {
+            Title = input.ReadString();
+            break;
+          }
+          case 66: {
+            Content = input.ReadString();
+            break;
+          }
+          case 74: {
+            IconId = input.ReadString();
+            break;
+          }
+          case 82: {
+            ExtraData = input.ReadString();
+            break;
+          }
+          case 90: {
+            TargetChannel = input.ReadString();
+            break;
+          }
+          case 96: {
+            ExcludeActor = input.ReadBool();
+            break;
+          }
+          case 106: {
+            AdminToken = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 0x0702 - UserActionNotificationReceive (채팅서버 -> 클라이언트)
+  /// </summary>
+  public sealed partial class UserActionNotificationReceive : pb::IMessage<UserActionNotificationReceive>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<UserActionNotificationReceive> _parser = new pb::MessageParser<UserActionNotificationReceive>(() => new UserActionNotificationReceive());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<UserActionNotificationReceive> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[29]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public UserActionNotificationReceive() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public UserActionNotificationReceive(UserActionNotificationReceive other) : this() {
+      notificationId_ = other.notificationId_;
+      actionType_ = other.actionType_;
+      actorUserId_ = other.actorUserId_;
+      actorNickname_ = other.actorNickname_;
+      actorProfileImage_ = other.actorProfileImage_;
+      actorFrameImage_ = other.actorFrameImage_;
+      title_ = other.title_;
+      content_ = other.content_;
+      iconId_ = other.iconId_;
+      extraData_ = other.extraData_;
+      timestamp_ = other.timestamp_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public UserActionNotificationReceive Clone() {
+      return new UserActionNotificationReceive(this);
+    }
+
+    /// <summary>Field number for the "notification_id" field.</summary>
+    public const int NotificationIdFieldNumber = 1;
+    private string notificationId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string NotificationId {
+      get { return notificationId_; }
+      set {
+        notificationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "action_type" field.</summary>
+    public const int ActionTypeFieldNumber = 2;
+    private global::Chat.Protocol.UserActionType actionType_ = global::Chat.Protocol.UserActionType.ActionItemAcquire;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Chat.Protocol.UserActionType ActionType {
+      get { return actionType_; }
+      set {
+        actionType_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "actor_user_id" field.</summary>
+    public const int ActorUserIdFieldNumber = 3;
+    private string actorUserId_ = "";
+    /// <summary>
+    /// 행동 주체 정보
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ActorUserId {
+      get { return actorUserId_; }
+      set {
+        actorUserId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "actor_nickname" field.</summary>
+    public const int ActorNicknameFieldNumber = 4;
+    private string actorNickname_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ActorNickname {
+      get { return actorNickname_; }
+      set {
+        actorNickname_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "actor_profile_image" field.</summary>
+    public const int ActorProfileImageFieldNumber = 5;
+    private string actorProfileImage_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ActorProfileImage {
+      get { return actorProfileImage_; }
+      set {
+        actorProfileImage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "actor_frame_image" field.</summary>
+    public const int ActorFrameImageFieldNumber = 6;
+    private string actorFrameImage_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ActorFrameImage {
+      get { return actorFrameImage_; }
+      set {
+        actorFrameImage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "title" field.</summary>
+    public const int TitleFieldNumber = 7;
+    private string title_ = "";
+    /// <summary>
+    /// 알림 내용
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Title {
+      get { return title_; }
+      set {
+        title_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "content" field.</summary>
+    public const int ContentFieldNumber = 8;
+    private string content_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Content {
+      get { return content_; }
+      set {
+        content_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "icon_id" field.</summary>
+    public const int IconIdFieldNumber = 9;
+    private string iconId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string IconId {
+      get { return iconId_; }
+      set {
+        iconId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "extra_data" field.</summary>
+    public const int ExtraDataFieldNumber = 10;
+    private string extraData_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ExtraData {
+      get { return extraData_; }
+      set {
+        extraData_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "timestamp" field.</summary>
+    public const int TimestampFieldNumber = 11;
+    private long timestamp_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long Timestamp {
+      get { return timestamp_; }
+      set {
+        timestamp_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as UserActionNotificationReceive);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(UserActionNotificationReceive other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (NotificationId != other.NotificationId) return false;
+      if (ActionType != other.ActionType) return false;
+      if (ActorUserId != other.ActorUserId) return false;
+      if (ActorNickname != other.ActorNickname) return false;
+      if (ActorProfileImage != other.ActorProfileImage) return false;
+      if (ActorFrameImage != other.ActorFrameImage) return false;
+      if (Title != other.Title) return false;
+      if (Content != other.Content) return false;
+      if (IconId != other.IconId) return false;
+      if (ExtraData != other.ExtraData) return false;
+      if (Timestamp != other.Timestamp) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (NotificationId.Length != 0) hash ^= NotificationId.GetHashCode();
+      if (ActionType != global::Chat.Protocol.UserActionType.ActionItemAcquire) hash ^= ActionType.GetHashCode();
+      if (ActorUserId.Length != 0) hash ^= ActorUserId.GetHashCode();
+      if (ActorNickname.Length != 0) hash ^= ActorNickname.GetHashCode();
+      if (ActorProfileImage.Length != 0) hash ^= ActorProfileImage.GetHashCode();
+      if (ActorFrameImage.Length != 0) hash ^= ActorFrameImage.GetHashCode();
+      if (Title.Length != 0) hash ^= Title.GetHashCode();
+      if (Content.Length != 0) hash ^= Content.GetHashCode();
+      if (IconId.Length != 0) hash ^= IconId.GetHashCode();
+      if (ExtraData.Length != 0) hash ^= ExtraData.GetHashCode();
+      if (Timestamp != 0L) hash ^= Timestamp.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (NotificationId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(NotificationId);
+      }
+      if (ActionType != global::Chat.Protocol.UserActionType.ActionItemAcquire) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) ActionType);
+      }
+      if (ActorUserId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ActorUserId);
+      }
+      if (ActorNickname.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(ActorNickname);
+      }
+      if (ActorProfileImage.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(ActorProfileImage);
+      }
+      if (ActorFrameImage.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(ActorFrameImage);
+      }
+      if (Title.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Title);
+      }
+      if (Content.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(Content);
+      }
+      if (IconId.Length != 0) {
+        output.WriteRawTag(74);
+        output.WriteString(IconId);
+      }
+      if (ExtraData.Length != 0) {
+        output.WriteRawTag(82);
+        output.WriteString(ExtraData);
+      }
+      if (Timestamp != 0L) {
+        output.WriteRawTag(88);
+        output.WriteInt64(Timestamp);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (NotificationId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(NotificationId);
+      }
+      if (ActionType != global::Chat.Protocol.UserActionType.ActionItemAcquire) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) ActionType);
+      }
+      if (ActorUserId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ActorUserId);
+      }
+      if (ActorNickname.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(ActorNickname);
+      }
+      if (ActorProfileImage.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(ActorProfileImage);
+      }
+      if (ActorFrameImage.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(ActorFrameImage);
+      }
+      if (Title.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Title);
+      }
+      if (Content.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(Content);
+      }
+      if (IconId.Length != 0) {
+        output.WriteRawTag(74);
+        output.WriteString(IconId);
+      }
+      if (ExtraData.Length != 0) {
+        output.WriteRawTag(82);
+        output.WriteString(ExtraData);
+      }
+      if (Timestamp != 0L) {
+        output.WriteRawTag(88);
+        output.WriteInt64(Timestamp);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (NotificationId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(NotificationId);
+      }
+      if (ActionType != global::Chat.Protocol.UserActionType.ActionItemAcquire) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) ActionType);
+      }
+      if (ActorUserId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ActorUserId);
+      }
+      if (ActorNickname.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ActorNickname);
+      }
+      if (ActorProfileImage.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ActorProfileImage);
+      }
+      if (ActorFrameImage.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ActorFrameImage);
+      }
+      if (Title.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Title);
+      }
+      if (Content.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Content);
+      }
+      if (IconId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(IconId);
+      }
+      if (ExtraData.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ExtraData);
+      }
+      if (Timestamp != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(Timestamp);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(UserActionNotificationReceive other) {
+      if (other == null) {
+        return;
+      }
+      if (other.NotificationId.Length != 0) {
+        NotificationId = other.NotificationId;
+      }
+      if (other.ActionType != global::Chat.Protocol.UserActionType.ActionItemAcquire) {
+        ActionType = other.ActionType;
+      }
+      if (other.ActorUserId.Length != 0) {
+        ActorUserId = other.ActorUserId;
+      }
+      if (other.ActorNickname.Length != 0) {
+        ActorNickname = other.ActorNickname;
+      }
+      if (other.ActorProfileImage.Length != 0) {
+        ActorProfileImage = other.ActorProfileImage;
+      }
+      if (other.ActorFrameImage.Length != 0) {
+        ActorFrameImage = other.ActorFrameImage;
+      }
+      if (other.Title.Length != 0) {
+        Title = other.Title;
+      }
+      if (other.Content.Length != 0) {
+        Content = other.Content;
+      }
+      if (other.IconId.Length != 0) {
+        IconId = other.IconId;
+      }
+      if (other.ExtraData.Length != 0) {
+        ExtraData = other.ExtraData;
+      }
+      if (other.Timestamp != 0L) {
+        Timestamp = other.Timestamp;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            NotificationId = input.ReadString();
+            break;
+          }
+          case 16: {
+            ActionType = (global::Chat.Protocol.UserActionType) input.ReadEnum();
+            break;
+          }
+          case 26: {
+            ActorUserId = input.ReadString();
+            break;
+          }
+          case 34: {
+            ActorNickname = input.ReadString();
+            break;
+          }
+          case 42: {
+            ActorProfileImage = input.ReadString();
+            break;
+          }
+          case 50: {
+            ActorFrameImage = input.ReadString();
+            break;
+          }
+          case 58: {
+            Title = input.ReadString();
+            break;
+          }
+          case 66: {
+            Content = input.ReadString();
+            break;
+          }
+          case 74: {
+            IconId = input.ReadString();
+            break;
+          }
+          case 82: {
+            ExtraData = input.ReadString();
+            break;
+          }
+          case 88: {
+            Timestamp = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            NotificationId = input.ReadString();
+            break;
+          }
+          case 16: {
+            ActionType = (global::Chat.Protocol.UserActionType) input.ReadEnum();
+            break;
+          }
+          case 26: {
+            ActorUserId = input.ReadString();
+            break;
+          }
+          case 34: {
+            ActorNickname = input.ReadString();
+            break;
+          }
+          case 42: {
+            ActorProfileImage = input.ReadString();
+            break;
+          }
+          case 50: {
+            ActorFrameImage = input.ReadString();
+            break;
+          }
+          case 58: {
+            Title = input.ReadString();
+            break;
+          }
+          case 66: {
+            Content = input.ReadString();
+            break;
+          }
+          case 74: {
+            IconId = input.ReadString();
+            break;
+          }
+          case 82: {
+            ExtraData = input.ReadString();
+            break;
+          }
+          case 88: {
+            Timestamp = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 0x0703 - UserActionNotificationAck (채팅서버 -> 게임서버)
+  /// </summary>
+  public sealed partial class UserActionNotificationAck : pb::IMessage<UserActionNotificationAck>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<UserActionNotificationAck> _parser = new pb::MessageParser<UserActionNotificationAck>(() => new UserActionNotificationAck());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<UserActionNotificationAck> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[30]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public UserActionNotificationAck() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public UserActionNotificationAck(UserActionNotificationAck other) : this() {
+      success_ = other.success_;
+      notificationId_ = other.notificationId_;
+      deliveredCount_ = other.deliveredCount_;
+      errorMessage_ = other.errorMessage_;
+      errorCode_ = other.errorCode_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public UserActionNotificationAck Clone() {
+      return new UserActionNotificationAck(this);
+    }
+
+    /// <summary>Field number for the "success" field.</summary>
+    public const int SuccessFieldNumber = 1;
+    private bool success_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Success {
+      get { return success_; }
+      set {
+        success_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "notification_id" field.</summary>
+    public const int NotificationIdFieldNumber = 2;
+    private string notificationId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string NotificationId {
+      get { return notificationId_; }
+      set {
+        notificationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "delivered_count" field.</summary>
+    public const int DeliveredCountFieldNumber = 3;
+    private int deliveredCount_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int DeliveredCount {
+      get { return deliveredCount_; }
+      set {
+        deliveredCount_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "error_message" field.</summary>
+    public const int ErrorMessageFieldNumber = 4;
+    private string errorMessage_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ErrorMessage {
+      get { return errorMessage_; }
+      set {
+        errorMessage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "error_code" field.</summary>
+    public const int ErrorCodeFieldNumber = 5;
+    private int errorCode_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int ErrorCode {
+      get { return errorCode_; }
+      set {
+        errorCode_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as UserActionNotificationAck);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(UserActionNotificationAck other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Success != other.Success) return false;
+      if (NotificationId != other.NotificationId) return false;
+      if (DeliveredCount != other.DeliveredCount) return false;
+      if (ErrorMessage != other.ErrorMessage) return false;
+      if (ErrorCode != other.ErrorCode) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Success != false) hash ^= Success.GetHashCode();
+      if (NotificationId.Length != 0) hash ^= NotificationId.GetHashCode();
+      if (DeliveredCount != 0) hash ^= DeliveredCount.GetHashCode();
+      if (ErrorMessage.Length != 0) hash ^= ErrorMessage.GetHashCode();
+      if (ErrorCode != 0) hash ^= ErrorCode.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (NotificationId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(NotificationId);
+      }
+      if (DeliveredCount != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(DeliveredCount);
+      }
+      if (ErrorMessage.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(ErrorMessage);
+      }
+      if (ErrorCode != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(ErrorCode);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (NotificationId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(NotificationId);
+      }
+      if (DeliveredCount != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(DeliveredCount);
+      }
+      if (ErrorMessage.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(ErrorMessage);
+      }
+      if (ErrorCode != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(ErrorCode);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Success != false) {
+        size += 1 + 1;
+      }
+      if (NotificationId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(NotificationId);
+      }
+      if (DeliveredCount != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(DeliveredCount);
+      }
+      if (ErrorMessage.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ErrorMessage);
+      }
+      if (ErrorCode != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ErrorCode);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(UserActionNotificationAck other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Success != false) {
+        Success = other.Success;
+      }
+      if (other.NotificationId.Length != 0) {
+        NotificationId = other.NotificationId;
+      }
+      if (other.DeliveredCount != 0) {
+        DeliveredCount = other.DeliveredCount;
+      }
+      if (other.ErrorMessage.Length != 0) {
+        ErrorMessage = other.ErrorMessage;
+      }
+      if (other.ErrorCode != 0) {
+        ErrorCode = other.ErrorCode;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+          case 18: {
+            NotificationId = input.ReadString();
+            break;
+          }
+          case 24: {
+            DeliveredCount = input.ReadInt32();
+            break;
+          }
+          case 34: {
+            ErrorMessage = input.ReadString();
+            break;
+          }
+          case 40: {
+            ErrorCode = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+          case 18: {
+            NotificationId = input.ReadString();
+            break;
+          }
+          case 24: {
+            DeliveredCount = input.ReadInt32();
+            break;
+          }
+          case 34: {
+            ErrorMessage = input.ReadString();
+            break;
+          }
+          case 40: {
+            ErrorCode = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
   /// 0xFF01 - Error (server -> client)
   /// </summary>
   public sealed partial class Error : pb::IMessage<Error>
@@ -8355,7 +9907,7 @@ namespace Chat.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[28]; }
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[31]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

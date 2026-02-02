@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UniversalChat.Core;
 using UniversalChat.UI;
 
 namespace UniversalChat.RichContent
@@ -17,6 +18,7 @@ namespace UniversalChat.RichContent
         [SerializeField] private TextMeshProUGUI _timestampText;
         [SerializeField] private Image _bubbleBackground;
         [SerializeField] private LayoutElement _layoutElement;
+        [SerializeField] private HorizontalLayoutGroup _rootLayout;
 
         // 현재 바인딩된 데이터 인덱스 (가상화용)
         private int _dataIndex = -1;
@@ -53,13 +55,15 @@ namespace UniversalChat.RichContent
             RichChatText messageText,
             TextMeshProUGUI timestampText,
             Image bubbleBackground,
-            LayoutElement layoutElement)
+            LayoutElement layoutElement,
+            HorizontalLayoutGroup rootLayout = null)
         {
             _nicknameText = nicknameText;
             _messageText = messageText;
             _timestampText = timestampText;
             _bubbleBackground = bubbleBackground;
             _layoutElement = layoutElement;
+            _rootLayout = rootLayout;
         }
 
         /// <summary>
@@ -115,6 +119,22 @@ namespace UniversalChat.RichContent
 
             // 버블 색상
             UpdateBubbleColor();
+
+            // 정렬 (내 메시지: 우측, 다른 사람: 좌측)
+            UpdateAlignment();
+        }
+
+        /// <summary>
+        /// 메시지 정렬 업데이트 (내 메시지: 우측, 다른 사람: 좌측)
+        /// </summary>
+        private void UpdateAlignment()
+        {
+            if (_rootLayout != null)
+            {
+                _rootLayout.childAlignment = _isMyMessage
+                    ? TextAnchor.UpperRight
+                    : TextAnchor.UpperLeft;
+            }
         }
 
         /// <summary>
@@ -128,9 +148,9 @@ namespace UniversalChat.RichContent
             SetData(
                 dataIndex: dataIndex,
                 oderId: channelMessage.SenderId,
-                nickname: channelMessage.SenderName,
+                nickname: channelMessage.SenderNickname,
                 message: channelMessage.Content,
-                timestamp: channelMessage.Timestamp.ToString("HH:mm"),
+                timestamp: channelMessage.DateTime.ToString("HH:mm"),
                 isMyMessage: isMyMsg,
                 isSystem: false
             );

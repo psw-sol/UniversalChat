@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UniversalChat.Core;
 using UniversalChat.UI;
 
 namespace UniversalChat.RichContent
@@ -150,9 +151,9 @@ namespace UniversalChat.RichContent
                 && channelMessage.SenderId == myUserId;
 
             SetData(
-                nickname: channelMessage.SenderName,
+                nickname: channelMessage.SenderNickname,
                 message: channelMessage.Content,
-                timestamp: channelMessage.Timestamp.ToString("HH:mm"),
+                timestamp: channelMessage.DateTime.ToString("HH:mm"),
                 oderId: channelMessage.SenderId,
                 isMyMessage: isMyMsg,
                 isSystem: false
