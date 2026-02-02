@@ -26,7 +26,27 @@ include(cmake/Dependencies.cmake)
 
 # Protobuf generation
 file(GLOB PROTO_FILES ${CMAKE_SOURCE_DIR}/proto/*.proto)
-protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_FILES})
+
+# Use custom command to support proto3 optional fields (for older protobuf versions)
+set(PROTO_SRCS)
+set(PROTO_HDRS)
+foreach(PROTO_FILE ${PROTO_FILES})
+    get_filename_component(PROTO_NAME ${PROTO_FILE} NAME_WE)
+    set(PROTO_SRC "${CMAKE_BINARY_DIR}/${PROTO_NAME}.pb.cc")
+    set(PROTO_HDR "${CMAKE_BINARY_DIR}/${PROTO_NAME}.pb.h")
+    list(APPEND PROTO_SRCS ${PROTO_SRC})
+    list(APPEND PROTO_HDRS ${PROTO_HDR})
+    add_custom_command(
+        OUTPUT ${PROTO_SRC} ${PROTO_HDR}
+        COMMAND protobuf::protoc
+            --cpp_out=${CMAKE_BINARY_DIR}
+            --experimental_allow_proto3_optional
+            -I${CMAKE_SOURCE_DIR}/proto
+            ${PROTO_FILE}
+        DEPENDS ${PROTO_FILE}
+        COMMENT "Running cpp protocol buffer compiler on ${PROTO_FILE}"
+    )
+endforeach()
 
 # Source files
 set(CORE_SOURCES
@@ -113,12 +133,26 @@ target_sources(chat_server_lib PRIVATE
 
 # Redis support (optional)
 if(ENABLE_REDIS)
-    find_package(hiredis REQUIRED)
+    # Try CONFIG first (vcpkg), then pkg-config (system)
+    find_package(hiredis CONFIG QUIET)
+    if(NOT hiredis_FOUND)
+        find_package(PkgConfig REQUIRED)
+        pkg_check_modules(HIREDIS REQUIRED hiredis)
+    endif()
+
     target_sources(chat_server_lib PRIVATE
         src/redis/RedisClient.cpp
         src/redis/RedisPubSub.cpp
+        src/redis/ChannelRegistry.cpp
+        src/redis/SessionRegistry.cpp
     )
-    target_link_libraries(chat_server_lib PUBLIC hiredis::hiredis)
+
+    if(hiredis_FOUND)
+        target_link_libraries(chat_server_lib PUBLIC hiredis::hiredis)
+    else()
+        target_include_directories(chat_server_lib PUBLIC ${HIREDIS_INCLUDE_DIRS})
+        target_link_libraries(chat_server_lib PUBLIC ${HIREDIS_LIBRARIES})
+    endif()
     target_compile_definitions(chat_server_lib PUBLIC ENABLE_REDIS)
 endif()
 

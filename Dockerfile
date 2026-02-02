@@ -11,29 +11,26 @@ FROM ubuntu:22.04 AS builder
 # Prevent interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install build dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    cmake \
-    ninja-build \
-    git \
-    pkg-config \
-    # Boost libraries
-    libboost-dev \
-    libboost-system-dev \
-    libboost-thread-dev \
-    # Protobuf
-    protobuf-compiler \
-    libprotobuf-dev \
-    # JSON library
-    nlohmann-json3-dev \
-    # Logging library
-    libspdlog-dev \
-    # SSL for password hashing
-    libssl-dev \
-    # Redis (optional)
-    libhiredis-dev \
-    && rm -rf /var/lib/apt/lists/*
+# Install build dependencies with retry logic
+RUN apt-get update && \
+    for i in 1 2 3; do \
+        apt-get install -y --no-install-recommends \
+            build-essential \
+            cmake \
+            ninja-build \
+            git \
+            pkg-config \
+            libboost-dev \
+            libboost-system-dev \
+            libboost-thread-dev \
+            protobuf-compiler \
+            libprotobuf-dev \
+            nlohmann-json3-dev \
+            libspdlog-dev \
+            libssl-dev \
+            libhiredis-dev \
+        && break || sleep 10; \
+    done && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
@@ -64,15 +61,19 @@ FROM ubuntu:22.04 AS runtime
 # Prevent interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install runtime dependencies only
-RUN apt-get update && apt-get install -y \
-    libboost-system1.74.0 \
-    libboost-thread1.74.0 \
-    libprotobuf23 \
-    libspdlog1 \
-    libssl3 \
-    libhiredis0.14 \
-    && rm -rf /var/lib/apt/lists/*
+# Install runtime dependencies with retry logic
+RUN apt-get update && \
+    for i in 1 2 3; do \
+        apt-get install -y --no-install-recommends \
+            libboost-system1.74.0 \
+            libboost-thread1.74.0 \
+            libprotobuf23 \
+            libspdlog1 \
+            libssl3 \
+            libhiredis0.14 \
+            netcat-openbsd \
+        && break || sleep 10; \
+    done && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user for security
 RUN useradd -m -s /bin/bash chatserver
