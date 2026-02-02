@@ -115,6 +115,14 @@ bool InMemoryMessageStore::clearChannel(const std::string& channel_id) {
 // RedisMessageStore Implementation
 // ==========================================
 
+RedisMessageStore::RedisMessageStore(std::shared_ptr<RedisClient> redis)
+    : redis_(std::move(redis))
+    , config_{}
+{
+    LOG_INFO("RedisMessageStore initialized (prefix={}, max={}, ttl={}s)",
+             config_.key_prefix, config_.max_messages_per_channel, config_.message_ttl_seconds);
+}
+
 RedisMessageStore::RedisMessageStore(std::shared_ptr<RedisClient> redis, const Config& config)
     : redis_(std::move(redis))
     , config_(config)
@@ -206,7 +214,7 @@ std::vector<ChatMessage> RedisMessageStore::getRecentMessages(
     } else {
         // Oldest first among recent messages
         int64_t total = redis_->zcard(key);
-        int start = std::max(0LL, total - count);
+        int64_t start = std::max(static_cast<int64_t>(0), total - static_cast<int64_t>(count));
         json_messages = redis_->zrange(key, static_cast<int>(start), -1);
     }
 
@@ -287,6 +295,16 @@ void RedisMessageStore::cleanupOldMessages(const std::string& channel_id) {
 // ==========================================
 // HybridMessageStore Implementation
 // ==========================================
+
+HybridMessageStore::HybridMessageStore(std::shared_ptr<RedisClient> redis, int memory_max_messages) {
+    if (redis) {
+        redis_store_ = std::make_unique<RedisMessageStore>(redis);
+    }
+    memory_store_ = std::make_unique<InMemoryMessageStore>(memory_max_messages);
+
+    LOG_INFO("HybridMessageStore initialized (redis={}, memory_fallback=true)",
+             redis_store_ ? "enabled" : "disabled");
+}
 
 HybridMessageStore::HybridMessageStore(
     std::shared_ptr<RedisClient> redis,

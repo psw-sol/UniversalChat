@@ -209,29 +209,44 @@ bool RedisPubSub::reconnect() {
         patterns = subscribed_patterns_;
     }
 
-    // Disconnect
-    disconnectInternal();
+    // Disconnect and reconnect with lock
+    {
+        std::unique_lock<std::shared_mutex> lock(state_mutex_);
 
-    // Wait before reconnecting
-    std::this_thread::sleep_for(std::chrono::milliseconds(config_.reconnect_interval_ms));
+        // Disconnect internal (no lock needed, we have it)
+        disconnectInternal();
 
-    // Reconnect
-    if (!connectInternal()) {
-        return false;
-    }
+        // Wait before reconnecting
+        // Release lock during sleep to avoid blocking other operations
+        lock.unlock();
+        std::this_thread::sleep_for(std::chrono::milliseconds(config_.reconnect_interval_ms));
+        lock.lock();
 
-    // Re-subscribe to channels
-    for (const auto& channel : channels) {
-        if (!sendSubscribeCommand("SUBSCRIBE", channel)) {
-            LOG_WARN("Failed to re-subscribe to channel: {}", channel);
+        // Reconnect
+        if (!connectInternal()) {
+            return false;
+        }
+
+        // Re-subscribe to channels (while holding lock, use direct command)
+        for (const auto& channel : channels) {
+            if (!sendSubscribeCommandInternal("SUBSCRIBE", channel)) {
+                LOG_WARN("Failed to re-subscribe to channel: {}", channel);
+            }
+        }
+
+        // Re-subscribe to patterns
+        for (const auto& pattern : patterns) {
+            if (!sendSubscribeCommandInternal("PSUBSCRIBE", pattern)) {
+                LOG_WARN("Failed to re-subscribe to pattern: {}", pattern);
+            }
         }
     }
 
-    // Re-subscribe to patterns
-    for (const auto& pattern : patterns) {
-        if (!sendSubscribeCommand("PSUBSCRIBE", pattern)) {
-            LOG_WARN("Failed to re-subscribe to pattern: {}", pattern);
-        }
+    // Restore subscription tracking
+    {
+        std::lock_guard<std::mutex> lock(subscriptions_mutex_);
+        subscribed_channels_ = channels;
+        subscribed_patterns_ = patterns;
     }
 
     // Update stats
@@ -242,6 +257,29 @@ bool RedisPubSub::reconnect() {
 
     LOG_INFO("RedisPubSub reconnected successfully");
     return true;
+}
+
+bool RedisPubSub::sendSubscribeCommandInternal(const std::string& command, const std::string& arg) {
+    // Internal version - assumes state_mutex_ is already held
+    if (!subscribe_context_) {
+        last_error_ = "Subscribe context not available";
+        return false;
+    }
+
+    redisReply* reply = static_cast<redisReply*>(
+        redisCommand(subscribe_context_, "%s %s", command.c_str(), arg.c_str())
+    );
+
+    if (!reply) {
+        last_error_ = subscribe_context_->errstr;
+        LOG_ERROR("RedisPubSub {} failed: {}", command, last_error_);
+        return false;
+    }
+
+    // Subscribe commands return array: [type, channel, count]
+    bool success = (reply->type == REDIS_REPLY_ARRAY && reply->elements >= 1);
+    freeReplyObject(reply);
+    return success;
 }
 
 // ============================================================================
@@ -451,7 +489,13 @@ void RedisPubSub::listenLoop() {
 
     while (!should_stop_.load()) {
         // Check connection
-        if (!subscribe_context_ || subscribe_context_->err) {
+        bool needs_reconnect = false;
+        {
+            std::shared_lock<std::shared_mutex> lock(state_mutex_);
+            needs_reconnect = (!subscribe_context_ || subscribe_context_->err);
+        }
+
+        if (needs_reconnect) {
             LOG_WARN("RedisPubSub connection lost, attempting reconnect...");
 
             if (config_.max_reconnect_attempts > 0 &&
@@ -460,15 +504,13 @@ void RedisPubSub::listenLoop() {
                 break;
             }
 
-            {
-                std::unique_lock<std::shared_mutex> lock(state_mutex_);
-                connected_.store(false);
-                if (reconnect()) {
-                    reconnect_attempts = 0;
-                } else {
-                    reconnect_attempts++;
-                    continue;
-                }
+            connected_.store(false);
+            // reconnect() handles its own locking
+            if (reconnect()) {
+                reconnect_attempts = 0;
+            } else {
+                reconnect_attempts++;
+                continue;
             }
         }
 

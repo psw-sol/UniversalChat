@@ -348,10 +348,29 @@ bool RedisClient::hdel(const std::string& key, const std::string& field) {
     return success;
 }
 
-std::vector<std::pair<std::string, std::string>> RedisClient::hgetall(const std::string& key) {
+bool RedisClient::hmset(const std::string& key, const std::unordered_map<std::string, std::string>& fields) {
     std::lock_guard<std::mutex> lock(mutex_);
 
-    std::vector<std::pair<std::string, std::string>> result;
+    if (fields.empty()) {
+        return true;
+    }
+
+    // Build HMSET command: HMSET key field1 value1 field2 value2 ...
+    std::string cmd = "HMSET " + key;
+    for (const auto& [field, value] : fields) {
+        cmd += " " + field + " " + value;
+    }
+
+    redisReply* reply = static_cast<redisReply*>(redisCommand(context_, cmd.c_str()));
+    bool success = reply && reply->type == REDIS_REPLY_STATUS;
+    freeReply(reply);
+    return success;
+}
+
+std::unordered_map<std::string, std::string> RedisClient::hgetall(const std::string& key) {
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    std::unordered_map<std::string, std::string> result;
     redisReply* reply = executeCommandWithReply("HGETALL %s", key.c_str());
 
     if (reply && reply->type == REDIS_REPLY_ARRAY && reply->elements % 2 == 0) {
@@ -359,12 +378,117 @@ std::vector<std::pair<std::string, std::string>> RedisClient::hgetall(const std:
         for (size_t i = 0; i < reply->elements; i += 2) {
             std::string field(reply->element[i]->str, reply->element[i]->len);
             std::string value(reply->element[i + 1]->str, reply->element[i + 1]->len);
-            result.emplace_back(std::move(field), std::move(value));
+            result[std::move(field)] = std::move(value);
         }
     }
 
     freeReply(reply);
     return result;
+}
+
+// ==========================================
+// Set Operations
+// ==========================================
+
+int64_t RedisClient::sadd(const std::string& key, const std::string& member) {
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    redisReply* reply = executeCommandWithReply("SADD %s %b", key.c_str(), member.c_str(), member.size());
+    int64_t added = 0;
+    if (reply && reply->type == REDIS_REPLY_INTEGER) {
+        added = reply->integer;
+    }
+    freeReply(reply);
+    return added;
+}
+
+int64_t RedisClient::srem(const std::string& key, const std::string& member) {
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    redisReply* reply = executeCommandWithReply("SREM %s %b", key.c_str(), member.c_str(), member.size());
+    int64_t removed = 0;
+    if (reply && reply->type == REDIS_REPLY_INTEGER) {
+        removed = reply->integer;
+    }
+    freeReply(reply);
+    return removed;
+}
+
+bool RedisClient::sismember(const std::string& key, const std::string& member) {
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    redisReply* reply = executeCommandWithReply("SISMEMBER %s %b", key.c_str(), member.c_str(), member.size());
+    bool is_member = reply && reply->type == REDIS_REPLY_INTEGER && reply->integer == 1;
+    freeReply(reply);
+    return is_member;
+}
+
+int64_t RedisClient::scard(const std::string& key) {
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    redisReply* reply = executeCommandWithReply("SCARD %s", key.c_str());
+    int64_t count = 0;
+    if (reply && reply->type == REDIS_REPLY_INTEGER) {
+        count = reply->integer;
+    }
+    freeReply(reply);
+    return count;
+}
+
+std::vector<std::string> RedisClient::smembers(const std::string& key) {
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    std::vector<std::string> result;
+    redisReply* reply = executeCommandWithReply("SMEMBERS %s", key.c_str());
+
+    if (reply && reply->type == REDIS_REPLY_ARRAY) {
+        result.reserve(reply->elements);
+        for (size_t i = 0; i < reply->elements; ++i) {
+            if (reply->element[i]->type == REDIS_REPLY_STRING) {
+                result.emplace_back(reply->element[i]->str, reply->element[i]->len);
+            }
+        }
+    }
+
+    freeReply(reply);
+    return result;
+}
+
+std::pair<std::string, std::vector<std::string>> RedisClient::sscan(const std::string& key,
+    const std::string& cursor, const std::string& pattern, int count) {
+
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    std::string next_cursor = "0";
+    std::vector<std::string> members;
+
+    redisReply* reply;
+    if (pattern.empty()) {
+        reply = executeCommandWithReply("SSCAN %s %s COUNT %d", key.c_str(), cursor.c_str(), count);
+    } else {
+        reply = executeCommandWithReply("SSCAN %s %s MATCH %s COUNT %d",
+            key.c_str(), cursor.c_str(), pattern.c_str(), count);
+    }
+
+    if (reply && reply->type == REDIS_REPLY_ARRAY && reply->elements == 2) {
+        // First element is the next cursor
+        if (reply->element[0]->type == REDIS_REPLY_STRING) {
+            next_cursor = std::string(reply->element[0]->str, reply->element[0]->len);
+        }
+        // Second element is array of members
+        if (reply->element[1]->type == REDIS_REPLY_ARRAY) {
+            redisReply* arr = reply->element[1];
+            members.reserve(arr->elements);
+            for (size_t i = 0; i < arr->elements; ++i) {
+                if (arr->element[i]->type == REDIS_REPLY_STRING) {
+                    members.emplace_back(arr->element[i]->str, arr->element[i]->len);
+                }
+            }
+        }
+    }
+
+    freeReply(reply);
+    return {next_cursor, members};
 }
 
 // ==========================================
@@ -523,9 +647,17 @@ bool RedisClient::ltrim(const std::string&, int, int) { return false; }
 int64_t RedisClient::llen(const std::string&) { return 0; }
 
 bool RedisClient::hset(const std::string&, const std::string&, const std::string&) { return false; }
+bool RedisClient::hmset(const std::string&, const std::unordered_map<std::string, std::string>&) { return false; }
 std::optional<std::string> RedisClient::hget(const std::string&, const std::string&) { return std::nullopt; }
 bool RedisClient::hdel(const std::string&, const std::string&) { return false; }
-std::vector<std::pair<std::string, std::string>> RedisClient::hgetall(const std::string&) { return {}; }
+std::unordered_map<std::string, std::string> RedisClient::hgetall(const std::string&) { return {}; }
+
+int64_t RedisClient::sadd(const std::string&, const std::string&) { return 0; }
+int64_t RedisClient::srem(const std::string&, const std::string&) { return 0; }
+bool RedisClient::sismember(const std::string&, const std::string&) { return false; }
+int64_t RedisClient::scard(const std::string&) { return 0; }
+std::vector<std::string> RedisClient::smembers(const std::string&) { return {}; }
+std::pair<std::string, std::vector<std::string>> RedisClient::sscan(const std::string&, const std::string&, const std::string&, int) { return {"0", {}}; }
 
 bool RedisClient::zadd(const std::string&, double, const std::string&) { return false; }
 std::vector<std::string> RedisClient::zrange(const std::string&, int, int) { return {}; }

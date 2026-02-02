@@ -21,7 +21,8 @@ public:
         int refill_rate = 10;      // Tokens per second
     };
 
-    explicit RateLimiter(const Config& config = Config{});
+    RateLimiter();  // Default constructor
+    explicit RateLimiter(const Config& config);
     ~RateLimiter() = default;
 
     // Non-copyable

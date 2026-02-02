@@ -3,6 +3,7 @@
 #include <string>
 #include <cstdint>
 #include <chrono>
+#include <optional>
 #include <nlohmann/json.hpp>
 
 namespace chat {

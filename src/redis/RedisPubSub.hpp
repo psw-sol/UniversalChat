@@ -228,6 +228,7 @@ private:
 
     // Subscription helpers
     bool sendSubscribeCommand(const std::string& command, const std::string& arg);
+    bool sendSubscribeCommandInternal(const std::string& command, const std::string& arg);
 
     // Listener thread function
     void listenLoop();

@@ -3,6 +3,13 @@
 
 namespace chat {
 
+RateLimiter::RateLimiter()
+    : config_{}
+{
+    LOG_INFO("RateLimiter initialized (bucket={}, rate={}/sec)",
+             config_.bucket_size, config_.refill_rate);
+}
+
 RateLimiter::RateLimiter(const Config& config)
     : config_(config)
 {

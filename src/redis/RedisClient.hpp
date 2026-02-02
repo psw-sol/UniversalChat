@@ -6,6 +6,7 @@
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <unordered_map>
 
 #ifdef ENABLE_REDIS
 #include <hiredis/hiredis.h>
@@ -62,9 +63,19 @@ public:
 
     // Hash operations
     bool hset(const std::string& key, const std::string& field, const std::string& value);
+    bool hmset(const std::string& key, const std::unordered_map<std::string, std::string>& fields);
     std::optional<std::string> hget(const std::string& key, const std::string& field);
     bool hdel(const std::string& key, const std::string& field);
-    std::vector<std::pair<std::string, std::string>> hgetall(const std::string& key);
+    std::unordered_map<std::string, std::string> hgetall(const std::string& key);
+
+    // Set operations (for channel members)
+    int64_t sadd(const std::string& key, const std::string& member);
+    int64_t srem(const std::string& key, const std::string& member);
+    bool sismember(const std::string& key, const std::string& member);
+    int64_t scard(const std::string& key);
+    std::vector<std::string> smembers(const std::string& key);
+    std::pair<std::string, std::vector<std::string>> sscan(const std::string& key,
+        const std::string& cursor, const std::string& pattern = "", int count = 10);
 
     // Sorted set operations (for ordered messages)
     bool zadd(const std::string& key, double score, const std::string& member);

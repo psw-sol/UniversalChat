@@ -244,7 +244,7 @@ bool ChannelRegistry::setChannelMetadata(const std::string& channel_id, const Ch
 
         // Get current time for created_at if not already set
         auto existing = redis_->hget(metadata_key, FIELD_CREATED_AT);
-        if (existing.empty()) {
+        if (!existing.has_value()) {
             fields[FIELD_CREATED_AT] = std::to_string(std::time(nullptr));
         }
 

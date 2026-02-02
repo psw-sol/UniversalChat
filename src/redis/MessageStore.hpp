@@ -108,7 +108,8 @@ public:
         bool auto_cleanup = true;
     };
 
-    RedisMessageStore(std::shared_ptr<RedisClient> redis, const Config& config = Config{});
+    explicit RedisMessageStore(std::shared_ptr<RedisClient> redis);
+    RedisMessageStore(std::shared_ptr<RedisClient> redis, const Config& config);
 
     bool saveMessage(const std::string& channel_id, const ChatMessage& message) override;
 
@@ -151,10 +152,11 @@ private:
  */
 class HybridMessageStore : public IMessageStore {
 public:
+    explicit HybridMessageStore(std::shared_ptr<RedisClient> redis, int memory_max_messages = 100);
     HybridMessageStore(
         std::shared_ptr<RedisClient> redis,
-        const RedisMessageStore::Config& redis_config = RedisMessageStore::Config{},
-        int memory_max_messages = 100
+        const RedisMessageStore::Config& redis_config,
+        int memory_max_messages
     );
 
     bool saveMessage(const std::string& channel_id, const ChatMessage& message) override;
