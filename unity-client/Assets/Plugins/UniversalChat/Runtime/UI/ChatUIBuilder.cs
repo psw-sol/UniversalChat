@@ -178,10 +178,13 @@ namespace UniversalChat.UI
             var root = CreateUIObject("Chat Message View", parent);
             var rootRect = root.GetComponent<RectTransform>();
 
-            // 절대 위치 사용을 위한 앵커 설정
+            // 절대 위치 사용을 위한 앵커 설정 (부모 너비에 맞춤)
             rootRect.anchorMin = new Vector2(0f, 1f);
             rootRect.anchorMax = new Vector2(1f, 1f);
             rootRect.pivot = new Vector2(0.5f, 1f);
+            // 부모(Content) 너비에 맞춤 - offset으로 설정
+            rootRect.offsetMin = new Vector2(0f, 0f);
+            rootRect.offsetMax = new Vector2(0f, 0f);
 
             // LayoutElement로 높이 제어
             var layoutElement = root.AddComponent<LayoutElement>();
@@ -189,45 +192,51 @@ namespace UniversalChat.UI
             layoutElement.preferredHeight = config?.DefaultItemHeight ?? 70f;
             layoutElement.flexibleWidth = 1;
 
-            // === Background (Bubble) ===
+            // Root에 패딩용 이미지 (투명)
+            var rootImage = root.AddComponent<Image>();
+            rootImage.color = Color.clear;
+
+            // === Background (Bubble) - Root의 직접 자식 ===
             var bubble = CreateUIObject("Bubble", root.transform);
             var bubbleRect = bubble.GetComponent<RectTransform>();
-            bubbleRect.anchorMin = Vector2.zero;
-            bubbleRect.anchorMax = Vector2.one;
-            bubbleRect.offsetMin = new Vector2(5, 2);
-            bubbleRect.offsetMax = new Vector2(-5, -2);
+
+            // 버블 기본 위치: 왼쪽 상단 (다른 사람 메시지 기본)
+            bubbleRect.anchorMin = new Vector2(0f, 1f);
+            bubbleRect.anchorMax = new Vector2(0f, 1f);
+            bubbleRect.pivot = new Vector2(0f, 1f);
+            bubbleRect.anchoredPosition = new Vector2(8f, -4f);  // 패딩
 
             var bubbleImage = bubble.AddComponent<Image>();
             bubbleImage.color = config?.OtherBubbleColor ?? new Color(0.25f, 0.25f, 0.25f, 1f);
 
-            // === Content Container ===
-            var content = CreateUIObject("Content", bubble.transform);
-            var contentRect = content.GetComponent<RectTransform>();
-            contentRect.anchorMin = Vector2.zero;
-            contentRect.anchorMax = Vector2.one;
-            contentRect.offsetMin = new Vector2(10, 8);
-            contentRect.offsetMax = new Vector2(-10, -8);
+            // Bubble에 ContentSizeFitter 추가 - 내용에 맞게 크기 조절
+            var bubbleFitter = bubble.AddComponent<ContentSizeFitter>();
+            bubbleFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            bubbleFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-            var contentLayout = content.AddComponent<VerticalLayoutGroup>();
-            contentLayout.childForceExpandWidth = true;
-            contentLayout.childForceExpandHeight = false;
-            contentLayout.childControlWidth = true;
-            contentLayout.childControlHeight = true;
-            contentLayout.spacing = 4;
+            // Bubble에 VerticalLayoutGroup 추가
+            var bubbleLayout = bubble.AddComponent<VerticalLayoutGroup>();
+            bubbleLayout.childForceExpandWidth = false;
+            bubbleLayout.childForceExpandHeight = false;
+            bubbleLayout.childControlWidth = true;
+            bubbleLayout.childControlHeight = true;
+            bubbleLayout.padding = new RectOffset(12, 12, 8, 8);
+            bubbleLayout.spacing = 2;
 
             // === Nickname Text ===
-            var nickname = CreateTextObject("Nickname", content.transform, "Username",
-                config?.NicknameFontSize ?? 12, TextAnchor.UpperLeft);
+            var nickname = CreateTextObject("Nickname", bubble.transform, "Username",
+                config?.NicknameFontSize ?? 14, TextAnchor.UpperLeft);
             var nicknameText = nickname.GetComponent<Text>();
             nicknameText.color = config?.NicknameColor ?? new Color(0.7f, 0.7f, 0.7f);
             nicknameText.fontStyle = FontStyle.Bold;
 
             var nicknameLayout = nickname.AddComponent<LayoutElement>();
-            nicknameLayout.minHeight = 16;
-            nicknameLayout.preferredHeight = 16;
+            nicknameLayout.minHeight = 18;
+            nicknameLayout.preferredHeight = 18;
+            nicknameLayout.minWidth = 50;
 
             // === Message Text ===
-            var message = CreateTextObject("Message", content.transform, "Message content",
+            var message = CreateTextObject("Message", bubble.transform, "Message content",
                 config?.MessageFontSize ?? 14, TextAnchor.UpperLeft);
             var messageText = message.GetComponent<Text>();
             messageText.color = config?.MessageColor ?? Color.white;
@@ -236,11 +245,12 @@ namespace UniversalChat.UI
 
             var messageLayout = message.AddComponent<LayoutElement>();
             messageLayout.minHeight = 18;
-            messageLayout.flexibleWidth = 1;
+            messageLayout.minWidth = 50;
+            messageLayout.preferredWidth = 250;  // 최대 텍스트 너비
 
             // === Timestamp Text ===
-            var timestamp = CreateTextObject("Timestamp", content.transform, "12:00",
-                config?.TimestampFontSize ?? 10, TextAnchor.LowerRight);
+            var timestamp = CreateTextObject("Timestamp", bubble.transform, "12:00",
+                config?.TimestampFontSize ?? 11, TextAnchor.LowerRight);
             var timestampText = timestamp.GetComponent<Text>();
             timestampText.color = config?.TimestampColor ?? new Color(0.5f, 0.5f, 0.5f);
 
@@ -255,7 +265,8 @@ namespace UniversalChat.UI
                 messageText,
                 timestampText,
                 bubbleImage,
-                layoutElement
+                layoutElement,
+                bubbleRect  // Bubble RectTransform 전달
             );
 
             return messageView;
@@ -624,27 +635,46 @@ namespace UniversalChat.UI
             layoutElement.preferredHeight = config?.DefaultItemHeight ?? 70f;
             layoutElement.flexibleWidth = 1;
 
+            // Root에 HorizontalLayoutGroup 추가 (버블 좌/우 정렬용)
+            var rootLayout = root.AddComponent<HorizontalLayoutGroup>();
+            rootLayout.childForceExpandWidth = false;
+            rootLayout.childForceExpandHeight = true;
+            rootLayout.childControlWidth = true;
+            rootLayout.childControlHeight = true;
+            rootLayout.childAlignment = TextAnchor.UpperLeft;  // 기본: 좌측 정렬 (다른 사람)
+            rootLayout.padding = new RectOffset(5, 5, 2, 2);
+
             // === Bubble Background ===
             var bubble = CreateUIObject("Bubble", root.transform);
             var bubbleRect = bubble.GetComponent<RectTransform>();
-            bubbleRect.anchorMin = Vector2.zero;
-            bubbleRect.anchorMax = Vector2.one;
-            bubbleRect.offsetMin = new Vector2(5, 2);
-            bubbleRect.offsetMax = new Vector2(-5, -2);
 
             var bubbleImage = bubble.AddComponent<Image>();
             bubbleImage.color = config?.OtherBubbleColor ?? new Color(0.25f, 0.25f, 0.25f, 1f);
 
+            // Bubble에 LayoutElement 추가 (최대 너비 제한)
+            var bubbleLayoutElement = bubble.AddComponent<LayoutElement>();
+            bubbleLayoutElement.preferredWidth = 300;  // 최대 너비
+            bubbleLayoutElement.flexibleWidth = 0;
+
+            // Bubble에 ContentSizeFitter 추가 (Content 크기에 맞춤)
+            var bubbleFitter = bubble.AddComponent<ContentSizeFitter>();
+            bubbleFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            bubbleFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            // Bubble에 VerticalLayoutGroup 추가 (내부 Content 배치)
+            var bubbleLayout = bubble.AddComponent<VerticalLayoutGroup>();
+            bubbleLayout.childForceExpandWidth = false;
+            bubbleLayout.childForceExpandHeight = false;
+            bubbleLayout.childControlWidth = true;
+            bubbleLayout.childControlHeight = true;
+            bubbleLayout.padding = new RectOffset(10, 10, 8, 8);
+
             // === Content Container ===
             var content = CreateUIObject("Content", bubble.transform);
             var contentRect = content.GetComponent<RectTransform>();
-            contentRect.anchorMin = Vector2.zero;
-            contentRect.anchorMax = Vector2.one;
-            contentRect.offsetMin = new Vector2(10, 8);
-            contentRect.offsetMax = new Vector2(-10, -8);
 
             var contentLayout = content.AddComponent<VerticalLayoutGroup>();
-            contentLayout.childForceExpandWidth = true;
+            contentLayout.childForceExpandWidth = false;
             contentLayout.childForceExpandHeight = false;
             contentLayout.childControlWidth = true;
             contentLayout.childControlHeight = true;
@@ -673,7 +703,7 @@ namespace UniversalChat.UI
 
             var messageLayout = message.AddComponent<LayoutElement>();
             messageLayout.minHeight = 18;
-            messageLayout.flexibleWidth = 1;
+            messageLayout.preferredWidth = 280;  // 최대 메시지 너비 (버블 패딩 고려)
 
             // === Timestamp Text ===
             var timestamp = CreateTMPTextObject("Timestamp", content.transform, "12:00",
@@ -692,7 +722,8 @@ namespace UniversalChat.UI
                 messageRich,
                 timestampTMP,
                 bubbleImage,
-                layoutElement
+                layoutElement,
+                rootLayout
             );
             richMessageView.SetChatConfig(config);
 
@@ -738,6 +769,8 @@ namespace UniversalChat.UI
             textComp.alignment = alignment;
             textComp.color = Color.white;
             textComp.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            textComp.alignByGeometry = true;
+            textComp.raycastTarget = false;
             return go;
         }
 

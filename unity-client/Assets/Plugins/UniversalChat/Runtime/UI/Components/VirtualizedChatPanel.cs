@@ -18,6 +18,10 @@ namespace UniversalChat.UI
         [SerializeField] private RectTransform _viewport;
         [SerializeField] private RectTransform _content;
 
+        [Header("Prefab (Optional)")]
+        [Tooltip("메시지 뷰 프리팹. 설정하지 않으면 코드로 자동 생성됩니다.")]
+        [SerializeField] private ChatMessageView _messageViewPrefab;
+
         [Header("Settings")]
         [SerializeField] private int _bufferCount = 3;
         [SerializeField] private int _maxDataCount = 500;
@@ -353,7 +357,7 @@ namespace UniversalChat.UI
         {
             for (int i = 0; i < count; i++)
             {
-                var view = ChatUIBuilder.BuildMessageView(_content, _config);
+                var view = CreateMessageView();
                 if (view != null)
                 {
                     view.Unbind();
@@ -374,12 +378,31 @@ namespace UniversalChat.UI
             }
 
             // 풀에 여유가 없으면 새로 생성
-            var newView = ChatUIBuilder.BuildMessageView(_content, _config);
+            var newView = CreateMessageView();
             if (newView != null)
             {
                 _viewPool.Add(newView);
             }
             return newView;
+        }
+
+        /// <summary>
+        /// 메시지 뷰 생성 (프리팹 우선, 없으면 코드 생성)
+        /// </summary>
+        private ChatMessageView CreateMessageView()
+        {
+            if (_messageViewPrefab != null)
+            {
+                // 프리팹으로 생성
+                var view = Instantiate(_messageViewPrefab, _content);
+                view.name = "Chat Message View";
+                return view;
+            }
+            else
+            {
+                // 코드로 생성
+                return ChatUIBuilder.BuildMessageView(_content, _config);
+            }
         }
 
         private void ReturnViewToPool(ChatMessageView view)

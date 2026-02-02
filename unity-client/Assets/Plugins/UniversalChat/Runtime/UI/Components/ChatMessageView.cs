@@ -19,6 +19,9 @@ namespace UniversalChat.UI
         [SerializeField] private Image _bubbleBackground;
         [SerializeField] private LayoutElement _layoutElement;
 
+        [Header("Alignment")]
+        [SerializeField] private RectTransform _bubbleRect;
+
         #endregion
 
         #region Fields
@@ -70,13 +73,15 @@ namespace UniversalChat.UI
         /// 런타임 빌더에서 호출하는 초기화 메서드
         /// </summary>
         public void Initialize(Text nicknameText, Text contentText, Text timestampText,
-            Image bubbleBackground, LayoutElement layoutElement)
+            Image bubbleBackground, LayoutElement layoutElement,
+            RectTransform bubbleRect = null)
         {
             _nicknameText = nicknameText;
             _contentText = contentText;
             _timestampText = timestampText;
             _bubbleBackground = bubbleBackground;
             _layoutElement = layoutElement;
+            _bubbleRect = bubbleRect;
             _rectTransform = GetComponent<RectTransform>();
         }
 
@@ -141,6 +146,9 @@ namespace UniversalChat.UI
             {
                 _bubbleBackground.color = GetBubbleColor(data, config, isMyMessage);
             }
+
+            // 정렬 업데이트 (내 메시지: 우측, 다른 사람: 좌측)
+            UpdateAlignment(isMyMessage);
 
             // 높이 설정
             float height = data.CachedHeight > 0 ? data.CachedHeight : CalculateHeight(data, config);
@@ -234,6 +242,44 @@ namespace UniversalChat.UI
         #endregion
 
         #region Helper Methods
+
+        /// <summary>
+        /// 메시지 정렬 업데이트 (내 메시지: 우측, 다른 사람: 좌측)
+        /// </summary>
+        private void UpdateAlignment(bool isMyMessage)
+        {
+            if (_bubbleRect == null)
+                return;
+
+            // 버블의 anchor와 pivot을 사용한 정렬
+            if (isMyMessage)
+            {
+                // 오른쪽 정렬 (내 메시지)
+                _bubbleRect.anchorMin = new Vector2(1f, 1f);
+                _bubbleRect.anchorMax = new Vector2(1f, 1f);
+                _bubbleRect.pivot = new Vector2(1f, 1f);
+                _bubbleRect.anchoredPosition = new Vector2(-8f, -4f);  // 오른쪽 패딩
+            }
+            else
+            {
+                // 왼쪽 정렬 (다른 사람 메시지)
+                _bubbleRect.anchorMin = new Vector2(0f, 1f);
+                _bubbleRect.anchorMax = new Vector2(0f, 1f);
+                _bubbleRect.pivot = new Vector2(0f, 1f);
+                _bubbleRect.anchoredPosition = new Vector2(8f, -4f);  // 왼쪽 패딩
+            }
+
+            // ContentSizeFitter 강제 업데이트
+            var fitter = _bubbleRect.GetComponent<ContentSizeFitter>();
+            if (fitter != null)
+            {
+                fitter.SetLayoutHorizontal();
+                fitter.SetLayoutVertical();
+            }
+
+            // 레이아웃 강제 리빌드
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_bubbleRect);
+        }
 
         private Color GetMessageColor(ChatMessageData data, ChatUIConfig config, bool isMyMessage)
         {
