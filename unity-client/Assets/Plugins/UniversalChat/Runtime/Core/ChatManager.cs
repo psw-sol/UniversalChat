@@ -151,8 +151,7 @@ namespace UniversalChat.Core
             else
             {
                 Log("Application resumed");
-                // 이전에 인증된 적이 있을 때만 재연결 시도 (초기 연결은 LobbyLoadingState에서 처리)
-                if (_autoReconnect && !IsConnected && !_isReconnecting && !string.IsNullOrEmpty(UserId))
+                if (_autoReconnect && !IsConnected && !_isReconnecting)
                 {
                     _ = ReconnectAsync();
                 }
