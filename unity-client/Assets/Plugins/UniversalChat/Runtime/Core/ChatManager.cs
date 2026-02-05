@@ -22,11 +22,18 @@ namespace UniversalChat.Core
             {
                 if (_instance == null)
                 {
-                    var go = new GameObject("[ChatManager]");
-                    _instance = go.AddComponent<ChatManager>();
-                    if (Application.isPlaying)
+                    // 씬에 이미 배치된 ChatManager를 먼저 찾음
+                    _instance = FindObjectOfType<ChatManager>();
+
+                    // 없으면 새로 생성
+                    if (_instance == null)
                     {
-                        DontDestroyOnLoad(go);
+                        var go = new GameObject("[ChatManager]");
+                        _instance = go.AddComponent<ChatManager>();
+                        if (Application.isPlaying)
+                        {
+                            DontDestroyOnLoad(go);
+                        }
                     }
                 }
                 return _instance;
