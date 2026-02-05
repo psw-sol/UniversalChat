@@ -92,6 +92,13 @@ namespace UniversalChat.Core
         private int _reconnectAttempts;
         private bool _isReconnecting;
 
+        // 재연결 시 사용할 인증 정보
+        private string _lastAuthToken;
+        private string _lastNickname;
+        private string _lastProfileImage;
+        private string _lastFrameImage;
+        private string _lastExtraData;
+
         #endregion
 
         #region Unity Lifecycle
@@ -213,7 +220,22 @@ namespace UniversalChat.Core
             _joinedChannels.Clear();
         }
 
-        public async Task<bool> LoginAsync(string userId, string password = null)
+        /// <summary>
+        /// 채팅 서버에 로그인
+        /// </summary>
+        /// <param name="userId">사용자 ID</param>
+        /// <param name="authToken">게임 서버에서 발급받은 인증 토큰</param>
+        /// <param name="nickname">닉네임 (null이면 userId 사용)</param>
+        /// <param name="profileImage">프로필 이미지 URL 또는 ID</param>
+        /// <param name="frameImage">프레임 이미지 URL 또는 ID</param>
+        /// <param name="extraData">기타 정보 (JSON 등)</param>
+        public async Task<bool> LoginAsync(
+            string userId,
+            string authToken = null,
+            string nickname = null,
+            string profileImage = null,
+            string frameImage = null,
+            string extraData = null)
         {
             if (!IsConnected)
             {
@@ -221,16 +243,38 @@ namespace UniversalChat.Core
                 return false;
             }
 
+            // 재연결 시 사용할 인증 정보 저장
+            _lastAuthToken = authToken;
+            _lastNickname = nickname;
+            _lastProfileImage = profileImage;
+            _lastFrameImage = frameImage;
+            _lastExtraData = extraData;
+
             Log($"Logging in as {userId}...");
-            return await _client.AuthenticateAsync(userId, password);
+            return await _client.AuthenticateAsync(userId, authToken, nickname, profileImage, frameImage, extraData);
         }
 
-        public async Task<bool> ConnectAndLoginAsync(string userId, string password = null)
+        /// <summary>
+        /// 연결 및 로그인을 한 번에 수행
+        /// </summary>
+        /// <param name="userId">사용자 ID</param>
+        /// <param name="authToken">게임 서버에서 발급받은 인증 토큰</param>
+        /// <param name="nickname">닉네임 (null이면 userId 사용)</param>
+        /// <param name="profileImage">프로필 이미지 URL 또는 ID</param>
+        /// <param name="frameImage">프레임 이미지 URL 또는 ID</param>
+        /// <param name="extraData">기타 정보 (JSON 등)</param>
+        public async Task<bool> ConnectAndLoginAsync(
+            string userId,
+            string authToken = null,
+            string nickname = null,
+            string profileImage = null,
+            string frameImage = null,
+            string extraData = null)
         {
             bool connected = await ConnectAsync();
             if (!connected) return false;
 
-            return await LoginAsync(userId, password);
+            return await LoginAsync(userId, authToken, nickname, profileImage, frameImage, extraData);
         }
 
         public async Task JoinChannelAsync(string channelId, string password = null)
@@ -484,7 +528,8 @@ namespace UniversalChat.Core
 
                 if (connected && !string.IsNullOrEmpty(UserId))
                 {
-                    await LoginAsync(UserId);
+                    // 저장된 인증 정보로 재로그인
+                    await LoginAsync(UserId, _lastAuthToken, _lastNickname, _lastProfileImage, _lastFrameImage, _lastExtraData);
                 }
             }
 

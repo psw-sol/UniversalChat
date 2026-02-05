@@ -112,15 +112,17 @@ namespace UniversalChat.Core
         #region Authentication
 
         /// <summary>
-        /// 서버에 인증 요청 (프로필 정보 포함)
+        /// 서버에 인증 요청 (토큰 및 프로필 정보 포함)
         /// </summary>
         /// <param name="userId">사용자 ID</param>
+        /// <param name="authToken">게임 서버에서 발급받은 인증 토큰</param>
         /// <param name="nickname">닉네임 (null이면 userId 사용)</param>
         /// <param name="profileImage">프로필 이미지 URL 또는 ID</param>
         /// <param name="frameImage">프레임 이미지 URL 또는 ID</param>
         /// <param name="extraData">기타 정보 (JSON 등)</param>
         public async Task<bool> AuthenticateAsync(
             string userId,
+            string authToken = null,
             string nickname = null,
             string profileImage = null,
             string frameImage = null,
@@ -142,6 +144,7 @@ namespace UniversalChat.Core
             {
                 UserId = userId,
                 Nickname = Nickname,
+                AuthToken = authToken ?? string.Empty,
                 ClientVersion = Application.version,
                 DeviceId = SystemInfo.deviceUniqueIdentifier,
                 ProfileImage = ProfileImage,
