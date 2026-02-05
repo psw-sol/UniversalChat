@@ -53,6 +53,11 @@ namespace UniversalChat.Core
         [SerializeField] private float _reconnectDelay = 5f;
         [SerializeField] private int _maxReconnectAttempts = 3;
 
+        [Header("Auto Login (테스트용)")]
+        [SerializeField] private bool _autoLogin = false;
+        [SerializeField] private string _autoLoginUserId = "TestUser";
+        [SerializeField] private string _autoLoginNickname = "";
+
         [Header("Auto Join")]
         [SerializeField] private bool _autoJoinWorldChannel = true;
         [SerializeField] private string _autoJoinChannelType = "world";
@@ -345,12 +350,20 @@ namespace UniversalChat.Core
 
         #region Event Handlers
 
-        private void HandleConnected()
+        private async void HandleConnected()
         {
             Log("Connected to server");
             _reconnectAttempts = 0;
             _isReconnecting = false;
             OnConnected?.Invoke();
+
+            // 자동 로그인 (테스트용)
+            if (_autoLogin && !string.IsNullOrEmpty(_autoLoginUserId))
+            {
+                string nickname = string.IsNullOrEmpty(_autoLoginNickname) ? _autoLoginUserId : _autoLoginNickname;
+                Log($"Auto-login enabled, logging in as {_autoLoginUserId}...");
+                await LoginAsync(_autoLoginUserId, null, nickname);
+            }
         }
 
         private async void HandleDisconnected(string reason)
