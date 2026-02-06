@@ -18,10 +18,8 @@ namespace UniversalChat.UI
         #region Inspector - Connection
 
         [Header("Connection Settings")]
-        [SerializeField] private string _serverHost = "localhost";
-        [SerializeField] private int _serverPort = 7777;
+        [Tooltip("Start 시 자동 연결 (ChatManager의 서버 설정 사용)")]
         [SerializeField] private bool _connectOnStart = false;
-        [SerializeField] private string _autoLoginUserId = "";
 
         #endregion
 
@@ -245,22 +243,21 @@ namespace UniversalChat.UI
             SetupUIComponents();
         }
 
+        /// <summary>
+        /// ChatManager의 Inspector 설정을 사용하여 연결
+        /// </summary>
         public async Task ConnectAsync()
         {
-            ChatManager.Instance.Configure(_serverHost, _serverPort);
-            bool connected = await ChatManager.Instance.ConnectAsync();
-
-            if (connected && !string.IsNullOrEmpty(_autoLoginUserId))
-            {
-                await ChatManager.Instance.LoginAsync(_autoLoginUserId);
-            }
+            await ChatManager.Instance.ConnectAsync();
         }
 
+        /// <summary>
+        /// 지정된 서버로 연결 (ChatManager 설정을 오버라이드)
+        /// </summary>
         public async Task ConnectAsync(string host, int port)
         {
-            _serverHost = host;
-            _serverPort = port;
-            await ConnectAsync();
+            ChatManager.Instance.Configure(host, port);
+            await ChatManager.Instance.ConnectAsync();
         }
 
         public void Disconnect()
