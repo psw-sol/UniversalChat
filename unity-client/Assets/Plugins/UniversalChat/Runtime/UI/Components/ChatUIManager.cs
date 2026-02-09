@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UniversalChat.Core;
+using UniversalChat.RichContent;
 using UniversalChat.Translation;
 
 namespace UniversalChat.UI
@@ -26,17 +27,12 @@ namespace UniversalChat.UI
         #region Inspector - UI References
 
         [Header("UI References")]
-        [SerializeField] private ChatPanel _chatPanel;
         [SerializeField] private VirtualizedChatPanel _virtualizedChatPanel;
         [SerializeField] private ChatInputField _inputField;
         [SerializeField] private ChannelListPanel _channelListPanel;
         [SerializeField] private Button _sendButton;
         [SerializeField] private Button _connectButton;
         [SerializeField] private Text _connectionStatusText;
-
-        [Header("Virtualization")]
-        [Tooltip("가상화 스크롤 사용 여부. 대량의 메시지 처리 시 성능 향상")]
-        [SerializeField] private bool _useVirtualizedScroll = true;
 
         #endregion
 
@@ -61,16 +57,54 @@ namespace UniversalChat.UI
 
         #endregion
 
+        #region Inspector - Auto Features
+
+        [Header("Auto Features")]
+        [Tooltip("채널 입장 시 최근 메시지를 자동으로 채팅창에 표시")]
+        [SerializeField] private bool _autoLoadHistoryOnJoin = true;
+
+        [Tooltip("새 메시지 수신 시 자동으로 하단 스크롤")]
+        [SerializeField] private bool _autoScrollToBottom = true;
+
+        #endregion
+
         #region Inspector - Events
 
-        [Header("Events")]
+        [Header("Lifecycle Events")]
+        [Tooltip("전체 파이프라인 완료 (Connect → Login → JoinChannel 성공)")]
+        public UnityEvent OnChatReadyEvent;
+
         public UnityEvent OnConnectedEvent;
         public UnityEvent<string> OnDisconnectedEvent;
         public UnityEvent<string> OnErrorEvent;
+
+        [Header("Auth Events")]
         public UnityEvent<bool> OnAuthenticatedEvent;
-        public UnityEvent<ChannelMessage> OnMessageReceivedEvent;
+
+        [Header("Channel Events")]
         public UnityEvent<string> OnChannelJoinedEvent;
+
+        [Tooltip("채널 입장 완료 (RecentMessages, Members 포함)")]
+        public UnityEvent<ChannelJoinResult> OnChannelJoinedCompleteEvent;
+
         public UnityEvent<string> OnChannelLeftEvent;
+
+        [Header("Message Events")]
+        public UnityEvent<ChannelMessage> OnMessageReceivedEvent;
+
+        [Tooltip("귓속말 수신")]
+        public UnityEvent<WhisperMessage> OnWhisperReceivedEvent;
+
+        [Header("Notification Events")]
+        [Tooltip("공지사항 수신")]
+        public UnityEvent<AnnouncementMessage> OnAnnouncementReceivedEvent;
+
+        [Tooltip("유저 행동 알림 수신 (아이템 획득, 업적 등)")]
+        public UnityEvent<UserActionNotificationMessage> OnUserActionNotificationEvent;
+
+        [Header("Rich Content Events")]
+        [Tooltip("Rich Content 링크 클릭 (아이템, 유저 등)")]
+        public UnityEvent<RichLinkData> OnLinkClickedEvent;
 
         #endregion
 
@@ -186,8 +220,19 @@ namespace UniversalChat.UI
             manager.OnAuthenticated += HandleAuthenticated;
             manager.OnMessageReceived += HandleMessageReceived;
             manager.OnChannelJoined += HandleChannelJoined;
+            manager.OnChannelJoinedWithHistory += HandleChannelJoinedWithHistory;
             manager.OnChannelLeft += HandleChannelLeft;
             manager.OnChannelListUpdated += HandleChannelListUpdated;
+            manager.OnWhisperReceived += HandleWhisperReceived;
+            manager.OnAnnouncementReceived += HandleAnnouncementReceived;
+            manager.OnUserActionNotificationReceived += HandleUserActionNotificationReceived;
+            manager.OnChatReady += HandleChatReady;
+
+            // RichContent 링크 클릭 이벤트
+            if (RichContentManager.HasInstance)
+            {
+                RichContentManager.Instance.OnLinkClicked += HandleLinkClicked;
+            }
         }
 
         private void UnsubscribeFromEvents()
@@ -201,8 +246,18 @@ namespace UniversalChat.UI
             manager.OnAuthenticated -= HandleAuthenticated;
             manager.OnMessageReceived -= HandleMessageReceived;
             manager.OnChannelJoined -= HandleChannelJoined;
+            manager.OnChannelJoinedWithHistory -= HandleChannelJoinedWithHistory;
             manager.OnChannelLeft -= HandleChannelLeft;
             manager.OnChannelListUpdated -= HandleChannelListUpdated;
+            manager.OnWhisperReceived -= HandleWhisperReceived;
+            manager.OnAnnouncementReceived -= HandleAnnouncementReceived;
+            manager.OnUserActionNotificationReceived -= HandleUserActionNotificationReceived;
+            manager.OnChatReady -= HandleChatReady;
+
+            if (RichContentManager.HasInstance)
+            {
+                RichContentManager.Instance.OnLinkClicked -= HandleLinkClicked;
+            }
         }
 
         #endregion
@@ -210,31 +265,12 @@ namespace UniversalChat.UI
         #region Public Methods
 
         /// <summary>
-        /// 런타임 빌더에서 호출하는 초기화 메서드 (기존 ChatPanel용)
-        /// </summary>
-        public void Initialize(ChatPanel chatPanel, ChatInputField inputField,
-            Button sendButton, Text connectionStatusText, ChatUIConfig config)
-        {
-            _chatPanel = chatPanel;
-            _virtualizedChatPanel = null;
-            _useVirtualizedScroll = false;
-            _inputField = inputField;
-            _sendButton = sendButton;
-            _connectionStatusText = connectionStatusText;
-            _uiConfig = config;
-
-            SetupUIComponents();
-        }
-
-        /// <summary>
-        /// 런타임 빌더에서 호출하는 초기화 메서드 (VirtualizedChatPanel용)
+        /// 런타임 빌더에서 호출하는 초기화 메서드
         /// </summary>
         public void Initialize(VirtualizedChatPanel virtualizedChatPanel, ChatInputField inputField,
             Button sendButton, Text connectionStatusText, ChatUIConfig config)
         {
-            _chatPanel = null;
             _virtualizedChatPanel = virtualizedChatPanel;
-            _useVirtualizedScroll = true;
             _inputField = inputField;
             _sendButton = sendButton;
             _connectionStatusText = connectionStatusText;
@@ -265,9 +301,26 @@ namespace UniversalChat.UI
             ChatManager.Instance?.Disconnect();
         }
 
-        public async Task LoginAsync(string userId, string password = null)
+        public async Task LoginAsync(string userId, string authToken = null)
         {
-            await ChatManager.Instance.LoginAsync(userId, password);
+            await ChatManager.Instance.LoginAsync(userId, authToken);
+        }
+
+        /// <summary>
+        /// 프로필 정보를 포함한 로그인
+        /// </summary>
+        public async Task LoginAsync(string userId, string authToken, string nickname,
+            string profileImage = null, string frameImage = null, string extraData = null)
+        {
+            await ChatManager.Instance.LoginAsync(userId, authToken, nickname, profileImage, frameImage, extraData);
+        }
+
+        /// <summary>
+        /// 귓속말 전송
+        /// </summary>
+        public async Task SendWhisperAsync(string targetUserId, string content)
+        {
+            await ChatManager.Instance.SendWhisperAsync(targetUserId, content);
         }
 
         public async Task JoinChannelAsync(string channelId, string password = null)
@@ -308,15 +361,7 @@ namespace UniversalChat.UI
         public void ClearMessages()
         {
             _messageHistory.Clear();
-
-            if (_useVirtualizedScroll && _virtualizedChatPanel != null)
-            {
-                _virtualizedChatPanel.Clear();
-            }
-            else
-            {
-                _chatPanel?.ClearMessages();
-            }
+            _virtualizedChatPanel?.Clear();
         }
 
         #endregion
@@ -389,14 +434,7 @@ namespace UniversalChat.UI
 
                 // 패널에 현재 사용자 ID 설정 (내 메시지 구분용)
                 string userId = ChatManager.Instance?.UserId;
-                if (_useVirtualizedScroll && _virtualizedChatPanel != null)
-                {
-                    _virtualizedChatPanel.SetCurrentUserId(userId);
-                }
-                else
-                {
-                    _chatPanel?.SetCurrentUserId(userId);
-                }
+                _virtualizedChatPanel?.SetCurrentUserId(userId);
             }
             else
             {
@@ -430,6 +468,27 @@ namespace UniversalChat.UI
             OnChannelJoinedEvent?.Invoke(channelId);
         }
 
+        private void HandleChannelJoinedWithHistory(ChannelJoinResult result)
+        {
+            // 자동 히스토리 로드
+            if (_autoLoadHistoryOnJoin && result.RecentMessages?.Count > 0)
+            {
+                _virtualizedChatPanel?.Clear();
+                foreach (var msg in result.RecentMessages)
+                {
+                    AddMessageToHistory(msg);
+                    _virtualizedChatPanel?.AddMessage(msg);
+                }
+
+                if (_autoScrollToBottom)
+                {
+                    _virtualizedChatPanel?.ScrollToBottom();
+                }
+            }
+
+            OnChannelJoinedCompleteEvent?.Invoke(result);
+        }
+
         private void HandleChannelLeft(string channelId)
         {
             AddSystemMessage($"Left channel: {channelId}");
@@ -441,20 +500,42 @@ namespace UniversalChat.UI
             _channelListPanel?.UpdateChannelList(channels);
         }
 
+        private void HandleWhisperReceived(WhisperMessage whisper)
+        {
+            AddSystemMessage($"[Whisper] {whisper.SenderNickname}: {whisper.Content}");
+            PlaySound(_uiConfig?.MessageReceivedSound);
+            OnWhisperReceivedEvent?.Invoke(whisper);
+        }
+
+        private void HandleAnnouncementReceived(AnnouncementMessage announcement)
+        {
+            AddSystemMessage($"[Announcement] {announcement.Content}");
+            OnAnnouncementReceivedEvent?.Invoke(announcement);
+        }
+
+        private void HandleUserActionNotificationReceived(UserActionNotificationMessage notification)
+        {
+            AddSystemMessage($"[Notification] {notification.Content}");
+            OnUserActionNotificationEvent?.Invoke(notification);
+        }
+
+        private void HandleChatReady()
+        {
+            OnChatReadyEvent?.Invoke();
+        }
+
+        private void HandleLinkClicked(RichLinkData linkData)
+        {
+            OnLinkClickedEvent?.Invoke(linkData);
+        }
+
         #endregion
 
         #region Helper Methods
 
         private void AddMessageToPanel(ChannelMessage message)
         {
-            if (_useVirtualizedScroll && _virtualizedChatPanel != null)
-            {
-                _virtualizedChatPanel.AddMessage(message);
-            }
-            else
-            {
-                _chatPanel?.AddMessage(message, _uiConfig);
-            }
+            _virtualizedChatPanel?.AddMessage(message);
         }
 
         private void AddMessageToHistory(ChannelMessage message)

@@ -69,18 +69,44 @@ namespace UniversalChat.Core
 
         #region Events
 
+        // Connection
         public event Action OnConnected;
         public event Action<string> OnDisconnected;
         public event Action<string> OnError;
+
+        // Auth
         public event Action<bool, string> OnAuthenticated;
-        public event Action<ChannelMessage> OnMessageReceived;
+
+        // Channel (기존 하위호환 유지)
         public event Action<string, string> OnChannelJoined;
         public event Action<string> OnChannelLeft;
         public event Action<List<ChannelInfo>> OnChannelListUpdated;
         public event Action<string, List<UserInfo>> OnUserListUpdated;
         public event Action<bool, string, string> OnChannelAutoAssigned; // success, channelId, errorMessage
+
+        /// <summary>
+        /// 채널 입장 완료 (RecentMessages, Members 포함)
+        /// 일반 Join과 AutoAssign 모두 발생
+        /// </summary>
+        public event Action<ChannelJoinResult> OnChannelJoinedWithHistory;
+
+        // Message
+        public event Action<ChannelMessage> OnMessageReceived;
+
+        /// <summary>
+        /// 귓속말 수신
+        /// </summary>
+        public event Action<WhisperMessage> OnWhisperReceived;
+
+        // Notification
         public event Action<AnnouncementMessage> OnAnnouncementReceived;
         public event Action<UserActionNotificationMessage> OnUserActionNotificationReceived;
+
+        /// <summary>
+        /// 전체 파이프라인 완료 (Connect → Login → JoinChannel 모두 성공)
+        /// Inspector 자동화 파이프라인에서 채널 입장까지 완료되었을 때 발생
+        /// </summary>
+        public event Action OnChatReady;
 
         #endregion
 
@@ -105,6 +131,7 @@ namespace UniversalChat.Core
         private bool _isReconnecting;
 
         // 재연결 시 사용할 인증 정보
+        private string _lastUserId;
         private string _lastAuthToken;
         private string _lastNickname;
         private string _lastProfileImage;
@@ -176,6 +203,7 @@ namespace UniversalChat.Core
             _client.OnChannelListReceived += HandleChannelListReceived;
             _client.OnMemberUpdated += HandleMemberUpdated;
             _client.OnChannelAutoAssigned += HandleChannelAutoAssigned;
+            _client.OnWhisperReceived += HandleWhisperReceived;
             _client.OnAnnouncementReceived += HandleAnnouncementReceived;
             _client.OnUserActionNotificationReceived += HandleUserActionNotificationReceived;
         }
@@ -194,6 +222,7 @@ namespace UniversalChat.Core
                 _client.OnChannelListReceived -= HandleChannelListReceived;
                 _client.OnMemberUpdated -= HandleMemberUpdated;
                 _client.OnChannelAutoAssigned -= HandleChannelAutoAssigned;
+                _client.OnWhisperReceived -= HandleWhisperReceived;
                 _client.OnAnnouncementReceived -= HandleAnnouncementReceived;
                 _client.OnUserActionNotificationReceived -= HandleUserActionNotificationReceived;
 
@@ -256,6 +285,7 @@ namespace UniversalChat.Core
             }
 
             // 재연결 시 사용할 인증 정보 저장
+            _lastUserId = userId;
             _lastAuthToken = authToken;
             _lastNickname = nickname;
             _lastProfileImage = profileImage;
@@ -328,6 +358,22 @@ namespace UniversalChat.Core
         public async Task SendMessageToChannelAsync(string channelId, string content)
         {
             await _client.SendMessageAsync(channelId, content);
+        }
+
+        /// <summary>
+        /// 귓속말 전송
+        /// </summary>
+        /// <param name="targetUserId">대상 사용자 ID</param>
+        /// <param name="content">메시지 내용</param>
+        public async Task SendWhisperAsync(string targetUserId, string content)
+        {
+            if (string.IsNullOrEmpty(targetUserId))
+            {
+                LogError("Target user ID is required for whisper");
+                return;
+            }
+
+            await _client.SendWhisperAsync(targetUserId, content);
         }
 
         /// <summary>
@@ -415,28 +461,32 @@ namespace UniversalChat.Core
 
         private void HandleChannelJoined(ChannelJoinAck protoResponse)
         {
-            var response = new ChannelJoinResponse(protoResponse);
+            var result = new ChannelJoinResult(protoResponse);
 
-            if (response.Success)
+            if (result.Success)
             {
-                Log($"Joined channel: {response.ChannelId}");
-                CurrentChannelId = response.ChannelId;
+                Log($"Joined channel: {result.ChannelId}");
+                CurrentChannelId = result.ChannelId;
 
-                if (!_joinedChannels.Contains(response.ChannelId))
+                if (!_joinedChannels.Contains(result.ChannelId))
                 {
-                    _joinedChannels.Add(response.ChannelId);
+                    _joinedChannels.Add(result.ChannelId);
                 }
 
-                // 유저 목록도 업데이트
-                _userLists[response.ChannelId] = response.Members;
-                OnUserListUpdated?.Invoke(response.ChannelId, response.Members);
+                // 유저 목록 업데이트
+                _userLists[result.ChannelId] = result.Members;
+                OnUserListUpdated?.Invoke(result.ChannelId, result.Members);
 
-                OnChannelJoined?.Invoke(response.ChannelId, response.ChannelId); // ChannelName이 proto에 없음
+                // 하위호환 이벤트
+                OnChannelJoined?.Invoke(result.ChannelId, result.ChannelId);
+
+                // 풀 데이터 이벤트 (RecentMessages 포함)
+                OnChannelJoinedWithHistory?.Invoke(result);
             }
             else
             {
-                LogError($"Failed to join channel: {response.ErrorMessage}");
-                OnError?.Invoke(response.ErrorMessage ?? "Unknown error");
+                LogError($"Failed to join channel: {result.ErrorMessage}");
+                OnError?.Invoke(result.ErrorMessage ?? "Unknown error");
             }
         }
 
@@ -476,35 +526,42 @@ namespace UniversalChat.Core
             Log($"Member update in {update.ChannelId}: {update.User?.Nickname} ({update.UpdateType})");
         }
 
-        private void HandleChannelAutoAssigned(ChannelAutoAssignAck response)
+        private void HandleChannelAutoAssigned(ChannelAutoAssignAck protoResponse)
         {
-            if (response.Success)
+            var result = new ChannelJoinResult(protoResponse);
+
+            if (result.Success)
             {
-                Log($"Auto-assigned to channel: {response.AssignedChannelId}");
-                CurrentChannelId = response.AssignedChannelId;
+                Log($"Auto-assigned to channel: {result.ChannelId}");
+                CurrentChannelId = result.ChannelId;
 
-                if (!_joinedChannels.Contains(response.AssignedChannelId))
+                if (!_joinedChannels.Contains(result.ChannelId))
                 {
-                    _joinedChannels.Add(response.AssignedChannelId);
+                    _joinedChannels.Add(result.ChannelId);
                 }
 
-                // 유저 목록도 업데이트 (proto -> wrapper 변환)
-                var members = new List<UserInfo>();
-                foreach (var protoMember in response.Members)
-                {
-                    members.Add(new UserInfo(protoMember));
-                }
-                _userLists[response.AssignedChannelId] = members;
-                OnUserListUpdated?.Invoke(response.AssignedChannelId, members);
+                // 유저 목록 업데이트
+                _userLists[result.ChannelId] = result.Members;
+                OnUserListUpdated?.Invoke(result.ChannelId, result.Members);
 
-                OnChannelAutoAssigned?.Invoke(true, response.AssignedChannelId, null);
-                OnChannelJoined?.Invoke(response.AssignedChannelId, response.AssignedChannelId);
+                // 하위호환 이벤트
+                OnChannelAutoAssigned?.Invoke(true, result.ChannelId, null);
+                OnChannelJoined?.Invoke(result.ChannelId, result.ChannelId);
+
+                // 풀 데이터 이벤트 (RecentMessages 포함)
+                OnChannelJoinedWithHistory?.Invoke(result);
+
+                // 자동 파이프라인 완료 시 ChatReady 발생
+                if (_autoJoinWorldChannel)
+                {
+                    OnChatReady?.Invoke();
+                }
             }
             else
             {
-                LogError($"Auto-assign failed: {response.ErrorMessage}");
-                OnChannelAutoAssigned?.Invoke(false, null, response.ErrorMessage);
-                OnError?.Invoke(response.ErrorMessage ?? "Auto-assign failed");
+                LogError($"Auto-assign failed: {result.ErrorMessage}");
+                OnChannelAutoAssigned?.Invoke(false, null, result.ErrorMessage);
+                OnError?.Invoke(result.ErrorMessage ?? "Auto-assign failed");
             }
         }
 
@@ -520,6 +577,13 @@ namespace UniversalChat.Core
             var notification = new UserActionNotificationMessage(protoNotification);
             Log($"[UserAction] [{notification.ActionType}] {notification.ActorNickname}: {notification.Title} - {notification.Content}");
             OnUserActionNotificationReceived?.Invoke(notification);
+        }
+
+        private void HandleWhisperReceived(WhisperReceive protoWhisper)
+        {
+            var whisper = new WhisperMessage(protoWhisper);
+            Log($"[Whisper] From {whisper.SenderNickname}: {whisper.Content}");
+            OnWhisperReceived?.Invoke(whisper);
         }
 
         #endregion
@@ -546,10 +610,10 @@ namespace UniversalChat.Core
             {
                 bool connected = await ConnectAsync();
 
-                if (connected && !string.IsNullOrEmpty(UserId))
+                if (connected && !string.IsNullOrEmpty(_lastUserId))
                 {
-                    // 저장된 인증 정보로 재로그인
-                    await LoginAsync(UserId, _lastAuthToken, _lastNickname, _lastProfileImage, _lastFrameImage, _lastExtraData);
+                    // 저장된 인증 정보로 재로그인 (_lastUserId 사용 - Disconnect 시 UserId가 null이 됨)
+                    await LoginAsync(_lastUserId, _lastAuthToken, _lastNickname, _lastProfileImage, _lastFrameImage, _lastExtraData);
                 }
             }
 

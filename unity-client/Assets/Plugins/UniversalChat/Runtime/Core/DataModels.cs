@@ -376,6 +376,73 @@ namespace UniversalChat.Core
     }
 
     /// <summary>
+    /// 채널 입장 결과 (RecentMessages, Members 포함)
+    /// ChatManager.OnChannelJoinedWithHistory 이벤트에서 전달
+    /// </summary>
+    [Serializable]
+    public class ChannelJoinResult
+    {
+        public string ChannelId { get; set; }
+        public string ChannelName { get; set; }
+        public bool IsAutoAssign { get; set; }
+        public bool Success { get; set; }
+        public string ErrorMessage { get; set; }
+        public List<UserInfo> Members { get; set; } = new List<UserInfo>();
+        public List<ChannelMessage> RecentMessages { get; set; } = new List<ChannelMessage>();
+
+        public ChannelJoinResult() { }
+
+        /// <summary>
+        /// ChannelJoinAck (일반 Join)에서 생성
+        /// </summary>
+        public ChannelJoinResult(ChannelJoinAck proto)
+        {
+            Success = proto.Success;
+            ChannelId = proto.ChannelId;
+            ChannelName = proto.ChannelId; // proto에 ChannelName 없음
+            ErrorMessage = proto.ErrorMessage;
+            IsAutoAssign = false;
+
+            if (proto.Members != null)
+            {
+                foreach (var member in proto.Members)
+                    Members.Add(new UserInfo(member));
+            }
+
+            if (proto.RecentMessages != null)
+            {
+                foreach (var msg in proto.RecentMessages)
+                    RecentMessages.Add(new ChannelMessage(msg));
+            }
+        }
+
+        /// <summary>
+        /// ChannelAutoAssignAck (자동 배정)에서 생성
+        /// </summary>
+        public ChannelJoinResult(ChannelAutoAssignAck proto)
+        {
+            Success = proto.Success;
+            ChannelId = proto.AssignedChannelId;
+            ChannelName = proto.AssignedChannelId;
+            ErrorMessage = proto.ErrorMessage;
+            IsAutoAssign = true;
+
+            if (proto.Members != null)
+            {
+                foreach (var member in proto.Members)
+                    Members.Add(new UserInfo(member));
+            }
+
+            // AutoAssign에도 RecentMessages가 있을 수 있음
+            if (proto.RecentMessages != null)
+            {
+                foreach (var msg in proto.RecentMessages)
+                    RecentMessages.Add(new ChannelMessage(msg));
+            }
+        }
+    }
+
+    /// <summary>
     /// 유저 행동 알림 메시지 (proto: UserActionNotificationReceive)
     /// </summary>
     [Serializable]
