@@ -374,6 +374,17 @@ chat.OnChannelAutoAssigned += (success, channelId, message) => {
     if (success) Debug.Log($"자동 배정: {channelId}");
 };
 
+// 채널 입장 (히스토리 + 멤버 포함)
+chat.OnChannelJoinedWithHistory += result => {
+    Debug.Log($"채널 {result.ChannelId} 입장, 멤버 {result.Members.Count}명");
+    foreach (var msg in result.RecentMessages)
+        Debug.Log($"[히스토리] {msg.SenderNickname}: {msg.Content}");
+};
+
+// 귓속말 수신
+chat.OnWhisperReceived += whisper =>
+    Debug.Log($"[귓속말] {whisper.SenderNickname}: {whisper.Content}");
+
 // 공지사항
 chat.OnAnnouncementReceived += announcement =>
     Debug.Log($"[공지] {announcement.Content}");
@@ -381,6 +392,10 @@ chat.OnAnnouncementReceived += announcement =>
 // 유저 행동 알림
 chat.OnUserActionNotificationReceived += notification =>
     Debug.Log($"[알림] {notification.ActorNickname}: {notification.Title}");
+
+// 전체 파이프라인 완료 (Connect → Login → JoinChannel 성공)
+chat.OnChatReady += () =>
+    Debug.Log("채팅 준비 완료! 메시지 송수신 가능");
 ```
 
 ---
@@ -447,14 +462,34 @@ client.Dispose();
 ├── Translation Config: TranslationConfig
 └── Auto Translate On Receive: bool  # 수신 메시지 자동 번역
 
-[Events]  (Inspector에서 연결 가능)
+[Auto Features]
+├── Auto Load History On Join: bool   # 채널 입장 시 최근 메시지 자동 표시 (기본: true)
+└── Auto Scroll To Bottom: bool       # 새 메시지 수신 시 자동 하단 스크롤 (기본: true)
+
+[Lifecycle Events]
+├── OnChatReadyEvent                              # Connect→Login→JoinChannel 파이프라인 완료
 ├── OnConnectedEvent
 ├── OnDisconnectedEvent(string)
-├── OnErrorEvent(string)
-├── OnAuthenticatedEvent(bool)
-├── OnMessageReceivedEvent(ChannelMessage)
+└── OnErrorEvent(string)
+
+[Auth Events]
+└── OnAuthenticatedEvent(bool)
+
+[Channel Events]
 ├── OnChannelJoinedEvent(string)
+├── OnChannelJoinedCompleteEvent(ChannelJoinResult)  # RecentMessages + Members 포함
 └── OnChannelLeftEvent(string)
+
+[Message Events]
+├── OnMessageReceivedEvent(ChannelMessage)
+└── OnWhisperReceivedEvent(WhisperMessage)           # 귓속말 수신
+
+[Notification Events]
+├── OnAnnouncementReceivedEvent(AnnouncementMessage) # 공지사항 수신
+└── OnUserActionNotificationEvent(UserActionNotificationMessage)  # 유저 행동 알림
+
+[Rich Content Events]
+└── OnLinkClickedEvent(RichLinkData)                 # 링크 클릭 (아이템, 유저 등)
 ```
 
 #### 코드 사용
@@ -467,8 +502,13 @@ async void Start()
     // 서버 연결
     await chatUI.ConnectAsync("localhost", 7777);
 
-    // 로그인
-    await chatUI.LoginAsync("user123", nickname: "홍길동");
+    // 로그인 (기본)
+    await chatUI.LoginAsync("user123");
+
+    // 로그인 (프로필 포함)
+    await chatUI.LoginAsync("user123", null, "홍길동",
+        profileImage: "avatar_01", frameImage: "frame_gold",
+        extraData: "{\"level\":50}");
 
     // 채널 입장
     await chatUI.JoinChannelAsync("lobby");
@@ -478,6 +518,12 @@ async void Start()
 public async void OnSendButtonClick(string text)
 {
     await chatUI.SendMessageAsync(text);
+}
+
+// 귓속말 전송
+public async void OnWhisperButtonClick(string targetUserId, string text)
+{
+    await chatUI.SendWhisperAsync(targetUserId, text);
 }
 
 // 시스템 메시지 표시 (서버와 무관, 로컬 UI에만 표시)
@@ -490,19 +536,6 @@ public void ShowNotice(string text)
 public void ClearChat()
 {
     chatUI.ClearMessages();
-}
-
-// 테마 런타임 변경
-public void ApplyDarkTheme(ChatUIConfig darkConfig)
-{
-    chatUI.UpdateUIConfig(darkConfig);
-}
-
-// 사운드 설정
-public void SetupSound(AudioSource audioSource)
-{
-    chatUI.SetAudioSource(audioSource);
-    chatUI.PlayMessageSound(); // 수동 재생
 }
 ```
 
@@ -772,35 +805,81 @@ void HandleError(string error) { /* ... */ }
 
 ### UnityEvent 이벤트
 
-`ChatUIManager`는 Inspector에서 연결 가능한 `UnityEvent`를 제공합니다.
+`ChatUIManager`는 Inspector에서 연결 가능한 13개의 `UnityEvent`를 제공합니다.
 
 ```csharp
-// 코드에서 구독
+// 코드에서 구독 - Lifecycle
+chatUIManager.OnChatReadyEvent.AddListener(OnChatReady);
 chatUIManager.OnConnectedEvent.AddListener(OnConnected);
 chatUIManager.OnDisconnectedEvent.AddListener(OnDisconnected);
-chatUIManager.OnMessageReceivedEvent.AddListener(OnMessage);
 chatUIManager.OnErrorEvent.AddListener(OnError);
+
+// Auth
 chatUIManager.OnAuthenticatedEvent.AddListener(OnAuthenticated);
+
+// Channel
 chatUIManager.OnChannelJoinedEvent.AddListener(OnChannelJoined);
+chatUIManager.OnChannelJoinedCompleteEvent.AddListener(OnChannelJoinedComplete);
 chatUIManager.OnChannelLeftEvent.AddListener(OnChannelLeft);
 
+// Message
+chatUIManager.OnMessageReceivedEvent.AddListener(OnMessage);
+chatUIManager.OnWhisperReceivedEvent.AddListener(OnWhisper);
+
+// Notification
+chatUIManager.OnAnnouncementReceivedEvent.AddListener(OnAnnouncement);
+chatUIManager.OnUserActionNotificationEvent.AddListener(OnUserAction);
+
+// Rich Content
+chatUIManager.OnLinkClickedEvent.AddListener(OnLinkClicked);
+
+void OnChatReady() { Debug.Log("채팅 준비 완료!"); }
 void OnConnected() { Debug.Log("서버 연결됨"); }
 void OnDisconnected(string reason) { Debug.Log($"연결 끊김: {reason}"); }
-void OnMessage(ChannelMessage msg) { Debug.Log($"[{msg.SenderNickname}] {msg.Content}"); }
 void OnError(string error) { Debug.LogError($"에러: {error}"); }
 void OnAuthenticated(bool success) { Debug.Log($"인증: {success}"); }
 void OnChannelJoined(string channelId) { Debug.Log($"채널 입장: {channelId}"); }
+void OnChannelJoinedComplete(ChannelJoinResult result) {
+    Debug.Log($"채널 {result.ChannelId} 입장, 멤버 {result.Members.Count}명, " +
+              $"히스토리 {result.RecentMessages.Count}개");
+}
 void OnChannelLeft(string channelId) { Debug.Log($"채널 퇴장: {channelId}"); }
+void OnMessage(ChannelMessage msg) { Debug.Log($"[{msg.SenderNickname}] {msg.Content}"); }
+void OnWhisper(WhisperMessage whisper) {
+    Debug.Log($"[귓속말] {whisper.SenderNickname}: {whisper.Content}");
+}
+void OnAnnouncement(AnnouncementMessage ann) { Debug.Log($"[공지] {ann.Content}"); }
+void OnUserAction(UserActionNotificationMessage notif) {
+    Debug.Log($"[알림] {notif.ActorNickname}: {notif.Title}");
+}
+void OnLinkClicked(RichLinkData link) {
+    Debug.Log($"[링크] 타입={link.LinkType}, 파라미터={link.Param1}");
+}
 ```
 
 Inspector에서도 직접 이벤트를 연결할 수 있습니다:
 
 ```
 ChatUIManager (Inspector)
-└── Events
-    ├── OnConnectedEvent      → [MyScript.OnConnected()]
-    ├── OnMessageReceivedEvent → [MyChatUI.DisplayMessage(ChannelMessage)]
-    └── OnErrorEvent          → [ErrorPopup.Show(string)]
+├── Lifecycle Events
+│   ├── OnChatReadyEvent       → [MyScript.OnChatReady()]
+│   ├── OnConnectedEvent       → [MyScript.OnConnected()]
+│   ├── OnDisconnectedEvent    → [ErrorPopup.Show(string)]
+│   └── OnErrorEvent           → [ErrorPopup.ShowError(string)]
+├── Auth Events
+│   └── OnAuthenticatedEvent   → [MyScript.OnAuthenticated(bool)]
+├── Channel Events
+│   ├── OnChannelJoinedEvent           → [MyScript.OnChannelJoined(string)]
+│   ├── OnChannelJoinedCompleteEvent   → [MyScript.OnChannelJoinedComplete(ChannelJoinResult)]
+│   └── OnChannelLeftEvent             → [MyScript.OnChannelLeft(string)]
+├── Message Events
+│   ├── OnMessageReceivedEvent  → [MyChatUI.DisplayMessage(ChannelMessage)]
+│   └── OnWhisperReceivedEvent  → [MyChatUI.DisplayWhisper(WhisperMessage)]
+├── Notification Events
+│   ├── OnAnnouncementReceivedEvent     → [NoticeUI.Show(AnnouncementMessage)]
+│   └── OnUserActionNotificationEvent   → [NoticeUI.ShowAction(UserActionNotificationMessage)]
+└── Rich Content Events
+    └── OnLinkClickedEvent     → [ItemPopup.ShowFromLink(RichLinkData)]
 ```
 
 ### 이벤트 전체 목록
@@ -813,12 +892,28 @@ ChatUIManager (Inspector)
 | | `OnAuthenticated` | `bool success, string message` |
 | | `OnMessageReceived` | `ChannelMessage` |
 | | `OnChannelJoined` | `string channelId, string channelName` |
+| | `OnChannelJoinedWithHistory` | `ChannelJoinResult` |
 | | `OnChannelLeft` | `string channelId` |
 | | `OnChannelListUpdated` | `List<ChannelInfo>` |
 | | `OnUserListUpdated` | `string channelId, List<UserInfo>` |
 | | `OnChannelAutoAssigned` | `bool success, string channelId, string message` |
+| | `OnWhisperReceived` | `WhisperMessage` |
 | | `OnAnnouncementReceived` | `AnnouncementMessage` |
 | | `OnUserActionNotificationReceived` | `UserActionNotificationMessage` |
+| | `OnChatReady` | (없음) |
+| **ChatUIManager** | `OnChatReadyEvent` | (없음) |
+| (UnityEvent) | `OnConnectedEvent` | (없음) |
+| | `OnDisconnectedEvent` | `string` |
+| | `OnErrorEvent` | `string` |
+| | `OnAuthenticatedEvent` | `bool` |
+| | `OnChannelJoinedEvent` | `string` |
+| | `OnChannelJoinedCompleteEvent` | `ChannelJoinResult` |
+| | `OnChannelLeftEvent` | `string` |
+| | `OnMessageReceivedEvent` | `ChannelMessage` |
+| | `OnWhisperReceivedEvent` | `WhisperMessage` |
+| | `OnAnnouncementReceivedEvent` | `AnnouncementMessage` |
+| | `OnUserActionNotificationEvent` | `UserActionNotificationMessage` |
+| | `OnLinkClickedEvent` | `RichLinkData` |
 | **GameChatManager** | `OnWorldMessageReceived` | `ChannelMessage` |
 | | `OnGuildMessageReceived` | `ChannelMessage` |
 | | `OnPartyMessageReceived` | `ChannelMessage` |
@@ -880,6 +975,23 @@ public class ChannelMessage
     public long Timestamp { get; set; }           // Unix 밀리초
     public int MessageType { get; set; }          // 0: Normal, 1: System, 2: Whisper
     public DateTime DateTime { get; }             // 로컬 시간으로 변환
+}
+```
+
+### ChannelJoinResult
+
+채널 입장 완료 시 `OnChannelJoinedWithHistory` / `OnChannelJoinedCompleteEvent`로 전달되는 통합 결과 객체입니다.
+
+```csharp
+public class ChannelJoinResult
+{
+    public string ChannelId { get; set; }
+    public string ChannelName { get; set; }
+    public bool IsAutoAssign { get; set; }        // 자동 배정 여부
+    public bool Success { get; set; }
+    public string ErrorMessage { get; set; }
+    public List<UserInfo> Members { get; set; }              // 채널 멤버 목록
+    public List<ChannelMessage> RecentMessages { get; set; } // 최근 메시지 히스토리
 }
 ```
 
@@ -1190,17 +1302,28 @@ client.OnProfileChanged += profileChanged => {
 
 ### 귓속말
 
+3가지 레벨에서 귓속말을 사용할 수 있습니다:
+
 ```csharp
-// ChatClient를 통한 귓속말
-var client = ChatManager.Instance.Client;
+// === ChatManager를 통한 귓속말 (권장) ===
+await ChatManager.Instance.SendWhisperAsync("targetUserId", "귓속말 내용입니다");
 
-// 귓속말 전송
-await client.SendWhisperAsync("targetUserId", "귓속말 내용입니다");
-
-// 귓속말 수신
-client.OnWhisperReceived += whisper => {
+// 수신 이벤트 (Action<WhisperMessage>)
+ChatManager.Instance.OnWhisperReceived += whisper => {
     Debug.Log($"[귓속말] {whisper.SenderNickname}: {whisper.Content}");
 };
+
+// === ChatUIManager를 통한 귓속말 (Inspector 통합) ===
+await chatUIManager.SendWhisperAsync("targetUserId", "귓속말 내용입니다");
+
+// 수신 이벤트 (UnityEvent<WhisperMessage> - Inspector에서 연결 가능)
+chatUIManager.OnWhisperReceivedEvent.AddListener(whisper => {
+    Debug.Log($"[귓속말] {whisper.SenderNickname}: {whisper.Content}");
+});
+
+// === ChatClient를 통한 귓속말 (저수준) ===
+var client = ChatManager.Instance.Client;
+await client.SendWhisperAsync("targetUserId", "귓속말 내용입니다");
 ```
 
 ### 공지사항 수신
