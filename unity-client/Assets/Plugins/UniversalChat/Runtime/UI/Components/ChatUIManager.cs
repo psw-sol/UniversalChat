@@ -117,9 +117,9 @@ namespace UniversalChat.UI
         /// </summary>
         public ChatUIConfig GetConfig() => _uiConfig;
 
-        public bool IsConnected => ChatManager.Instance?.IsConnected ?? false;
-        public bool IsAuthenticated => ChatManager.Instance?.IsAuthenticated ?? false;
-        public string CurrentChannelId => ChatManager.Instance?.CurrentChannelId;
+        public bool IsConnected => _chatService?.IsConnected ?? false;
+        public bool IsAuthenticated => _chatService?.IsAuthenticated ?? false;
+        public string CurrentChannelId => _chatService?.CurrentChannelId;
 
         /// <summary>
         /// 번역 기능이 활성화되어 있는지 여부
@@ -135,6 +135,7 @@ namespace UniversalChat.UI
 
         #region Fields
 
+        private IChatService _chatService;
         private readonly List<ChannelMessage> _messageHistory = new List<ChannelMessage>();
         private AudioSource _audioSource;
 
@@ -151,6 +152,12 @@ namespace UniversalChat.UI
 
         private void Start()
         {
+            // IChatService 미설정 시 ChatManager 자동 감지 (하위 호환)
+            if (_chatService == null)
+            {
+                _chatService = ChatManager.Instance;
+            }
+
             SubscribeToEvents();
 
             if (_connectOnStart)
@@ -211,22 +218,21 @@ namespace UniversalChat.UI
 
         private void SubscribeToEvents()
         {
-            var manager = ChatManager.Instance;
-            if (manager == null) return;
+            if (_chatService == null) return;
 
-            manager.OnConnected += HandleConnected;
-            manager.OnDisconnected += HandleDisconnected;
-            manager.OnError += HandleError;
-            manager.OnAuthenticated += HandleAuthenticated;
-            manager.OnMessageReceived += HandleMessageReceived;
-            manager.OnChannelJoined += HandleChannelJoined;
-            manager.OnChannelJoinedWithHistory += HandleChannelJoinedWithHistory;
-            manager.OnChannelLeft += HandleChannelLeft;
-            manager.OnChannelListUpdated += HandleChannelListUpdated;
-            manager.OnWhisperReceived += HandleWhisperReceived;
-            manager.OnAnnouncementReceived += HandleAnnouncementReceived;
-            manager.OnUserActionNotificationReceived += HandleUserActionNotificationReceived;
-            manager.OnChatReady += HandleChatReady;
+            _chatService.OnConnected += HandleConnected;
+            _chatService.OnDisconnected += HandleDisconnected;
+            _chatService.OnError += HandleError;
+            _chatService.OnAuthenticated += HandleAuthenticated;
+            _chatService.OnMessageReceived += HandleMessageReceived;
+            _chatService.OnChannelJoined += HandleChannelJoined;
+            _chatService.OnChannelJoinedWithHistory += HandleChannelJoinedWithHistory;
+            _chatService.OnChannelLeft += HandleChannelLeft;
+            _chatService.OnChannelListUpdated += HandleChannelListUpdated;
+            _chatService.OnWhisperReceived += HandleWhisperReceived;
+            _chatService.OnAnnouncementReceived += HandleAnnouncementReceived;
+            _chatService.OnUserActionNotificationReceived += HandleUserActionNotificationReceived;
+            _chatService.OnChatReady += HandleChatReady;
 
             // RichContent 링크 클릭 이벤트
             if (RichContentManager.HasInstance)
@@ -237,22 +243,21 @@ namespace UniversalChat.UI
 
         private void UnsubscribeFromEvents()
         {
-            var manager = ChatManager.Instance;
-            if (manager == null) return;
+            if (_chatService == null) return;
 
-            manager.OnConnected -= HandleConnected;
-            manager.OnDisconnected -= HandleDisconnected;
-            manager.OnError -= HandleError;
-            manager.OnAuthenticated -= HandleAuthenticated;
-            manager.OnMessageReceived -= HandleMessageReceived;
-            manager.OnChannelJoined -= HandleChannelJoined;
-            manager.OnChannelJoinedWithHistory -= HandleChannelJoinedWithHistory;
-            manager.OnChannelLeft -= HandleChannelLeft;
-            manager.OnChannelListUpdated -= HandleChannelListUpdated;
-            manager.OnWhisperReceived -= HandleWhisperReceived;
-            manager.OnAnnouncementReceived -= HandleAnnouncementReceived;
-            manager.OnUserActionNotificationReceived -= HandleUserActionNotificationReceived;
-            manager.OnChatReady -= HandleChatReady;
+            _chatService.OnConnected -= HandleConnected;
+            _chatService.OnDisconnected -= HandleDisconnected;
+            _chatService.OnError -= HandleError;
+            _chatService.OnAuthenticated -= HandleAuthenticated;
+            _chatService.OnMessageReceived -= HandleMessageReceived;
+            _chatService.OnChannelJoined -= HandleChannelJoined;
+            _chatService.OnChannelJoinedWithHistory -= HandleChannelJoinedWithHistory;
+            _chatService.OnChannelLeft -= HandleChannelLeft;
+            _chatService.OnChannelListUpdated -= HandleChannelListUpdated;
+            _chatService.OnWhisperReceived -= HandleWhisperReceived;
+            _chatService.OnAnnouncementReceived -= HandleAnnouncementReceived;
+            _chatService.OnUserActionNotificationReceived -= HandleUserActionNotificationReceived;
+            _chatService.OnChatReady -= HandleChatReady;
 
             if (RichContentManager.HasInstance)
             {
@@ -280,30 +285,55 @@ namespace UniversalChat.UI
         }
 
         /// <summary>
-        /// ChatManager의 Inspector 설정을 사용하여 연결
+        /// IChatService를 주입합니다.
+        /// ChatServiceBase 또는 IChatService 구현체를 사용할 때 호출하세요.
+        /// 미호출 시 ChatManager.Instance를 자동으로 사용합니다.
         /// </summary>
-        public async Task ConnectAsync()
+        public void SetChatService(IChatService service)
         {
-            await ChatManager.Instance.ConnectAsync();
+            // 기존 이벤트 해제
+            UnsubscribeFromEvents();
+
+            _chatService = service;
+
+            // 새 서비스 이벤트 구독
+            SubscribeToEvents();
         }
 
         /// <summary>
-        /// 지정된 서버로 연결 (ChatManager 설정을 오버라이드)
+        /// 서버에 연결 (IChatService 사용)
         /// </summary>
         public async Task ConnectAsync(string host, int port)
         {
-            ChatManager.Instance.Configure(host, port);
-            await ChatManager.Instance.ConnectAsync();
+            if (_chatService == null) return;
+            await _chatService.ConnectAsync(host, port);
+        }
+
+        /// <summary>
+        /// ChatManager의 Inspector 설정을 사용하여 연결
+        /// (ChatManager를 IChatService로 사용 중일 때만 동작)
+        /// </summary>
+        public async Task ConnectAsync()
+        {
+            if (_chatService is ChatManager chatManager)
+            {
+                await chatManager.ConnectAsync();
+            }
+            else if (_chatService != null)
+            {
+                Debug.LogWarning("[ChatUIManager] ConnectAsync() without parameters requires ChatManager. Use ConnectAsync(host, port) instead.");
+            }
         }
 
         public void Disconnect()
         {
-            ChatManager.Instance?.Disconnect();
+            _chatService?.Disconnect();
         }
 
         public async Task LoginAsync(string userId, string authToken = null)
         {
-            await ChatManager.Instance.LoginAsync(userId, authToken);
+            if (_chatService == null) return;
+            await _chatService.LoginAsync(userId, authToken);
         }
 
         /// <summary>
@@ -312,7 +342,8 @@ namespace UniversalChat.UI
         public async Task LoginAsync(string userId, string authToken, string nickname,
             string profileImage = null, string frameImage = null, string extraData = null)
         {
-            await ChatManager.Instance.LoginAsync(userId, authToken, nickname, profileImage, frameImage, extraData);
+            if (_chatService == null) return;
+            await _chatService.LoginAsync(userId, authToken, nickname, profileImage, frameImage, extraData);
         }
 
         /// <summary>
@@ -320,24 +351,30 @@ namespace UniversalChat.UI
         /// </summary>
         public async Task SendWhisperAsync(string targetUserId, string content)
         {
-            await ChatManager.Instance.SendWhisperAsync(targetUserId, content);
+            if (_chatService == null) return;
+            await _chatService.SendWhisperAsync(targetUserId, content);
         }
 
         public async Task JoinChannelAsync(string channelId, string password = null)
         {
-            await ChatManager.Instance.JoinChannelAsync(channelId, password);
+            if (_chatService == null) return;
+            await _chatService.JoinChannelAsync(channelId, password);
         }
 
         public async Task LeaveChannelAsync(string channelId)
         {
-            await ChatManager.Instance.LeaveChannelAsync(channelId);
+            if (_chatService == null) return;
+            await _chatService.LeaveChannelAsync(channelId);
         }
 
         public async Task SendMessageAsync(string content)
         {
-            if (string.IsNullOrWhiteSpace(content)) return;
+            if (string.IsNullOrWhiteSpace(content) || _chatService == null) return;
 
-            await ChatManager.Instance.SendMessageAsync(content);
+            string channelId = _chatService.CurrentChannelId;
+            if (string.IsNullOrEmpty(channelId)) return;
+
+            await _chatService.SendMessageAsync(channelId, content);
             PlaySound(_uiConfig?.MessageSentSound);
         }
 
@@ -433,7 +470,7 @@ namespace UniversalChat.UI
                 AddSystemMessage("Successfully logged in");
 
                 // 패널에 현재 사용자 ID 설정 (내 메시지 구분용)
-                string userId = ChatManager.Instance?.UserId;
+                string userId = _chatService?.UserId;
                 _virtualizedChatPanel?.SetCurrentUserId(userId);
             }
             else
@@ -454,7 +491,7 @@ namespace UniversalChat.UI
             // 자동 번역 (설정이 켜져 있고, 내 메시지가 아닌 경우)
             if (_autoTranslateOnReceive && IsTranslationEnabled && _translationConfig.AutoTranslate)
             {
-                string myUserId = ChatManager.Instance?.UserId;
+                string myUserId = _chatService?.UserId;
                 if (message.SenderId != myUserId)
                 {
                     _ = AutoTranslateMessageAsync(message);

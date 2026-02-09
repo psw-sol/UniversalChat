@@ -11,7 +11,7 @@ namespace UniversalChat.Core
     /// Unity MonoBehaviour 기반 채팅 매니저
     /// ChatClient를 래핑하여 Unity 생명주기와 통합
     /// </summary>
-    public class ChatManager : MonoBehaviour
+    public class ChatManager : MonoBehaviour, IChatService
     {
         #region Singleton
 
@@ -116,6 +116,7 @@ namespace UniversalChat.Core
         public bool IsAuthenticated => _client?.IsAuthenticated ?? false;
         public string UserId => _client?.UserId;
         public string CurrentChannelId { get; private set; }
+        public IReadOnlyList<string> JoinedChannels => _joinedChannels.AsReadOnly();
         public IReadOnlyList<ChannelInfo> ChannelList => _channelList;
         public IReadOnlyDictionary<string, List<UserInfo>> UserLists => _userLists;
 
@@ -390,6 +391,48 @@ namespace UniversalChat.Core
 
             Log($"Requesting auto-assign to {channelType} channel...");
             await _client.RequestAutoAssignChannelAsync(channelType);
+        }
+
+        #endregion
+
+        #region IChatService Methods
+
+        /// <summary>
+        /// 지정된 서버로 연결 (IChatService 구현)
+        /// </summary>
+        async Task<bool> IChatService.ConnectAsync(string host, int port, int timeoutMs)
+        {
+            Configure(host, port);
+            _connectionTimeoutMs = timeoutMs;
+            return await ConnectAsync();
+        }
+
+        /// <summary>
+        /// IChatService.RequestAutoAssignChannelAsync 구현
+        /// </summary>
+        async Task IChatService.RequestAutoAssignChannelAsync(string channelType)
+        {
+            await JoinAutoAssignedChannelAsync(channelType);
+        }
+
+        /// <summary>
+        /// 특정 채널에 메시지 전송 (IChatService 구현)
+        /// </summary>
+        async Task IChatService.SendMessageAsync(string channelId, string content, int messageType)
+        {
+            await _client.SendMessageAsync(channelId, content, (MessageType)messageType);
+        }
+
+        /// <summary>
+        /// 프로필 업데이트 (IChatService 구현)
+        /// </summary>
+        public async Task UpdateProfileAsync(
+            string nickname = null,
+            string profileImage = null,
+            string frameImage = null,
+            string extraData = null)
+        {
+            await _client.UpdateProfileAsync(nickname, profileImage, frameImage, extraData);
         }
 
         #endregion

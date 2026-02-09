@@ -10,8 +10,13 @@ UniversalChatServer(C++ 채팅 서버)와 통신하는 Unity 채팅 클라이언
 2. [설치 및 요구사항](#설치-및-요구사항)
 3. [빠른 시작](#빠른-시작)
 4. [아키텍처](#아키텍처)
+   - [3-Level 사용 패턴](#3-level-사용-패턴)
+   - [계층 구조](#계층-구조)
+   - [이벤트 파이프라인](#이벤트-파이프라인)
 5. [핵심 컴포넌트 API](#핵심-컴포넌트-api)
-   - [ChatManager](#chatmanager)
+   - [IChatService (인터페이스)](#ichatservice-인터페이스)
+   - [ChatManager (Level 1)](#chatmanager-level-1)
+   - [ChatServiceBase (Level 2)](#chatservicebase-level-2)
    - [ChatClient](#chatclient)
    - [ChatUIManager](#chatuimanager)
    - [ChatUIBuilder](#chatuibuilder)
@@ -20,12 +25,13 @@ UniversalChatServer(C++ 채팅 서버)와 통신하는 Unity 채팅 클라이언
    - [코드에서 생성](#방법-2-코드에서-생성)
    - [ChatUIConfig 테마 설정](#chatuiconfig-테마-설정)
 7. [게임 통합 패턴](#게임-통합-패턴)
-   - [GameChatManager 사용](#gamechatmanager-사용)
+   - [GameChatManager 샘플](#gamechatmanager-샘플)
    - [채널 타입별 관리](#채널-타입별-관리)
    - [메시지 히스토리](#메시지-히스토리)
 8. [이벤트 시스템](#이벤트-시스템)
-   - [C# Action 이벤트](#c-action-이벤트)
-   - [UnityEvent 이벤트](#unityevent-이벤트)
+   - [IChatService 이벤트 (C# Action)](#ichatservice-이벤트-c-action)
+   - [Typed Channel 이벤트 (ChatServiceBase)](#typed-channel-이벤트-chatservicebase)
+   - [UnityEvent 이벤트 (ChatUIManager)](#unityevent-이벤트-chatuimanager)
 9. [데이터 모델](#데이터-모델)
 10. [Rich Content 시스템](#rich-content-시스템)
 11. [번역 시스템](#번역-시스템)
@@ -55,6 +61,8 @@ UniversalChatServer(C++ 채팅 서버)와 통신하는 Unity 채팅 클라이언
 - **실시간 채팅**: TCP 소켓 기반 저지연 메시지 송수신
 - **채널 시스템**: 월드/길드/파티 등 다중 채널 동시 참여
 - **Plug & Play UI**: 프리팹 없이 런타임 UI 동적 생성
+- **3-Level 사용 패턴**: Zero Code → Minimal Code → Full Control
+- **IChatService 추상화**: 모든 UI가 의존하는 공통 인터페이스
 - **Rich Content**: 클릭 가능한 링크 (아이템, 유저 등) 지원
 - **번역**: REST API 기반 다국어 자동 번역
 - **자동 재연결**: 연결 끊김 시 자동 복구
@@ -68,7 +76,9 @@ UniversalChatServer(C++ 채팅 서버)와 통신하는 Unity 채팅 클라이언
 Assets/Plugins/UniversalChat/
 ├── Runtime/                        # 런타임 코드
 │   ├── Core/                      # 핵심 비즈니스 로직
-│   │   ├── ChatManager.cs         # MonoBehaviour 싱글톤
+│   │   ├── IChatService.cs        # 채팅 서비스 추상화 인터페이스
+│   │   ├── ChatServiceBase.cs     # 제네릭 기본 구현 (Level 2)
+│   │   ├── ChatManager.cs         # MonoBehaviour 싱글톤 (Level 1)
 │   │   ├── ChatClient.cs          # 서버 통신 클라이언트
 │   │   └── DataModels.cs          # Proto 래퍼 클래스
 │   ├── Network/                   # 네트워크 통신
@@ -106,7 +116,7 @@ Assets/Plugins/UniversalChat/
 │   ├── ChatUISampleSceneGenerator.cs
 │   └── RichContentEditorMenu.cs
 ├── Samples/                       # 샘플 및 통합 예시
-│   ├── Scripts/GameChatManager.cs # 게임 통합 예시
+│   ├── Scripts/GameChatManager.cs # 게임 통합 예시 (ChatServiceBase 기반)
 │   ├── GameIntegration/           # Rich Content 예시
 │   └── README.md                  # ← 이 파일
 └── package.json                   # Unity 패키지 메타데이터
@@ -124,17 +134,18 @@ Assets/Plugins/UniversalChat/
 
 ### 설치 방법
 
-#### 방법 A: 폴더 복사 (권장)
+#### 방법 A: Unity Package Manager (Git URL)
+
+`Packages/manifest.json`에 추가:
+
+```json
+"com.universalchat.client": "https://github.com/psw-sol/UniversalChat.git?path=unity-client/Assets/Plugins/UniversalChat#v1.0.0"
+```
+
+#### 방법 B: 폴더 복사
 
 ```
 Assets/Plugins/UniversalChat/ 폴더 전체를 프로젝트에 복사
-```
-
-#### 방법 B: Unity Package Manager
-
-```
-Window → Package Manager → "+" → Add package from disk
-→ Assets/Plugins/UniversalChat/package.json 선택
 ```
 
 ### Google.Protobuf 설정
@@ -151,7 +162,7 @@ Assets/Plugins/
 
 ## 빠른 시작
 
-### 30초 빠른 시작
+### Level 1: 30초 빠른 시작 (Zero Code)
 
 ```csharp
 using UniversalChat.Core;
@@ -169,7 +180,49 @@ ChatManager.Instance.OnMessageReceived += msg =>
     Debug.Log($"[{msg.SenderNickname}] {msg.Content}");
 ```
 
-### 기본 통합 예시
+### Level 2: 게임 통합 (Minimal Code)
+
+```csharp
+using UniversalChat.Core;
+using UniversalChat.UI;
+
+// 1. 채팅 서비스 정의 (ClassifyChannel 하나만 구현)
+public class MyChatService : ChatServiceBase<MyChatService.ChannelType>
+{
+    public enum ChannelType { World, Guild, Party, Custom }
+
+    protected override ChannelType ClassifyChannel(string channelId)
+    {
+        if (channelId.StartsWith("world")) return ChannelType.World;
+        if (channelId.StartsWith("guild_")) return ChannelType.Guild;
+        if (channelId.StartsWith("party_")) return ChannelType.Party;
+        return ChannelType.Custom;
+    }
+}
+
+// 2. MonoBehaviour에서 사용
+public class GameChat : MonoBehaviour
+{
+    [SerializeField] private ChatUIManager chatUI;
+    private MyChatService _chatService;
+
+    void Awake()
+    {
+        _chatService = new MyChatService();
+        chatUI.SetChatService(_chatService);  // UI에 서비스 주입
+    }
+
+    async void Start()
+    {
+        await _chatService.ConnectAndLoginAsync("localhost", 7777, "user123", nickname: "홍길동");
+        await _chatService.RequestAutoAssignChannelAsync("world");
+    }
+
+    void OnDestroy() => _chatService?.Dispose();
+}
+```
+
+### 기본 UI 통합 예시
 
 ```csharp
 using UnityEngine;
@@ -206,25 +259,64 @@ public class SimpleChatSetup : MonoBehaviour
 
 ## 아키텍처
 
+### 3-Level 사용 패턴
+
+UniversalChat은 프로젝트 요구에 맞는 3단계 사용 레벨을 제공합니다:
+
+| Level | 이름 | 구현 방식 | 적합한 경우 |
+|-------|------|----------|-------------|
+| **Level 1** | Zero Code | `ChatManager` + `ChatUIManager` | 빠른 프로토타이핑, 단순 채팅 |
+| **Level 2** | Minimal Code | `ChatServiceBase<T>` 상속 | 게임별 채널 타입 관리 필요 |
+| **Level 3** | Full Control | `IChatService` 직접 구현 | 기존 시스템 통합, 완전 커스텀 |
+
+```
+Level 1 (Zero Code)         Level 2 (Minimal Code)        Level 3 (Full Control)
+┌──────────────────┐     ┌──────────────────────┐     ┌──────────────────────┐
+│  ChatManager     │     │ ChatServiceBase<T>   │     │ IChatService 직접    │
+│  (MonoBehaviour  │     │ - ClassifyChannel()  │     │ 구현                  │
+│   싱글톤)        │     │   하나만 구현         │     │                      │
+│                  │     │ - 자동: 재연결,       │     │ 완전한 자유도        │
+│  Inspector만으로 │     │   히스토리, 타입별    │     │ 기존 시스템 통합     │
+│  사용 가능       │     │   이벤트 등 내장      │     │                      │
+└──────┬───────────┘     └──────────┬───────────┘     └──────────┬───────────┘
+       │                            │                            │
+       └────────────────────────────┼────────────────────────────┘
+                                    │
+                          ┌─────────▼─────────┐
+                          │   IChatService     │ ← 공통 인터페이스
+                          │  (14개 이벤트)     │
+                          └─────────┬─────────┘
+                                    │
+                          ┌─────────▼─────────┐
+                          │  ChatUIManager     │ ← UI 자동 연결
+                          │  (13개 UnityEvent) │
+                          └───────────────────┘
+```
+
 ### 계층 구조
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                     게임 코드 (사용자 구현)                       │
-│  GameChatManager / ChatPopup / 커스텀 UI                         │
+│  Level 1: ChatManager 직접 사용                                  │
+│  Level 2: ChatServiceBase<T> 상속 (ClassifyChannel만 구현)       │
+│  Level 3: IChatService 직접 구현                                 │
 └──────────────────────────┬──────────────────────────────────────┘
-                           │
+                           │ SetChatService(IChatService)
 ┌──────────────────────────┼──────────────────────────────────────┐
-│  ChatUIManager (UI 계층) │ UnityEvent 기반                       │
+│  ChatUIManager (UI 계층) │ IChatService 의존, UnityEvent 기반    │
 │  ├─ VirtualizedChatPanel │ 가상화 스크롤 메시지 표시              │
 │  ├─ ChatInputField       │ 메시지 입력                           │
 │  ├─ ChannelListPanel     │ 채널 목록                             │
 │  └─ RichContentManager   │ 클릭 가능 링크                        │
 └──────────────────────────┼──────────────────────────────────────┘
-                           │
+                           │ IChatService 인터페이스
 ┌──────────────────────────┼──────────────────────────────────────┐
-│  ChatManager (비즈니스 계층)  │ 싱글톤, 상태 관리, 자동 재연결   │
-│  └─ TranslationManager       │ 번역 서비스 통합                  │
+│  IChatService 구현체                                             │
+│  ├─ ChatManager              │ Level 1 (MonoBehaviour 싱글톤)    │
+│  ├─ ChatServiceBase<T>       │ Level 2 (제네릭 기본 클래스)      │
+│  │   └─ GameChatManager      │ Level 2 샘플                      │
+│  └─ (커스텀 구현)            │ Level 3                           │
 └──────────────────────────┼──────────────────────────────────────┘
                            │
 ┌──────────────────────────┼──────────────────────────────────────┐
@@ -234,19 +326,23 @@ public class SimpleChatSetup : MonoBehaviour
 └──────────────────────────┴──────────────────────────────────────┘
 ```
 
-### 요청 처리 흐름
+### 이벤트 파이프라인
 
 ```
-1. 사용자 코드에서 ChatManager.SendMessageAsync("Hello") 호출
-2. ChatManager → ChatClient.SendMessageAsync(channelId, "Hello") 위임
-3. ChatClient → PacketSerializer.Encode(MessageSend proto) 직렬화
-4. ChatConnection → TCP 소켓으로 [8B 헤더 + Protobuf 바디] 전송
-5. 서버 응답 수신 → ChatConnection 네트워크 스레드에서 바이트 수신
-6. MainThreadDispatcher → Unity 메인 스레드로 콜백 전달
-7. PacketSerializer.Decode() → Protobuf 역직렬화
-8. ChatClient → OnMessageReceived 이벤트 발행
-9. ChatManager → DataModels 래퍼로 변환 → OnMessageReceived 이벤트 발행
-10. ChatUIManager → UI 업데이트 (메시지 표시)
+ChatClient (proto 이벤트)
+    │
+    ├─ ChatManager (Level 1)
+    │   Proto → Domain 변환 → IChatService 이벤트 발행
+    │
+    ├─ ChatServiceBase<T> (Level 2)
+    │   Proto → Domain 변환 → IChatService 이벤트 + Typed Channel 이벤트 발행
+    │
+    └─ 커스텀 (Level 3)
+        사용자 정의 변환 및 이벤트 발행
+            │
+            ▼
+    ChatUIManager (IChatService 이벤트 구독)
+        → UnityEvent 발행 → Inspector 연결 가능
 ```
 
 ### 스레드 안전성
@@ -257,9 +353,92 @@ public class SimpleChatSetup : MonoBehaviour
 
 ## 핵심 컴포넌트 API
 
-### ChatManager
+### IChatService (인터페이스)
 
-**역할**: MonoBehaviour 싱글톤. 게임 코드에서 주로 사용하는 최상위 API.
+**역할**: 모든 UI 컴포넌트가 의존하는 채팅 서비스 추상화. Level 1~3 모두 이 인터페이스를 구현합니다.
+
+```csharp
+using UniversalChat.Core;
+```
+
+#### 프로퍼티
+
+| 프로퍼티 | 타입 | 설명 |
+|----------|------|------|
+| `IsConnected` | `bool` | 서버 연결 상태 |
+| `IsAuthenticated` | `bool` | 인증(로그인) 상태 |
+| `UserId` | `string` | 로그인한 사용자 ID |
+| `CurrentChannelId` | `string` | 현재 활성 채널 ID |
+| `JoinedChannels` | `IReadOnlyList<string>` | 입장한 채널 ID 목록 |
+
+#### 메서드
+
+```csharp
+IChatService chat = ...; // ChatManager.Instance 또는 커스텀 서비스
+
+// 연결
+await chat.ConnectAsync("192.168.1.100", 7777, timeoutMs: 5000);
+chat.Disconnect();
+
+// 로그인 (모든 파라미터는 nickname 이후 선택사항)
+await chat.LoginAsync(
+    userId: "user123",
+    authToken: null,
+    nickname: "홍길동",
+    profileImage: "avatar_01",
+    frameImage: "frame_gold",
+    extraData: "{\"level\":50}");
+
+// 채널
+await chat.JoinChannelAsync("lobby", password: null);
+await chat.LeaveChannelAsync("lobby");
+await chat.RequestAutoAssignChannelAsync("world");
+
+// 메시지
+await chat.SendMessageAsync("channelId", "안녕하세요!", messageType: 0);
+await chat.SendWhisperAsync("targetUserId", "귓속말입니다");
+
+// 프로필
+await chat.UpdateProfileAsync(nickname: "새닉네임", profileImage: "avatar_02");
+```
+
+#### 이벤트
+
+```csharp
+IChatService chat = ...;
+
+// Connection
+chat.OnConnected += () => Debug.Log("연결됨");
+chat.OnDisconnected += reason => Debug.Log($"연결 끊김: {reason}");
+chat.OnError += error => Debug.LogError(error);
+
+// Auth
+chat.OnAuthenticated += (success, message) => Debug.Log($"인증: {success}");
+
+// Channel
+chat.OnChannelJoined += (channelId, channelName) => Debug.Log($"채널 입장: {channelId}");
+chat.OnChannelJoinedWithHistory += result => Debug.Log($"멤버 {result.Members.Count}명");
+chat.OnChannelLeft += channelId => Debug.Log($"채널 퇴장: {channelId}");
+chat.OnChannelListUpdated += channels => Debug.Log($"채널 {channels.Count}개");
+chat.OnUserListUpdated += (channelId, users) => Debug.Log($"유저 {users.Count}명");
+
+// Message
+chat.OnMessageReceived += msg => Debug.Log($"[{msg.SenderNickname}] {msg.Content}");
+chat.OnWhisperReceived += whisper => Debug.Log($"[귓속말] {whisper.Content}");
+
+// Notification
+chat.OnAnnouncementReceived += ann => Debug.Log($"[공지] {ann.Content}");
+chat.OnUserActionNotificationReceived += notif => Debug.Log($"[알림] {notif.Title}");
+
+// State
+chat.OnChatReady += () => Debug.Log("채팅 준비 완료!");
+```
+
+---
+
+### ChatManager (Level 1)
+
+**역할**: MonoBehaviour 싱글톤. `IChatService`를 구현하며, Inspector 설정만으로 사용 가능합니다.
 
 ```csharp
 using UniversalChat.Core;
@@ -267,135 +446,194 @@ using UniversalChat.Core;
 var chat = ChatManager.Instance;
 ```
 
-#### 프로퍼티
+#### ChatManager 전용 프로퍼티
 
 | 프로퍼티 | 타입 | 설명 |
 |----------|------|------|
 | `Instance` | `ChatManager` | 싱글톤 인스턴스 (없으면 자동 생성) |
-| `IsConnected` | `bool` | 서버 연결 상태 |
-| `IsAuthenticated` | `bool` | 인증(로그인) 상태 |
-| `UserId` | `string` | 로그인한 사용자 ID |
-| `CurrentChannelId` | `string` | 현재 활성 채널 ID |
 | `ChannelList` | `IReadOnlyList<ChannelInfo>` | 채널 목록 |
 | `UserLists` | `IReadOnlyDictionary<string, List<UserInfo>>` | 채널별 유저 목록 |
 
-#### 연결 메서드
+#### ChatManager 전용 메서드
 
 ```csharp
-// 서버 주소 설정
+// 서버 주소 설정 (Inspector 또는 코드)
 chat.Configure("192.168.1.100", 7777);
 
-// 서버 연결
+// 파라미터 없는 연결 (Configure된 주소 사용)
 bool connected = await chat.ConnectAsync();
-
-// 연결 해제
-chat.Disconnect();
-
-// 로그인 (모든 파라미터는 nickname 이후 선택사항)
-bool loggedIn = await chat.LoginAsync(
-    userId: "user123",
-    authToken: null,         // 인증 토큰 (서버 설정에 따라)
-    nickname: "홍길동",
-    profileImage: "avatar_01",
-    frameImage: "frame_gold",
-    extraData: "{\"level\":50}"  // 게임별 커스텀 데이터 (JSON)
-);
 
 // 연결 + 로그인 한 번에
 bool success = await chat.ConnectAndLoginAsync(
     "localhost", 7777, "user123", nickname: "홍길동");
-```
 
-#### 채널 메서드
+// 현재 활성 채널에 메시지 전송 (channelId 불필요)
+await chat.SendMessageAsync("안녕하세요!");
 
-```csharp
-// 채널 입장
-await chat.JoinChannelAsync("lobby");
-await chat.JoinChannelAsync("guild_123", password: "secret");
+// 특정 채널에 메시지 전송
+await chat.SendMessageToChannelAsync("world_1", "월드 메시지입니다");
 
-// 자동 배정 채널 입장 (서버가 적절한 채널 배정)
+// 자동 배정 채널 입장
 await chat.JoinAutoAssignedChannelAsync("world");
 
-// 채널 퇴장
-await chat.LeaveChannelAsync("lobby");
-
-// 채널 목록 새로고침
+// 채널 목록/멤버 새로고침
 await chat.RefreshChannelListAsync();
-
-// 채널 멤버 목록 새로고침
 await chat.RefreshUserListAsync("lobby");
 
 // 채널 생성
 await chat.CreateChannelAsync("my_room", password: null, maxUsers: 100);
 ```
 
-#### 메시지 메서드
+#### ChatManager 전용 이벤트
 
 ```csharp
-// 현재 활성 채널에 메시지 전송
-await chat.SendMessageAsync("안녕하세요!");
-
-// 특정 채널에 메시지 전송
-await chat.SendMessageToChannelAsync("world_1", "월드 메시지입니다");
-```
-
-#### 이벤트
-
-```csharp
-// 연결 이벤트
-chat.OnConnected += () => Debug.Log("연결됨");
-chat.OnDisconnected += reason => Debug.Log($"연결 끊김: {reason}");
-chat.OnError += error => Debug.LogError(error);
-
-// 인증 이벤트
-chat.OnAuthenticated += (success, message) => {
-    if (success) Debug.Log("로그인 성공");
-    else Debug.LogError($"로그인 실패: {message}");
-};
-
-// 메시지 수신
-chat.OnMessageReceived += msg => {
-    Debug.Log($"[{msg.SenderNickname}] {msg.Content}");
-    Debug.Log($"채널: {msg.ChannelId}, 시간: {msg.DateTime}");
-};
-
-// 채널 이벤트
-chat.OnChannelJoined += (channelId, channelName) =>
-    Debug.Log($"채널 입장: {channelName} ({channelId})");
-chat.OnChannelLeft += channelId =>
-    Debug.Log($"채널 퇴장: {channelId}");
-chat.OnChannelListUpdated += channels =>
-    Debug.Log($"채널 {channels.Count}개 업데이트");
-chat.OnUserListUpdated += (channelId, users) =>
-    Debug.Log($"채널 {channelId} 유저 {users.Count}명");
-
-// 자동 배정 채널
 chat.OnChannelAutoAssigned += (success, channelId, message) => {
     if (success) Debug.Log($"자동 배정: {channelId}");
 };
+```
 
-// 채널 입장 (히스토리 + 멤버 포함)
-chat.OnChannelJoinedWithHistory += result => {
-    Debug.Log($"채널 {result.ChannelId} 입장, 멤버 {result.Members.Count}명");
-    foreach (var msg in result.RecentMessages)
-        Debug.Log($"[히스토리] {msg.SenderNickname}: {msg.Content}");
-};
+> **참고**: ChatManager는 IChatService의 모든 이벤트도 지원합니다. 위의 [IChatService 이벤트](#이벤트) 섹션을 참조하세요.
 
-// 귓속말 수신
-chat.OnWhisperReceived += whisper =>
-    Debug.Log($"[귓속말] {whisper.SenderNickname}: {whisper.Content}");
+---
 
-// 공지사항
-chat.OnAnnouncementReceived += announcement =>
-    Debug.Log($"[공지] {announcement.Content}");
+### ChatServiceBase (Level 2)
 
-// 유저 행동 알림
-chat.OnUserActionNotificationReceived += notification =>
-    Debug.Log($"[알림] {notification.ActorNickname}: {notification.Title}");
+**역할**: 게임 프로젝트를 위한 제네릭 기본 구현. `IChatService`를 구현하며, `ClassifyChannel()` 하나만 구현하면 됩니다.
 
-// 전체 파이프라인 완료 (Connect → Login → JoinChannel 성공)
-chat.OnChatReady += () =>
-    Debug.Log("채팅 준비 완료! 메시지 송수신 가능");
+#### 내장 기능 (재구현 불필요)
+
+- ChatClient 이벤트 브릿징 (Proto → Domain 자동 변환)
+- 자동 재연결 (설정 가능)
+- 인증 정보 캐싱 (재연결 시 자동 재로그인)
+- 채널 상태 추적 (입장/퇴장, 현재 채널)
+- 메시지 히스토리 캐싱 (채널별)
+- 멤버 목록 관리 (채널별)
+- 채널 타입별 자동 분류 및 이벤트 분배
+
+#### 기본 사용법
+
+```csharp
+using UniversalChat.Core;
+
+public class MyChatService : ChatServiceBase<MyChatService.ChannelType>
+{
+    public enum ChannelType { World, Guild, Party, Custom }
+
+    // 유일한 필수 구현: 채널 ID → 채널 타입 분류
+    protected override ChannelType ClassifyChannel(string channelId)
+    {
+        if (channelId.StartsWith("world")) return ChannelType.World;
+        if (channelId.StartsWith("guild_")) return ChannelType.Guild;
+        if (channelId.StartsWith("party_")) return ChannelType.Party;
+        return ChannelType.Custom;
+    }
+}
+```
+
+#### ChatServiceBase 전용 프로퍼티
+
+| 프로퍼티 | 타입 | 설명 |
+|----------|------|------|
+| `CurrentChannelsByType` | `IReadOnlyDictionary<T, string>` | 채널 타입별 현재 활성 채널 ID |
+| `AutoReconnect` | `bool` | 자동 재연결 활성화 (기본: true) |
+| `MaxReconnectAttempts` | `int` | 최대 재연결 시도 횟수 (기본: 3) |
+| `ReconnectDelay` | `float` | 재연결 대기 시간(초) (기본: 5f) |
+| `MaxHistoryPerChannel` | `int` | 채널별 최대 히스토리 수 (기본: 100) |
+
+#### ChatServiceBase 전용 메서드
+
+```csharp
+var chat = new MyChatService();
+
+// 연결 + 로그인 한 번에
+await chat.ConnectAndLoginAsync("localhost", 7777, "user123", nickname: "홍길동");
+
+// 채널 타입별 메시지 전송
+await chat.SendMessageToChannelTypeAsync(MyChatService.ChannelType.World, "월드 메시지");
+
+// 현재 활성 채널에 메시지 전송
+await chat.SendMessageToCurrentChannelAsync("안녕하세요");
+
+// 히스토리 조회 (채널별 또는 채널 타입별)
+List<ChannelMessage> history = chat.GetMessageHistory("world_1", 50);
+List<ChannelMessage> worldHistory = chat.GetMessageHistory(MyChatService.ChannelType.World, 50);
+
+// 멤버 목록 조회
+List<UserInfo> members = chat.GetChannelMembers("world_1");
+
+// 채널 타입 확인
+bool inWorld = chat.IsInChannelType(MyChatService.ChannelType.World);
+string worldChannelId = chat.GetCurrentChannelId(MyChatService.ChannelType.World);
+
+// 상태 초기화
+chat.ClearAllState();
+
+// 리소스 해제
+chat.Dispose();
+```
+
+#### Virtual Extension Points
+
+`ChatServiceBase`는 게임 특화 처리를 위한 가상 메서드를 제공합니다:
+
+```csharp
+public class MyChatService : ChatServiceBase<MyChatService.ChannelType>
+{
+    // ... ClassifyChannel 구현 ...
+
+    protected override void OnChannelJoinedInternal(ChannelType type, string channelId, ChannelJoinResult result)
+    {
+        // 채널 타입별 입장 후 처리
+        Debug.Log($"[{type}] 입장: {channelId}, 멤버 {result.Members.Count}명");
+    }
+
+    protected override void OnMessageReceivedInternal(ChannelType type, ChannelMessage message)
+    {
+        // 게임 특화 메시지 처리 (예: 금칙어 필터링, 아이템 링크 파싱)
+    }
+
+    protected override void OnDisconnectedInternal(string reason)
+    {
+        // 연결 끊김 처리 (예: UI 상태 업데이트)
+    }
+
+    protected override void OnReconnectedInternal()
+    {
+        // 재연결 성공 처리 (예: 채널 상태 복원 알림)
+    }
+
+    protected override void OnWhisperReceivedInternal(WhisperMessage whisper)
+    {
+        // 귓속말 처리 (예: 알림 팝업)
+    }
+
+    protected override void OnAuthenticatedInternal(bool success, string errorMessage)
+    {
+        // 인증 처리 (예: 로비 씬 전환)
+    }
+}
+```
+
+#### Typed Channel 이벤트
+
+```csharp
+var chat = new MyChatService();
+
+// 채널 타입별 메시지 수신
+chat.OnTypedMessageReceived += (type, msg) =>
+    Debug.Log($"[{type}] {msg.SenderNickname}: {msg.Content}");
+
+// 채널 타입별 입장
+chat.OnTypedChannelJoined += (type, channelId, result) =>
+    Debug.Log($"[{type}] 입장: {channelId}");
+
+// 채널 타입별 퇴장
+chat.OnTypedChannelLeft += (type, channelId) =>
+    Debug.Log($"[{type}] 퇴장: {channelId}");
+
+// 채널 타입별 멤버 업데이트
+chat.OnTypedMembersUpdated += (type, channelId, members) =>
+    Debug.Log($"[{type}] 멤버 변경: {members.Count}명");
 ```
 
 ---
@@ -438,7 +676,17 @@ client.Dispose();
 
 ### ChatUIManager
 
-**역할**: Plug & Play UI 매니저. Inspector에서 모든 설정이 가능합니다.
+**역할**: Plug & Play UI 매니저. `IChatService`에 의존하며, Inspector에서 모든 설정이 가능합니다.
+
+#### SetChatService() - 서비스 주입
+
+```csharp
+// Level 2/3에서 커스텀 서비스를 ChatUIManager에 주입
+var chatService = new MyChatService();
+chatUIManager.SetChatService(chatService);
+```
+
+> **하위 호환**: `SetChatService()`를 호출하지 않으면 `Start()`에서 자동으로 `ChatManager.Instance`를 감지합니다 (Level 1 동작).
 
 #### Inspector 설정 항목
 
@@ -499,6 +747,9 @@ client.Dispose();
 
 async void Start()
 {
+    // Level 2/3: 커스텀 서비스 주입 (선택)
+    // chatUI.SetChatService(myChatService);
+
     // 서버 연결
     await chatUI.ConnectAsync("localhost", 7777);
 
@@ -693,43 +944,61 @@ public class GameManager : MonoBehaviour
 
 ## 게임 통합 패턴
 
-### GameChatManager 사용
+### GameChatManager 샘플
 
-`GameChatManager`는 `ChatManager`를 래핑하여 게임에 특화된 기능을 제공합니다.
+`GameChatManager`는 `ChatServiceBase<ChannelType>`을 상속한 샘플 코드입니다.
+`ClassifyChannel()` 하나만 구현하면 채널 타입별 관리가 자동으로 제공됩니다.
 
 ```csharp
+using UniversalChat.Core;
 using UniversalChat.Game;
 
 public class MyGame : MonoBehaviour
 {
+    [SerializeField] private ChatUIManager chatUI;
+
+    private GameChatManager _chatService;
+
+    void Awake()
+    {
+        _chatService = new GameChatManager();
+        chatUI.SetChatService(_chatService);  // ChatUIManager에 서비스 주입
+    }
+
     async void Start()
     {
-        var gameChat = GameChatManager.Instance;
-
         // 서버 연결 및 로그인
-        bool success = await gameChat.ConnectAndLoginAsync(
-            "user123",
-            nickname: "홍길동",
-            profileImage: "avatar_01",
-            extraData: "{\"level\":50, \"class\":\"warrior\"}"
-        );
+        bool success = await _chatService.ConnectAndLoginAsync(
+            "localhost", 7777, "user123", nickname: "홍길동");
 
         if (!success) return;
 
         // 월드 채널 자동 배정
-        await gameChat.JoinWorldChannelAsync();
+        await _chatService.JoinWorldChannelAsync();
 
         // 길드 채널 입장
-        await gameChat.JoinGuildChannelAsync("guild_abc");
+        await _chatService.JoinGuildChannelAsync("abc123");
 
-        // 이벤트 구독
-        gameChat.OnWorldMessageReceived += msg =>
-            Debug.Log($"[월드] {msg.SenderNickname}: {msg.Content}");
-
-        gameChat.OnGuildMessageReceived += msg =>
-            Debug.Log($"[길드] {msg.SenderNickname}: {msg.Content}");
+        // 채널 타입별 이벤트 구독
+        _chatService.OnTypedMessageReceived += (type, msg) =>
+            Debug.Log($"[{type}] {msg.SenderNickname}: {msg.Content}");
     }
+
+    void OnDestroy() => _chatService?.Dispose();
 }
+```
+
+#### GameChatManagerBehaviour (MonoBehaviour 래퍼)
+
+Inspector에서 설정할 수 있는 MonoBehaviour 래퍼도 제공됩니다:
+
+```csharp
+using UniversalChat.Game;
+
+// GameChatManagerBehaviour를 씬에 배치하면:
+// - Inspector에서 서버 주소, 자동 연결, 자동 로그인 설정
+// - ChatUIManager 자동 연결
+// - Start()에서 자동으로 연결 + 월드 채널 입장
 ```
 
 ### 채널 타입별 관리
@@ -741,55 +1010,58 @@ public class MyGame : MonoBehaviour
 | `world` / `world_` | `World` | `world`, `world_1`, `world_asia` |
 | `guild_` | `Guild` | `guild_abc123` |
 | `party_` | `Party` | `party_xyz` |
-| `system` | `System` | `system` |
 | 기타 | `Custom` | `lobby`, `trade` |
 
 ```csharp
-var gameChat = GameChatManager.Instance;
+var chat = new GameChatManager();
 
-// 채널 타입별 메시지 전송
-await gameChat.SendWorldMessageAsync("월드 메시지");
-await gameChat.SendGuildMessageAsync("길드 메시지");
-await gameChat.SendPartyMessageAsync("파티 메시지");
+// 채널 타입별 메시지 전송 (편의 메서드)
+await chat.SendWorldMessageAsync("월드 메시지");
+await chat.SendGuildMessageAsync("길드 메시지");
+await chat.SendPartyMessageAsync("파티 메시지");
 
-// 현재 채널 확인
-string worldChannel = gameChat.CurrentWorldChannelId;   // "world_1"
-string guildChannel = gameChat.CurrentGuildChannelId;    // "guild_abc"
-bool isInGuild = gameChat.IsInChannelType(GameChatManager.ChannelType.Guild);
+// 채널 타입별 퇴장 (편의 메서드)
+await chat.LeaveGuildChannelAsync();
+await chat.LeavePartyChannelAsync();
 
-// 채널 타입 판별 (정적 메서드)
-var type = GameChatManager.GetChannelType("guild_abc"); // ChannelType.Guild
+// 현재 채널 확인 (편의 프로퍼티)
+string worldChannel = chat.CurrentWorldChannelId;   // "world_1"
+string guildChannel = chat.CurrentGuildChannelId;    // "guild_abc"
+string partyChannel = chat.CurrentPartyChannelId;    // null (미입장)
+
+// 채널 타입 확인 (ChatServiceBase 메서드)
+bool isInGuild = chat.IsInChannelType(GameChatManager.ChannelType.Guild);
 ```
 
 ### 메시지 히스토리
 
+`ChatServiceBase`가 채널별 히스토리를 자동으로 관리합니다:
+
 ```csharp
-var gameChat = GameChatManager.Instance;
+var chat = new GameChatManager();
 
 // 채널별 히스토리 조회 (최근 N개)
-List<ChannelMessage> worldHistory = gameChat.GetWorldMessageHistory(50);
-List<ChannelMessage> guildHistory = gameChat.GetGuildMessageHistory(50);
-List<ChannelMessage> customHistory = gameChat.GetMessageHistory("lobby", 100);
+List<ChannelMessage> worldHistory = chat.GetMessageHistory(
+    GameChatManager.ChannelType.World, 50);
+List<ChannelMessage> customHistory = chat.GetMessageHistory("lobby", 100);
 
-// 히스토리 클리어
-gameChat.ClearHistory("world_1");
-gameChat.ClearAllHistory();
+// 멤버 목록 조회
+List<UserInfo> worldMembers = chat.GetChannelMembers("world_1");
 
-// 히스토리 로드 이벤트
-gameChat.OnHistoryLoaded += (channelId, messages) =>
-    Debug.Log($"채널 {channelId}에서 {messages.Count}개 메시지 로드");
+// 상태 전체 초기화
+chat.ClearAllState();
 ```
 
 ---
 
 ## 이벤트 시스템
 
-### C# Action 이벤트
+### IChatService 이벤트 (C# Action)
 
-`ChatManager`와 `GameChatManager`는 표준 C# `Action` 이벤트를 사용합니다.
+`IChatService`를 구현하는 모든 컴포넌트 (ChatManager, ChatServiceBase, 커스텀)에서 사용 가능합니다.
 
 ```csharp
-var chat = ChatManager.Instance;
+IChatService chat = ...; // ChatManager.Instance 또는 커스텀 서비스
 
 // 구독
 chat.OnMessageReceived += HandleMessage;
@@ -803,7 +1075,31 @@ void HandleMessage(ChannelMessage msg) { /* ... */ }
 void HandleError(string error) { /* ... */ }
 ```
 
-### UnityEvent 이벤트
+### Typed Channel 이벤트 (ChatServiceBase)
+
+`ChatServiceBase<T>`에서만 사용 가능한 채널 타입별 이벤트입니다:
+
+```csharp
+var chat = new MyChatService();
+
+// 채널 타입별 메시지 수신
+chat.OnTypedMessageReceived += (type, msg) =>
+    Debug.Log($"[{type}] {msg.SenderNickname}: {msg.Content}");
+
+// 채널 타입별 입장
+chat.OnTypedChannelJoined += (type, channelId, result) =>
+    Debug.Log($"[{type}] 입장: {channelId}, 멤버 {result.Members.Count}명");
+
+// 채널 타입별 퇴장
+chat.OnTypedChannelLeft += (type, channelId) =>
+    Debug.Log($"[{type}] 퇴장: {channelId}");
+
+// 채널 타입별 멤버 업데이트
+chat.OnTypedMembersUpdated += (type, channelId, members) =>
+    Debug.Log($"[{type}] {channelId} 멤버 변경: {members.Count}명");
+```
+
+### UnityEvent 이벤트 (ChatUIManager)
 
 `ChatUIManager`는 Inspector에서 연결 가능한 13개의 `UnityEvent`를 제공합니다.
 
@@ -886,8 +1182,8 @@ ChatUIManager (Inspector)
 
 | 컴포넌트 | 이벤트 | 파라미터 |
 |----------|--------|----------|
-| **ChatManager** | `OnConnected` | (없음) |
-| | `OnDisconnected` | `string reason` |
+| **IChatService** | `OnConnected` | (없음) |
+| (모든 Level) | `OnDisconnected` | `string reason` |
 | | `OnError` | `string error` |
 | | `OnAuthenticated` | `bool success, string message` |
 | | `OnMessageReceived` | `ChannelMessage` |
@@ -896,11 +1192,14 @@ ChatUIManager (Inspector)
 | | `OnChannelLeft` | `string channelId` |
 | | `OnChannelListUpdated` | `List<ChannelInfo>` |
 | | `OnUserListUpdated` | `string channelId, List<UserInfo>` |
-| | `OnChannelAutoAssigned` | `bool success, string channelId, string message` |
 | | `OnWhisperReceived` | `WhisperMessage` |
 | | `OnAnnouncementReceived` | `AnnouncementMessage` |
 | | `OnUserActionNotificationReceived` | `UserActionNotificationMessage` |
 | | `OnChatReady` | (없음) |
+| **ChatServiceBase** | `OnTypedMessageReceived` | `TChannelType, ChannelMessage` |
+| (Level 2 전용) | `OnTypedChannelJoined` | `TChannelType, string, ChannelJoinResult` |
+| | `OnTypedChannelLeft` | `TChannelType, string` |
+| | `OnTypedMembersUpdated` | `TChannelType, string, List<UserInfo>` |
 | **ChatUIManager** | `OnChatReadyEvent` | (없음) |
 | (UnityEvent) | `OnConnectedEvent` | (없음) |
 | | `OnDisconnectedEvent` | `string` |
@@ -914,16 +1213,6 @@ ChatUIManager (Inspector)
 | | `OnAnnouncementReceivedEvent` | `AnnouncementMessage` |
 | | `OnUserActionNotificationEvent` | `UserActionNotificationMessage` |
 | | `OnLinkClickedEvent` | `RichLinkData` |
-| **GameChatManager** | `OnWorldMessageReceived` | `ChannelMessage` |
-| | `OnGuildMessageReceived` | `ChannelMessage` |
-| | `OnPartyMessageReceived` | `ChannelMessage` |
-| | `OnAnyMessageReceived` | `ChannelMessage` |
-| | `OnChannelJoined` | `ChannelType, string channelId` |
-| | `OnChannelLeft` | `ChannelType, string channelId` |
-| | `OnChannelMembersUpdated` | `string channelId, List<UserInfo>` |
-| | `OnHistoryLoaded` | `string channelId, List<ChannelMessage>` |
-| | `OnAnnouncementReceived` | `AnnouncementMessage` |
-| | `OnUserActionReceived` | `UserActionNotificationMessage` |
 
 ---
 
@@ -1227,7 +1516,7 @@ ChatUIManager (Inspector)
 
 ### 커스텀 UI 통합
 
-기존 게임 UI 프레임워크(Doozy UI 등)와 통합하려면 `ChatManager`를 직접 사용합니다:
+기존 게임 UI 프레임워크(Doozy UI 등)와 통합하려면 `IChatService`를 직접 사용합니다:
 
 ```csharp
 using UniversalChat.Core;
@@ -1237,19 +1526,24 @@ public class ChatPopup : MonoBehaviour  // 또는 Doozy UIPopup 등
     [SerializeField] private TMP_Text messageDisplay;
     [SerializeField] private TMP_InputField inputField;
 
+    private IChatService _chatService;
+
     async void Start()
     {
-        var chat = ChatManager.Instance;
+        // Level 1: ChatManager 사용
+        _chatService = ChatManager.Instance;
+
+        // 또는 Level 2: 커스텀 서비스 사용
+        // _chatService = new MyChatService();
 
         // 이벤트 구독
-        chat.OnMessageReceived += DisplayMessage;
-        chat.OnChannelJoined += (id, name) => AddSystemMessage($"채널 [{name}] 입장");
+        _chatService.OnMessageReceived += DisplayMessage;
+        _chatService.OnChannelJoined += (id, name) => AddSystemMessage($"채널 [{name}] 입장");
 
         // 연결
-        chat.Configure("localhost", 7777);
-        await chat.ConnectAsync();
-        await chat.LoginAsync("user123", nickname: "홍길동");
-        await chat.JoinAutoAssignedChannelAsync("world");
+        await _chatService.ConnectAsync("localhost", 7777);
+        await _chatService.LoginAsync("user123", nickname: "홍길동");
+        await _chatService.RequestAutoAssignChannelAsync("world");
     }
 
     void DisplayMessage(ChannelMessage msg)
@@ -1267,15 +1561,17 @@ public class ChatPopup : MonoBehaviour  // 또는 Doozy UIPopup 등
         string text = inputField.text;
         if (string.IsNullOrEmpty(text)) return;
 
-        await ChatManager.Instance.SendMessageAsync(text);
+        string channelId = _chatService.CurrentChannelId;
+        if (!string.IsNullOrEmpty(channelId))
+            await _chatService.SendMessageAsync(channelId, text);
+
         inputField.text = "";
     }
 
     void OnDestroy()
     {
-        var chat = ChatManager.Instance;
-        if (chat != null)
-            chat.OnMessageReceived -= DisplayMessage;
+        if (_chatService != null)
+            _chatService.OnMessageReceived -= DisplayMessage;
     }
 }
 ```
@@ -1283,18 +1579,16 @@ public class ChatPopup : MonoBehaviour  // 또는 Doozy UIPopup 등
 ### 프로필 관리
 
 ```csharp
-// ChatClient를 통한 프로필 업데이트
-var client = ChatManager.Instance.Client; // ChatClient 접근
-
-// 프로필 변경
-await client.UpdateProfileAsync(
+// IChatService를 통한 프로필 업데이트 (Level 1/2/3 공통)
+IChatService chat = ...;
+await chat.UpdateProfileAsync(
     nickname: "새닉네임",
     profileImage: "avatar_03",
     frameImage: "frame_diamond",
-    extraData: "{\"level\":99}"
-);
+    extraData: "{\"level\":99}");
 
-// 다른 유저의 프로필 변경 알림 수신
+// ChatClient를 통한 저수준 접근 (프로필 변경 알림 등)
+var client = ChatManager.Instance.Client;
 client.OnProfileChanged += profileChanged => {
     Debug.Log($"{profileChanged.UserId}의 프로필이 변경됨");
 };
@@ -1305,11 +1599,12 @@ client.OnProfileChanged += profileChanged => {
 3가지 레벨에서 귓속말을 사용할 수 있습니다:
 
 ```csharp
-// === ChatManager를 통한 귓속말 (권장) ===
-await ChatManager.Instance.SendWhisperAsync("targetUserId", "귓속말 내용입니다");
+// === IChatService를 통한 귓속말 (Level 1/2/3 공통, 권장) ===
+IChatService chat = ...;
+await chat.SendWhisperAsync("targetUserId", "귓속말 내용입니다");
 
 // 수신 이벤트 (Action<WhisperMessage>)
-ChatManager.Instance.OnWhisperReceived += whisper => {
+chat.OnWhisperReceived += whisper => {
     Debug.Log($"[귓속말] {whisper.SenderNickname}: {whisper.Content}");
 };
 
@@ -1329,7 +1624,8 @@ await client.SendWhisperAsync("targetUserId", "귓속말 내용입니다");
 ### 공지사항 수신
 
 ```csharp
-ChatManager.Instance.OnAnnouncementReceived += announcement => {
+IChatService chat = ...;
+chat.OnAnnouncementReceived += announcement => {
     switch (announcement.Type)
     {
         case AnnouncementType.Normal:
@@ -1353,7 +1649,8 @@ ChatManager.Instance.OnAnnouncementReceived += announcement => {
 서버에서 특정 유저의 특별한 행동(레어 아이템 획득 등)을 브로드캐스트합니다:
 
 ```csharp
-ChatManager.Instance.OnUserActionNotificationReceived += notification => {
+IChatService chat = ...;
+chat.OnUserActionNotificationReceived += notification => {
     switch (notification.ActionType)
     {
         case UserActionType.ItemAcquire:
@@ -1409,16 +1706,22 @@ protoc --csharp_out=unity-client/Assets/Plugins/UniversalChat/Runtime/Protocol p
 ### "서버 연결 실패"
 
 1. **서버 실행 확인**: `chat_server`가 실행 중인지 확인
-2. **IP/Port 확인**: `Configure()`에 올바른 주소/포트 전달
+2. **IP/Port 확인**: `ConnectAsync()`에 올바른 주소/포트 전달
 3. **방화벽**: 해당 포트가 열려 있는지 확인
 4. **ChatManager 존재 확인**: `ChatManager.Instance`는 씬에 없으면 자동 생성되지만, `DontDestroyOnLoad` 처리 확인
 
 ### "메시지가 표시되지 않음"
 
 1. **채널 입장 확인**: `JoinChannelAsync()` 후 `OnChannelJoined` 이벤트 수신 확인
-2. **현재 채널 확인**: `ChatManager.Instance.CurrentChannelId`가 올바른지 확인
+2. **현재 채널 확인**: `IChatService.CurrentChannelId`가 올바른지 확인
 3. **ChatUIConfig 연결**: ChatUIManager에 Config가 연결되어 있는지 확인
 4. **VirtualizedChatPanel**: 스크롤뷰 설정 확인
+
+### "커스텀 서비스의 이벤트가 ChatUIManager에 연결 안됨"
+
+1. **SetChatService() 호출 확인**: 커스텀 IChatService를 사용할 때 반드시 `chatUIManager.SetChatService(service)` 호출
+2. **호출 시점**: `SetChatService()`는 `Awake()` 또는 `Start()` 초반에 호출 (이벤트 구독 전에)
+3. **Dispose 확인**: ChatServiceBase 사용 시 `OnDestroy()`에서 `Dispose()` 호출
 
 ### "내 메시지와 다른 메시지 구분이 안됨"
 
@@ -1429,7 +1732,7 @@ protoc --csharp_out=unity-client/Assets/Plugins/UniversalChat/Runtime/Protocol p
 
 1. **구독 시점 확인**: 이벤트 구독이 `ConnectAsync()` 이전에 이루어지는지 확인
 2. **MainThread 확인**: Unity UI 업데이트는 반드시 메인 스레드에서 (자동 처리됨)
-3. **싱글톤 확인**: `ChatManager.Instance`가 씬 전환 후에도 유지되는지 확인
+3. **서비스 연결 확인**: ChatUIManager에 올바른 IChatService가 연결되어 있는지 확인 (SetChatService 또는 자동 감지)
 
 ### "Rich Content 링크가 클릭되지 않음"
 
