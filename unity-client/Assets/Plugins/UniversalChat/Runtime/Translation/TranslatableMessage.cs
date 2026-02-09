@@ -7,7 +7,7 @@ namespace UniversalChat.Translation
 {
     /// <summary>
     /// Makes a chat message translatable with long-press or button
-    /// Attach to ChatMessageItem prefab
+    /// Attach to chat message prefab
     /// </summary>
     public class TranslatableMessage : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
     {
