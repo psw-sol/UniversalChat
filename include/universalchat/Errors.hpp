@@ -48,6 +48,13 @@ enum class ErrorCode : int {
     WhisperFailed = 5003,
     CannotWhisperSelf = 5004,
 
+    // DM errors (6xxx)
+    DMChannelCreateFailed = 6001,
+    DMChannelNotFound     = 6002,
+    DMSelfMessage         = 6003,
+    DMUserNotFound        = 6004,
+    DMHistoryLoadFailed   = 6005,
+
     // Scale-out errors (7xxx)
     PubSubPublishFailed = 7001,
     PubSubNotConnected = 7002,
@@ -136,6 +143,18 @@ inline const char* getErrorMessage(ErrorCode code) {
             return "Failed to send whisper";
         case ErrorCode::CannotWhisperSelf:
             return "Cannot whisper to yourself";
+
+        // DM errors
+        case ErrorCode::DMChannelCreateFailed:
+            return "Failed to create DM channel";
+        case ErrorCode::DMChannelNotFound:
+            return "DM channel not found";
+        case ErrorCode::DMSelfMessage:
+            return "Cannot send DM to yourself";
+        case ErrorCode::DMUserNotFound:
+            return "DM target user not found";
+        case ErrorCode::DMHistoryLoadFailed:
+            return "Failed to load DM history";
 
         // Scale-out errors
         case ErrorCode::PubSubPublishFailed:

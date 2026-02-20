@@ -27,21 +27,30 @@ UniversalChatServer(C++ 채팅 서버)와 통신하는 Unity 채팅 클라이언
 7. [게임 통합 패턴](#게임-통합-패턴)
    - [GameChatManager 샘플](#gamechatmanager-샘플)
    - [채널 타입별 관리](#채널-타입별-관리)
+   - [채널 자동 생성](#채널-자동-생성)
    - [메시지 히스토리](#메시지-히스토리)
-8. [이벤트 시스템](#이벤트-시스템)
-   - [IChatService 이벤트 (C# Action)](#ichatservice-이벤트-c-action)
-   - [Typed Channel 이벤트 (ChatServiceBase)](#typed-channel-이벤트-chatservicebase)
-   - [UnityEvent 이벤트 (ChatUIManager)](#unityevent-이벤트-chatuimanager)
-9. [데이터 모델](#데이터-모델)
-10. [Rich Content 시스템](#rich-content-시스템)
-11. [번역 시스템](#번역-시스템)
-12. [고급 사용법](#고급-사용법)
+8. [DM (다이렉트 메시지) 시스템](#dm-다이렉트-메시지-시스템)
+   - [DM 개요](#dm-개요)
+   - [DM API (IChatService)](#dm-api-ichatservice)
+   - [DM 이벤트](#dm-이벤트)
+   - [ChatUIManager DM UnityEvent](#chatuimanager-dm-unityevent)
+   - [GameChatManager DM 편의 메서드](#gamechatmanager-dm-편의-메서드)
+   - [DM 데이터 모델](#dm-데이터-모델)
+9. [탭 UI 예시 (GameChatUIExample)](#탭-ui-예시-gamechatuiexample)
+10. [이벤트 시스템](#이벤트-시스템)
+    - [IChatService 이벤트 (C# Action)](#ichatservice-이벤트-c-action)
+    - [Typed Channel 이벤트 (ChatServiceBase)](#typed-channel-이벤트-chatservicebase)
+    - [UnityEvent 이벤트 (ChatUIManager)](#unityevent-이벤트-chatuimanager)
+11. [데이터 모델](#데이터-모델)
+12. [Rich Content 시스템](#rich-content-시스템)
+13. [번역 시스템](#번역-시스템)
+14. [고급 사용법](#고급-사용법)
     - [커스텀 UI 통합](#커스텀-ui-통합)
     - [프로필 관리](#프로필-관리)
     - [귓속말](#귓속말)
     - [공지사항 수신](#공지사항-수신)
-13. [프로토콜 참조](#프로토콜-참조)
-14. [문제 해결](#문제-해결)
+15. [프로토콜 참조](#프로토콜-참조)
+16. [문제 해결](#문제-해결)
 
 ---
 
@@ -66,6 +75,8 @@ UniversalChatServer(C++ 채팅 서버)와 통신하는 Unity 채팅 클라이언
 - **Rich Content**: 클릭 가능한 링크 (아이템, 유저 등) 지원
 - **번역**: REST API 기반 다국어 자동 번역
 - **자동 재연결**: 연결 끊김 시 자동 복구
+- **DM (다이렉트 메시지)**: 영속적 1:1 대화, 히스토리, 읽음확인, 오프라인 수신
+- **채널 자동 생성**: prefix 기반 채널 자동 생성 (guild_, alliance_, party_)
 - **가상화 스크롤**: 대량 메시지 처리 성능 최적화
 - **테마 커스터마이징**: ScriptableObject 기반 UI 설정
 - **공지사항 및 유저 행동 알림**: 서버 푸시 알림 수신
@@ -116,7 +127,9 @@ Assets/Plugins/UniversalChat/
 │   ├── ChatUISampleSceneGenerator.cs
 │   └── RichContentEditorMenu.cs
 ├── Samples/                       # 샘플 및 통합 예시
-│   ├── Scripts/GameChatManager.cs # 게임 통합 예시 (ChatServiceBase 기반)
+│   ├── Scripts/
+│   │   ├── GameChatManager.cs     # 게임 통합 예시 (ChatServiceBase 기반)
+│   │   └── GameChatUIExample.cs   # 탭 UI 예시 (월드/연맹/DM 3탭)
 │   ├── GameIntegration/           # Rich Content 예시
 │   └── README.md                  # ← 이 파일
 └── package.json                   # Unity 패키지 메타데이터
@@ -284,12 +297,12 @@ Level 1 (Zero Code)         Level 2 (Minimal Code)        Level 3 (Full Control)
                                     │
                           ┌─────────▼─────────┐
                           │   IChatService     │ ← 공통 인터페이스
-                          │  (14개 이벤트)     │
+                          │  (18개 이벤트)     │
                           └─────────┬─────────┘
                                     │
                           ┌─────────▼─────────┐
                           │  ChatUIManager     │ ← UI 자동 연결
-                          │  (13개 UnityEvent) │
+                          │  (17개 UnityEvent) │
                           └───────────────────┘
 ```
 
@@ -432,6 +445,12 @@ chat.OnUserActionNotificationReceived += notif => Debug.Log($"[알림] {notif.Ti
 
 // State
 chat.OnChatReady += () => Debug.Log("채팅 준비 완료!");
+
+// DM
+chat.OnDMStarted += conv => Debug.Log($"[DM] 시작: {conv.PeerNickname}");
+chat.OnDMMessageReceived += msg => Debug.Log($"[DM] {msg.SenderNickname}: {msg.Content}");
+chat.OnDMReadReceiptReceived += receipt => Debug.Log($"[읽음] {receipt.ReaderUserId}");
+chat.OnDMListUpdated += convs => Debug.Log($"[DM 목록] {convs.Count}개");
 ```
 
 ---
@@ -738,6 +757,12 @@ chatUIManager.SetChatService(chatService);
 
 [Rich Content Events]
 └── OnLinkClickedEvent(RichLinkData)                 # 링크 클릭 (아이템, 유저 등)
+
+[DM Events]
+├── OnDMStartedEvent(DMConversation)                 # DM 대화 시작
+├── OnDMMessageReceivedEvent(ChannelMessage)          # DM 메시지 수신
+├── OnDMReadReceiptEvent(DMReadReceiptData)           # 읽음 확인 수신
+└── OnDMListUpdatedEvent(List<DMConversation>)        # DM 목록 업데이트
 ```
 
 #### 코드 사용
@@ -1009,7 +1034,9 @@ using UniversalChat.Game;
 |--------|-------------|------|
 | `world` / `world_` | `World` | `world`, `world_1`, `world_asia` |
 | `guild_` | `Guild` | `guild_abc123` |
+| `alliance_` | `Alliance` | `alliance_456` |
 | `party_` | `Party` | `party_xyz` |
+| `dm:` | `DM` | `dm:userA:userB` |
 | 기타 | `Custom` | `lobby`, `trade` |
 
 ```csharp
@@ -1018,19 +1045,50 @@ var chat = new GameChatManager();
 // 채널 타입별 메시지 전송 (편의 메서드)
 await chat.SendWorldMessageAsync("월드 메시지");
 await chat.SendGuildMessageAsync("길드 메시지");
+await chat.SendAllianceMessageAsync("연맹 메시지");
 await chat.SendPartyMessageAsync("파티 메시지");
 
 // 채널 타입별 퇴장 (편의 메서드)
 await chat.LeaveGuildChannelAsync();
+await chat.LeaveAllianceChannelAsync();
 await chat.LeavePartyChannelAsync();
 
 // 현재 채널 확인 (편의 프로퍼티)
-string worldChannel = chat.CurrentWorldChannelId;   // "world_1"
-string guildChannel = chat.CurrentGuildChannelId;    // "guild_abc"
-string partyChannel = chat.CurrentPartyChannelId;    // null (미입장)
+string worldChannel = chat.CurrentWorldChannelId;      // "world_1"
+string guildChannel = chat.CurrentGuildChannelId;       // "guild_abc"
+string allianceChannel = chat.CurrentAllianceChannelId; // "alliance_456"
+string partyChannel = chat.CurrentPartyChannelId;       // null (미입장)
 
 // 채널 타입 확인 (ChatServiceBase 메서드)
 bool isInGuild = chat.IsInChannelType(GameChatManager.ChannelType.Guild);
+
+// DM 대화 시작 (편의 메서드)
+var dmConversation = await chat.StartDirectMessageAsync("targetUserId");
+```
+
+### 채널 자동 생성
+
+서버가 `guild_`, `alliance_`, `party_` 등 특정 prefix를 가진 채널에 대해 **자동 생성**을 지원합니다. 클라이언트에서 존재하지 않는 채널에 `JoinChannel`하면 서버가 자동으로 생성합니다.
+
+```csharp
+var chat = new GameChatManager();
+
+// 연맹 채널 입장 (서버에 채널이 없으면 자동 생성)
+await chat.JoinAllianceChannelAsync("my_alliance_123");
+
+// 길드 채널도 동일하게 자동 생성
+await chat.JoinGuildChannelAsync("my_guild_456");
+```
+
+서버 설정 (`config/server.json`):
+
+```json
+{
+    "channel": {
+        "auto_create_prefixes": ["guild_", "alliance_", "party_"],
+        "auto_create_max_members": 200
+    }
+}
 ```
 
 ### 메시지 히스토리
@@ -1050,6 +1108,261 @@ List<UserInfo> worldMembers = chat.GetChannelMembers("world_1");
 
 // 상태 전체 초기화
 chat.ClearAllState();
+```
+
+---
+
+## DM (다이렉트 메시지) 시스템
+
+### DM 개요
+
+DM은 기존 Whisper(온라인 전용 1:1 귓속말)와 다른 **영속적 1:1 대화** 시스템입니다.
+
+| 기능 | Whisper (0x04xx) | DM (0x08xx) |
+|------|------------------|-------------|
+| **영속성** | 없음 (메모리 전용) | 있음 (서버 저장) |
+| **오프라인 수신** | 불가 | 가능 (unread 카운트) |
+| **히스토리** | 없음 | 있음 (LoadDMHistoryAsync) |
+| **읽음 확인** | 없음 | 있음 (MarkDMReadAsync) |
+| **대화 목록** | 없음 | 있음 (GetDMListAsync) |
+| **용도** | 즉시성 귓속말 | 영속적 1:1 채팅 |
+
+DM 채널 ID 형식: `dm:{sorted_user1}:{user2}` (알파벳 정렬로 고유성 보장)
+
+### DM API (IChatService)
+
+```csharp
+IChatService chat = ...; // ChatManager, ChatServiceBase, 또는 커스텀
+
+// DM 대화 시작 (없으면 생성)
+DMConversation conv = await chat.StartDMAsync("targetUserId");
+
+// DM 대화 목록 조회
+List<DMConversation> conversations = await chat.GetDMListAsync(limit: 50);
+
+// DM 메시지 전송
+await chat.SendDMMessageAsync(conv.DMChannelId, "안녕하세요!");
+
+// 읽음 확인 전송
+await chat.MarkDMReadAsync(conv.DMChannelId, "lastMessageId");
+
+// DM 히스토리 로드 (페이지네이션)
+List<ChannelMessage> history = await chat.LoadDMHistoryAsync(
+    conv.DMChannelId, beforeTimestamp: 0, limit: 30);
+
+// DM 삭제 (본인 측 숨김)
+await chat.DeleteDMAsync(conv.DMChannelId);
+```
+
+### DM 이벤트
+
+```csharp
+IChatService chat = ...;
+
+// DM 대화 시작됨
+chat.OnDMStarted += (DMConversation conversation) => {
+    Debug.Log($"DM 시작: {conversation.PeerNickname}");
+};
+
+// DM 메시지 수신 (ChannelMessage 재사용, ChannelId = dm 채널 ID)
+chat.OnDMMessageReceived += (ChannelMessage message) => {
+    Debug.Log($"[DM] {message.SenderNickname}: {message.Content}");
+};
+
+// 읽음 확인 수신
+chat.OnDMReadReceiptReceived += (DMReadReceiptData receipt) => {
+    Debug.Log($"{receipt.ReaderUserId}가 {receipt.DMChannelId} 읽음");
+};
+
+// DM 대화 목록 업데이트
+chat.OnDMListUpdated += (List<DMConversation> conversations) => {
+    Debug.Log($"DM 대화 {conversations.Count}개");
+};
+```
+
+### ChatUIManager DM UnityEvent
+
+ChatUIManager에 4개의 DM UnityEvent가 추가되었습니다 (기존 13개 + 4개 = 총 17개):
+
+```
+ChatUIManager (Inspector)
+├── ... (기존 13개 이벤트)
+└── DM Events
+    ├── OnDMStartedEvent(DMConversation)           # DM 대화 시작
+    ├── OnDMMessageReceivedEvent(ChannelMessage)    # DM 메시지 수신
+    ├── OnDMReadReceiptEvent(DMReadReceiptData)     # 읽음 확인 수신
+    └── OnDMListUpdatedEvent(List<DMConversation>)  # DM 목록 업데이트
+```
+
+코드에서 구독:
+
+```csharp
+chatUIManager.OnDMStartedEvent.AddListener(OnDMStarted);
+chatUIManager.OnDMMessageReceivedEvent.AddListener(OnDMMessage);
+chatUIManager.OnDMReadReceiptEvent.AddListener(OnDMReadReceipt);
+chatUIManager.OnDMListUpdatedEvent.AddListener(OnDMListUpdated);
+
+void OnDMStarted(DMConversation conv) {
+    Debug.Log($"DM 시작: {conv.PeerNickname} (unread: {conv.UnreadCount})");
+}
+void OnDMMessage(ChannelMessage msg) {
+    Debug.Log($"[DM] {msg.SenderNickname}: {msg.Content}");
+}
+void OnDMReadReceipt(DMReadReceiptData receipt) {
+    Debug.Log($"읽음: {receipt.ReaderUserId}");
+}
+void OnDMListUpdated(List<DMConversation> convs) {
+    Debug.Log($"DM 목록 갱신: {convs.Count}개");
+}
+```
+
+ChatUIManager 편의 메서드:
+
+```csharp
+// DM 대화 시작
+var conv = await chatUIManager.StartDMAsync("targetUserId");
+
+// DM 목록 조회
+var list = await chatUIManager.GetDMListAsync(50);
+
+// DM 메시지 전송
+await chatUIManager.SendDMMessageAsync("dm:userA:userB", "안녕하세요!");
+
+// 읽음 확인
+await chatUIManager.MarkDMReadAsync("dm:userA:userB", "lastMsgId");
+
+// 히스토리 로드
+var history = await chatUIManager.LoadDMHistoryAsync("dm:userA:userB", 0, 30);
+
+// DM 삭제
+await chatUIManager.DeleteDMAsync("dm:userA:userB");
+```
+
+### GameChatManager DM 편의 메서드
+
+```csharp
+var chat = new GameChatManager();
+
+// DM 대화 시작 (편의 래퍼)
+DMConversation dm = await chat.StartDirectMessageAsync("targetUserId");
+```
+
+### DM 데이터 모델
+
+#### DMConversation
+
+```csharp
+public class DMConversation
+{
+    public string DMChannelId { get; set; }        // "dm:userA:userB"
+    public string PeerUserId { get; set; }         // 상대방 ID
+    public string PeerNickname { get; set; }       // 상대방 닉네임
+    public string PeerProfileImage { get; set; }   // 상대방 프로필 이미지
+    public string PeerFrameImage { get; set; }     // 상대방 프레임 이미지
+    public string PeerExtraData { get; set; }      // 상대방 추가 데이터
+    public string LastMessageContent { get; set; } // 마지막 메시지 내용
+    public long LastMessageTimestamp { get; set; }  // 마지막 메시지 시간
+    public int UnreadCount { get; set; }           // 읽지 않은 메시지 수
+}
+```
+
+#### DMReadReceiptData
+
+```csharp
+public class DMReadReceiptData
+{
+    public string DMChannelId { get; set; }        // DM 채널 ID
+    public string ReaderUserId { get; set; }       // 읽은 사용자 ID
+    public string LastReadMessageId { get; set; }  // 마지막으로 읽은 메시지 ID
+    public long LastReadTimestamp { get; set; }     // 읽은 시간
+}
+```
+
+---
+
+## 탭 UI 예시 (GameChatUIExample)
+
+> **중요**: UniversalChat 패키지는 탭 UI를 하드코딩하지 않습니다. 패키지는 데이터 + 이벤트 인프라만 제공하고, 탭 UI는 게임 측에서 자유롭게 구현합니다.
+
+`GameChatUIExample.cs`는 3탭 UI (월드/연맹/DM)의 **참고용 샘플**입니다.
+
+### 게임별 탭 구성 예시
+
+| 게임 | 탭 구성 |
+|------|---------|
+| RentaHero | 월드 / 연맹 / 1:1 DM (3탭) |
+| 소셜 게임 | 전체 / DM (2탭) |
+| MMORPG | 월드 / 길드 / 파티 / DM / 시스템 (5탭) |
+
+### 구조
+
+```
+GameChatUIExample (MonoBehaviour)
+├── Inspector 설정
+│   ├── GameChatManagerBehaviour 참조
+│   ├── ChatUIManager 참조
+│   ├── 탭 버튼 배열 (Button[])
+│   ├── 탭 패널 배열 (GameObject[])
+│   └── DM UI 요소 (목록/대화 패널, 프리팹)
+├── 탭 관리
+│   └── SwitchTab(int tabIndex)
+├── DM 목록 관리
+│   ├── RefreshDMListAsync()
+│   ├── OnDMConversationClicked(string dmChannelId)
+│   ├── BackToDMList()
+│   ├── StartNewDMAsync(string targetUserId)
+│   └── SendCurrentDMMessageAsync(string content)
+└── DM 뱃지 (읽지 않은 메시지 수)
+```
+
+### 사용법
+
+```csharp
+// 1. GameChatManagerBehaviour를 씬에 배치
+// 2. GameChatUIExample을 같은 Canvas에 배치
+// 3. Inspector에서 연결:
+//    - _chatManagerBehaviour: GameChatManagerBehaviour 참조
+//    - _chatUIManager: ChatUIManager 참조
+//    - _tabButtons: [월드 버튼, 연맹 버튼, DM 버튼]
+//    - _tabPanels: [월드 패널, 연맹 패널, DM 패널]
+//    - _dmListContainer: DM 목록 ScrollView Content
+//    - _dmConversationPrefab: DM 항목 프리팹
+
+// 코드에서 DM 시작 (예: 유저 프로필에서 "메시지 보내기" 버튼)
+var example = GetComponent<GameChatUIExample>();
+await example.StartNewDMAsync("targetUserId");
+
+// DM 탭에서 현재 대화에 메시지 전송
+await example.SendCurrentDMMessageAsync("안녕하세요!");
+```
+
+### 패키지 ↔ 게임 역할 분리
+
+```
+┌─────────────────────────────────────────────────────┐
+│  UniversalChat 패키지 (범용)                         │
+│  ┌───────────┐  ┌──────────┐  ┌──────────────────┐ │
+│  │IChatService│  │ChatClient│  │ChatUIManager     │ │
+│  │ (DM 메서드│  │ (DM 패킷 │  │ (DM UnityEvent  │ │
+│  │ /이벤트)  │  │  송수신) │  │  4개 추가)      │ │
+│  └───────────┘  └──────────┘  └──────────────────┘ │
+│  ┌────────────────────────────────────────────────┐ │
+│  │ ChatServiceBase<T> (DM 상태 관리 + 이벤트)     │ │
+│  └────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────┘
+                       ↓ 이벤트 구독
+┌─────────────────────────────────────────────────────┐
+│  게임 측 (Samples에 예시 제공)                       │
+│  ┌────────────────────────────────────────────────┐ │
+│  │ GameChatManager : ChatServiceBase<ChannelType> │ │
+│  │  - ClassifyChannel()에 DM 타입 추가            │ │
+│  │  - StartDirectMessageAsync() 편의 메서드       │ │
+│  └────────────────────────────────────────────────┘ │
+│  ┌────────────────────────────────────────────────┐ │
+│  │ GameChatUIExample (탭 UI - 게임별 자유 구현)   │ │
+│  │  [월드] [연맹] [1:1 DM(3)]                     │ │
+│  └────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -1101,7 +1414,7 @@ chat.OnTypedMembersUpdated += (type, channelId, members) =>
 
 ### UnityEvent 이벤트 (ChatUIManager)
 
-`ChatUIManager`는 Inspector에서 연결 가능한 13개의 `UnityEvent`를 제공합니다.
+`ChatUIManager`는 Inspector에서 연결 가능한 17개의 `UnityEvent`를 제공합니다.
 
 ```csharp
 // 코드에서 구독 - Lifecycle
@@ -1129,6 +1442,12 @@ chatUIManager.OnUserActionNotificationEvent.AddListener(OnUserAction);
 // Rich Content
 chatUIManager.OnLinkClickedEvent.AddListener(OnLinkClicked);
 
+// DM
+chatUIManager.OnDMStartedEvent.AddListener(OnDMStarted);
+chatUIManager.OnDMMessageReceivedEvent.AddListener(OnDMMessage);
+chatUIManager.OnDMReadReceiptEvent.AddListener(OnDMReadReceipt);
+chatUIManager.OnDMListUpdatedEvent.AddListener(OnDMListUpdated);
+
 void OnChatReady() { Debug.Log("채팅 준비 완료!"); }
 void OnConnected() { Debug.Log("서버 연결됨"); }
 void OnDisconnected(string reason) { Debug.Log($"연결 끊김: {reason}"); }
@@ -1150,6 +1469,18 @@ void OnUserAction(UserActionNotificationMessage notif) {
 }
 void OnLinkClicked(RichLinkData link) {
     Debug.Log($"[링크] 타입={link.LinkType}, 파라미터={link.Param1}");
+}
+void OnDMStarted(DMConversation conv) {
+    Debug.Log($"[DM 시작] {conv.PeerNickname}");
+}
+void OnDMMessage(ChannelMessage msg) {
+    Debug.Log($"[DM] {msg.SenderNickname}: {msg.Content}");
+}
+void OnDMReadReceipt(DMReadReceiptData receipt) {
+    Debug.Log($"[읽음] {receipt.ReaderUserId}");
+}
+void OnDMListUpdated(List<DMConversation> convs) {
+    Debug.Log($"[DM 목록] {convs.Count}개 대화");
 }
 ```
 
@@ -1174,8 +1505,13 @@ ChatUIManager (Inspector)
 ├── Notification Events
 │   ├── OnAnnouncementReceivedEvent     → [NoticeUI.Show(AnnouncementMessage)]
 │   └── OnUserActionNotificationEvent   → [NoticeUI.ShowAction(UserActionNotificationMessage)]
-└── Rich Content Events
-    └── OnLinkClickedEvent     → [ItemPopup.ShowFromLink(RichLinkData)]
+├── Rich Content Events
+│   └── OnLinkClickedEvent     → [ItemPopup.ShowFromLink(RichLinkData)]
+└── DM Events
+    ├── OnDMStartedEvent       → [DMChatUI.OnDMStarted(DMConversation)]
+    ├── OnDMMessageReceivedEvent → [DMChatUI.OnDMMessage(ChannelMessage)]
+    ├── OnDMReadReceiptEvent   → [DMChatUI.OnDMReceipt(DMReadReceiptData)]
+    └── OnDMListUpdatedEvent   → [DMChatUI.OnDMList(List<DMConversation>)]
 ```
 
 ### 이벤트 전체 목록
@@ -1196,6 +1532,10 @@ ChatUIManager (Inspector)
 | | `OnAnnouncementReceived` | `AnnouncementMessage` |
 | | `OnUserActionNotificationReceived` | `UserActionNotificationMessage` |
 | | `OnChatReady` | (없음) |
+| | `OnDMStarted` | `DMConversation` |
+| | `OnDMMessageReceived` | `ChannelMessage` |
+| | `OnDMReadReceiptReceived` | `DMReadReceiptData` |
+| | `OnDMListUpdated` | `List<DMConversation>` |
 | **ChatServiceBase** | `OnTypedMessageReceived` | `TChannelType, ChannelMessage` |
 | (Level 2 전용) | `OnTypedChannelJoined` | `TChannelType, string, ChannelJoinResult` |
 | | `OnTypedChannelLeft` | `TChannelType, string` |
@@ -1213,6 +1553,10 @@ ChatUIManager (Inspector)
 | | `OnAnnouncementReceivedEvent` | `AnnouncementMessage` |
 | | `OnUserActionNotificationEvent` | `UserActionNotificationMessage` |
 | | `OnLinkClickedEvent` | `RichLinkData` |
+| | `OnDMStartedEvent` | `DMConversation` |
+| | `OnDMMessageReceivedEvent` | `ChannelMessage` |
+| | `OnDMReadReceiptEvent` | `DMReadReceiptData` |
+| | `OnDMListUpdatedEvent` | `List<DMConversation>` |
 
 ---
 
@@ -1688,6 +2032,7 @@ chat.OnUserActionNotificationReceived += notification => {
 | `0x05xx` | Profile | `0x0501` UpdateRequest, `0x0502` UpdateResponse, `0x0503` Changed |
 | `0x06xx` | Announcement | `0x0601` Send, `0x0602` Receive, `0x0603` Ack |
 | `0x07xx` | UserAction | `0x0701` Send, `0x0702` Receive, `0x0703` Ack |
+| `0x08xx` | DM | `0x0801` Start, `0x0805` Send, `0x0806` Receive, `0x0808` ReadReceipt |
 | `0xFFxx` | Error | `0xFF01` ServerError |
 
 ### Protobuf 재생성
@@ -1747,6 +2092,19 @@ protoc --csharp_out=unity-client/Assets/Plugins/UniversalChat/Runtime/Protocol p
 2. `TranslationManager.Instance.IsAvailable`이 `true`인지 확인
 3. `CheckHealthAsync()`로 서버 상태 확인
 4. 레이트 리미팅에 걸리지 않았는지 확인
+
+### "DM 메시지가 수신되지 않음"
+
+1. **DM 대화 시작 확인**: `StartDMAsync()`가 성공적으로 `DMConversation`을 반환했는지 확인
+2. **채널 ID 형식 확인**: DM 채널 ID는 `dm:{sorted_user1}:{user2}` 형식 (알파벳 정렬)
+3. **이벤트 구독 확인**: `OnDMMessageReceived` 이벤트가 올바르게 구독되어 있는지 확인
+4. **서버 DM 활성화**: 서버 `config/server.json`에서 DM이 활성화되어 있는지 확인
+
+### "채널 자동 생성이 안됨"
+
+1. **서버 설정 확인**: `config/server.json`의 `auto_create_prefixes`에 해당 prefix가 포함되어 있는지 확인
+2. **prefix 형식 확인**: 채널 ID가 올바른 prefix로 시작하는지 확인 (예: `guild_`, `alliance_`, `party_`)
+3. **서버 버전**: 채널 자동 생성을 지원하는 서버 버전인지 확인
 
 ### "패킷 타입 불일치 에러"
 

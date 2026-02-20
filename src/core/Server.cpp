@@ -7,6 +7,7 @@
 #include "../message/MessageDispatcher.hpp"
 #include "../announcement/AnnouncementService.hpp"
 #include "../notification/UserActionService.hpp"
+#include "../dm/DMManager.hpp"
 #include "../util/Config.hpp"
 #include "../util/Logger.hpp"
 
@@ -92,6 +93,12 @@ Server::Server(const Config& config)
     // Initialize MessageDispatcher (after WorldChannelManager)
     message_dispatcher_ = std::make_unique<MessageDispatcher>(
         *session_manager_, *channel_manager_, *world_channel_manager_, config);
+
+    // Initialize DMManager
+    if (config.dm_enabled) {
+        dm_manager_ = std::make_unique<DMManager>(*session_manager_, config);
+        message_dispatcher_->setDMManager(dm_manager_.get());
+    }
 
     // Initialize AnnouncementService
     announcement_service_ = std::make_shared<AnnouncementService>(

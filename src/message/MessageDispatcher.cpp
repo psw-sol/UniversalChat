@@ -6,6 +6,7 @@
 #include "../channel/Channel.hpp"
 #include "../announcement/AnnouncementService.hpp"
 #include "../notification/UserActionService.hpp"
+#include "../dm/DMManager.hpp"
 #include "../protocol/PacketCodec.hpp"
 #include "../util/Config.hpp"
 #include "../util/Logger.hpp"
@@ -57,6 +58,20 @@ MessageDispatcher::MessageDispatcher(SessionManager& session_manager,
     registerHandler(PacketType::UserActionNotificationSend,
         [this](auto s, const auto& p) { handleUserActionNotificationSend(s, p); });
 
+    // DM handlers
+    registerHandler(PacketType::DMStart,
+        [this](auto s, const auto& p) { handleDMStart(s, p); });
+    registerHandler(PacketType::DMListRequest,
+        [this](auto s, const auto& p) { handleDMList(s, p); });
+    registerHandler(PacketType::DMMessageSend,
+        [this](auto s, const auto& p) { handleDMMessageSend(s, p); });
+    registerHandler(PacketType::DMReadReceipt,
+        [this](auto s, const auto& p) { handleDMReadReceipt(s, p); });
+    registerHandler(PacketType::DMHistoryRequest,
+        [this](auto s, const auto& p) { handleDMHistory(s, p); });
+    registerHandler(PacketType::DMDeleteRequest,
+        [this](auto s, const auto& p) { handleDMDelete(s, p); });
+
     LOG_INFO("MessageDispatcher initialized with {} handlers", handlers_.size());
 }
 
@@ -70,6 +85,12 @@ void MessageDispatcher::setUserActionService(std::shared_ptr<UserActionService> 
     user_action_service_ = std::move(user_action_service);
     LOG_INFO("MessageDispatcher: UserActionService set (available={})",
              user_action_service_ ? "true" : "false");
+}
+
+void MessageDispatcher::setDMManager(DMManager* dm_manager) {
+    dm_manager_ = dm_manager;
+    LOG_INFO("MessageDispatcher: DMManager set (available={})",
+             dm_manager_ ? "true" : "false");
 }
 
 #ifdef ENABLE_REDIS
@@ -894,6 +915,266 @@ void MessageDispatcher::handleUserActionNotificationSend(SessionPtr session, con
 }
 
 // ==========================================
+// DM Handler Implementations
+// ==========================================
+
+void MessageDispatcher::handleDMStart(SessionPtr session, const Packet& packet) {
+    if (!checkAuthenticated(session, packet)) return;
+
+    protocol::DMStartRequest request;
+    if (!request.ParseFromArray(packet.data.data(), static_cast<int>(packet.data.size()))) {
+        sendError(session, toInt(ErrorCode::InvalidPacket), "Invalid DM start request");
+        return;
+    }
+
+    protocol::DMStartResponse response;
+
+    if (!dm_manager_) {
+        response.set_success(false);
+        response.set_error_message("DM service unavailable");
+        response.set_error_code(toInt(ErrorCode::InternalError));
+    }
+    else if (request.target_user_id() == session->userId()) {
+        response.set_success(false);
+        response.set_error_message("Cannot start DM with yourself");
+        response.set_error_code(toInt(ErrorCode::DMSelfMessage));
+    }
+    else {
+        auto* channel = dm_manager_->getOrCreateDMChannel(
+            session->userId(), request.target_user_id());
+
+        if (!channel) {
+            response.set_success(false);
+            response.set_error_message("Failed to create DM channel");
+            response.set_error_code(toInt(ErrorCode::DMChannelCreateFailed));
+        } else {
+            response.set_success(true);
+            response.set_dm_channel_id(channel->channelId());
+
+            // Add recent messages
+            auto recent = channel->getRecentMessages(20);
+            for (const auto& msg : recent) {
+                auto* msg_data = response.add_recent_messages();
+                msg_data->set_message_id(msg.message_id);
+                msg_data->set_channel_id(msg.channel_id);
+                msg_data->set_sender_id(msg.sender_id);
+                msg_data->set_sender_nickname(msg.sender_nickname);
+                msg_data->set_sender_profile_image(msg.sender_profile_image);
+                msg_data->set_sender_frame_image(msg.sender_frame_image);
+                msg_data->set_sender_extra_data(msg.sender_extra_data);
+                msg_data->set_content(msg.content);
+                msg_data->set_timestamp(msg.timestamp);
+                msg_data->set_message_type(static_cast<protocol::MessageType>(msg.message_type));
+            }
+
+            // Add peer info if online
+            auto peer_session = session_manager_.getByUserId(request.target_user_id());
+            if (peer_session) {
+                auto* peer_info = response.mutable_peer_info();
+                peer_info->set_user_id(peer_session->userId());
+                peer_info->set_nickname(peer_session->nickname());
+                peer_info->set_profile_image(peer_session->profileImage());
+                peer_info->set_frame_image(peer_session->frameImage());
+                peer_info->set_extra_data(peer_session->extraData());
+            } else {
+                // Peer offline - set basic info
+                auto* peer_info = response.mutable_peer_info();
+                peer_info->set_user_id(request.target_user_id());
+                peer_info->set_nickname(request.target_user_id());
+            }
+
+            LOG_INFO("DM started: {} -> {} (channel={})",
+                     session->userId(), request.target_user_id(), channel->channelId());
+        }
+    }
+
+    Packet resp_packet;
+    resp_packet.type = PacketType::DMStartResponse;
+    std::string data;
+    response.SerializeToString(&data);
+    resp_packet.data = std::vector<char>(data.begin(), data.end());
+    session->send(resp_packet);
+}
+
+void MessageDispatcher::handleDMList(SessionPtr session, const Packet& packet) {
+    if (!checkAuthenticated(session, packet)) return;
+
+    protocol::DMListRequest request;
+    if (!request.ParseFromArray(packet.data.data(), static_cast<int>(packet.data.size()))) {
+        sendError(session, toInt(ErrorCode::InvalidPacket), "Invalid DM list request");
+        return;
+    }
+
+    protocol::DMListResponse response;
+
+    if (dm_manager_) {
+        int limit = request.limit() > 0 ? request.limit() : config_.dm_list_default_limit;
+        auto summaries = dm_manager_->getUserDMList(
+            session->userId(), limit, request.before_timestamp());
+
+        for (const auto& summary : summaries) {
+            auto* conv = response.add_conversations();
+            conv->set_dm_channel_id(summary.dm_channel_id);
+            conv->set_peer_user_id(summary.peer_user_id);
+            conv->set_peer_nickname(summary.peer_nickname);
+            conv->set_peer_profile_image(summary.peer_profile_image);
+            conv->set_peer_frame_image(summary.peer_frame_image);
+            conv->set_peer_extra_data(summary.peer_extra_data);
+            conv->set_last_message_content(summary.last_message_content);
+            conv->set_last_message_timestamp(summary.last_message_timestamp);
+            conv->set_unread_count(summary.unread_count);
+        }
+
+        response.set_has_more(static_cast<int>(summaries.size()) >= limit);
+    }
+
+    Packet resp_packet;
+    resp_packet.type = PacketType::DMListResponse;
+    std::string data;
+    response.SerializeToString(&data);
+    resp_packet.data = std::vector<char>(data.begin(), data.end());
+    session->send(resp_packet);
+}
+
+void MessageDispatcher::handleDMMessageSend(SessionPtr session, const Packet& packet) {
+    if (!checkAuthenticated(session, packet)) return;
+
+    protocol::DMMessageSend request;
+    if (!request.ParseFromArray(packet.data.data(), static_cast<int>(packet.data.size()))) {
+        sendError(session, toInt(ErrorCode::InvalidPacket), "Invalid DM message send");
+        return;
+    }
+
+    protocol::DMMessageAck ack;
+    ack.set_client_message_id(request.client_message_id());
+
+    if (!dm_manager_) {
+        ack.set_success(false);
+        ack.set_error_message("DM service unavailable");
+        ack.set_error_code(toInt(ErrorCode::InternalError));
+    } else {
+        auto msg = dm_manager_->sendDMMessage(
+            request.dm_channel_id(),
+            session,
+            request.content(),
+            static_cast<int>(request.message_type()),
+            request.client_message_id());
+
+        if (!msg.message_id.empty()) {
+            ack.set_success(true);
+            ack.set_message_id(msg.message_id);
+        } else {
+            ack.set_success(false);
+            ack.set_error_message("Failed to send DM message");
+            ack.set_error_code(toInt(ErrorCode::DMChannelNotFound));
+        }
+    }
+
+    Packet ack_packet;
+    ack_packet.type = PacketType::DMMessageAck;
+    std::string data;
+    ack.SerializeToString(&data);
+    ack_packet.data = std::vector<char>(data.begin(), data.end());
+    session->send(ack_packet);
+}
+
+void MessageDispatcher::handleDMReadReceipt(SessionPtr session, const Packet& packet) {
+    if (!checkAuthenticated(session, packet)) return;
+
+    protocol::DMReadReceipt request;
+    if (!request.ParseFromArray(packet.data.data(), static_cast<int>(packet.data.size()))) {
+        sendError(session, toInt(ErrorCode::InvalidPacket), "Invalid DM read receipt");
+        return;
+    }
+
+    if (dm_manager_) {
+        dm_manager_->markAsRead(
+            request.dm_channel_id(),
+            session->userId(),
+            request.last_read_message_id(),
+            request.last_read_timestamp());
+    }
+}
+
+void MessageDispatcher::handleDMHistory(SessionPtr session, const Packet& packet) {
+    if (!checkAuthenticated(session, packet)) return;
+
+    protocol::DMHistoryRequest request;
+    if (!request.ParseFromArray(packet.data.data(), static_cast<int>(packet.data.size()))) {
+        sendError(session, toInt(ErrorCode::InvalidPacket), "Invalid DM history request");
+        return;
+    }
+
+    protocol::DMHistoryResponse response;
+    response.set_dm_channel_id(request.dm_channel_id());
+
+    if (dm_manager_) {
+        auto* channel = dm_manager_->getDMChannel(request.dm_channel_id());
+        if (channel && channel->isMember(session->userId())) {
+            int limit = request.limit() > 0 ? request.limit() : 30;
+            auto messages = channel->getMessagesBefore(request.before_timestamp(), limit);
+
+            for (const auto& msg : messages) {
+                auto* msg_data = response.add_messages();
+                msg_data->set_message_id(msg.message_id);
+                msg_data->set_channel_id(msg.channel_id);
+                msg_data->set_sender_id(msg.sender_id);
+                msg_data->set_sender_nickname(msg.sender_nickname);
+                msg_data->set_sender_profile_image(msg.sender_profile_image);
+                msg_data->set_sender_frame_image(msg.sender_frame_image);
+                msg_data->set_sender_extra_data(msg.sender_extra_data);
+                msg_data->set_content(msg.content);
+                msg_data->set_timestamp(msg.timestamp);
+                msg_data->set_message_type(static_cast<protocol::MessageType>(msg.message_type));
+            }
+
+            response.set_has_more(static_cast<int>(messages.size()) >= limit);
+        }
+    }
+
+    Packet resp_packet;
+    resp_packet.type = PacketType::DMHistoryResponse;
+    std::string data;
+    response.SerializeToString(&data);
+    resp_packet.data = std::vector<char>(data.begin(), data.end());
+    session->send(resp_packet);
+}
+
+void MessageDispatcher::handleDMDelete(SessionPtr session, const Packet& packet) {
+    if (!checkAuthenticated(session, packet)) return;
+
+    protocol::DMDeleteRequest request;
+    if (!request.ParseFromArray(packet.data.data(), static_cast<int>(packet.data.size()))) {
+        sendError(session, toInt(ErrorCode::InvalidPacket), "Invalid DM delete request");
+        return;
+    }
+
+    protocol::DMDeleteResponse response;
+    response.set_dm_channel_id(request.dm_channel_id());
+
+    if (dm_manager_) {
+        bool success = dm_manager_->deleteDMForUser(
+            request.dm_channel_id(), session->userId());
+        response.set_success(success);
+        if (!success) {
+            response.set_error_message("DM channel not found or not a member");
+            response.set_error_code(toInt(ErrorCode::DMChannelNotFound));
+        }
+    } else {
+        response.set_success(false);
+        response.set_error_message("DM service unavailable");
+        response.set_error_code(toInt(ErrorCode::InternalError));
+    }
+
+    Packet resp_packet;
+    resp_packet.type = PacketType::DMDeleteResponse;
+    std::string data;
+    response.SerializeToString(&data);
+    resp_packet.data = std::vector<char>(data.begin(), data.end());
+    session->send(resp_packet);
+}
+
+// ==========================================
 // Helper Functions
 // ==========================================
 
@@ -932,6 +1213,8 @@ int MessageDispatcher::getPacketCost(PacketType type) const {
         case PacketType::ChannelJoin:
         case PacketType::ChannelCreate:
         case PacketType::ChannelLeave:
+        case PacketType::DMStart:
+        case PacketType::DMDeleteRequest:
             return 2;
 
         // Standard cost for other packets

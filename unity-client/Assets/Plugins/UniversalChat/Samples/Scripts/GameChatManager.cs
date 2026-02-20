@@ -41,7 +41,9 @@ namespace UniversalChat.Game
         {
             World,      // 월드 채널 (world_*)
             Guild,      // 길드 채널 (guild_*)
+            Alliance,   // 연맹 채널 (alliance_*)
             Party,      // 파티 채널 (party_*)
+            DM,         // DM 채널 (dm:*)
             Custom      // 사용자 정의
         }
 
@@ -66,8 +68,12 @@ namespace UniversalChat.Game
                 return ChannelType.World;
             if (channelId.StartsWith("guild_"))
                 return ChannelType.Guild;
+            if (channelId.StartsWith("alliance_"))
+                return ChannelType.Alliance;
             if (channelId.StartsWith("party_"))
                 return ChannelType.Party;
+            if (channelId.StartsWith("dm:"))
+                return ChannelType.DM;
 
             return ChannelType.Custom;
         }
@@ -149,7 +155,42 @@ namespace UniversalChat.Game
         /// </summary>
         public string CurrentWorldChannelId => GetCurrentChannelId(ChannelType.World);
         public string CurrentGuildChannelId => GetCurrentChannelId(ChannelType.Guild);
+        public string CurrentAllianceChannelId => GetCurrentChannelId(ChannelType.Alliance);
         public string CurrentPartyChannelId => GetCurrentChannelId(ChannelType.Party);
+
+        /// <summary>
+        /// 연맹 채널 입장 (서버에서 자동 생성)
+        /// </summary>
+        public async Task JoinAllianceChannelAsync(string allianceId, string password = null)
+        {
+            await JoinChannelAsync($"alliance_{allianceId}", password);
+        }
+
+        /// <summary>
+        /// 연맹 채널에 메시지 전송
+        /// </summary>
+        public async Task SendAllianceMessageAsync(string content)
+        {
+            await SendMessageToChannelTypeAsync(ChannelType.Alliance, content);
+        }
+
+        /// <summary>
+        /// 연맹 채널 퇴장
+        /// </summary>
+        public async Task LeaveAllianceChannelAsync()
+        {
+            var channelId = GetCurrentChannelId(ChannelType.Alliance);
+            if (!string.IsNullOrEmpty(channelId))
+                await LeaveChannelAsync(channelId);
+        }
+
+        /// <summary>
+        /// DM 대화 시작 (편의 메서드)
+        /// </summary>
+        public Task<DMConversation> StartDirectMessageAsync(string targetUserId)
+        {
+            return StartDMAsync(targetUserId);
+        }
 
         #endregion
 

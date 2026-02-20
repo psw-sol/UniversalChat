@@ -100,6 +100,13 @@ public:
                            const Packet& packet,
                            const std::string& exclude_session = "");
 
+    // === Auto-Create ===
+    /**
+     * Check if a channel ID matches any auto-create prefix.
+     * @return true if the channel can be auto-created
+     */
+    bool isAutoCreatablePrefix(const std::string& channel_id) const;
+
     // === Session Cleanup ===
     void onSessionDisconnect(SessionPtr session);
 

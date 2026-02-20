@@ -350,6 +350,115 @@ message UserActionNotificationAck {
 }
 
 // ============================================
+// Direct Message / DM (0x08xx)
+// ============================================
+
+// 0x0801 - DMStartRequest (client -> server)
+message DMStartRequest {
+    string target_user_id = 1;
+}
+
+// 0x0802 - DMStartResponse (server -> client)
+message DMStartResponse {
+    bool success = 1;
+    string dm_channel_id = 2;
+    string error_message = 3;
+    int32 error_code = 4;
+    repeated ChatMessageData recent_messages = 5;
+    UserInfo peer_info = 6;
+}
+
+// 0x0803 - DMListRequest (client -> server)
+message DMListRequest {
+    int32 limit = 1;
+    int64 before_timestamp = 2;
+}
+
+// 0x0804 - DMListResponse (server -> client)
+message DMListResponse {
+    repeated DMConversationInfo conversations = 1;
+    bool has_more = 2;
+}
+
+// 0x0805 - DMMessageSend (client -> server)
+message DMMessageSend {
+    string dm_channel_id = 1;
+    string content = 2;
+    MessageType message_type = 3;
+    string client_message_id = 4;
+}
+
+// 0x0806 - DMMessageReceive (server -> client)
+message DMMessageReceive {
+    ChatMessageData message = 1;
+    string dm_channel_id = 2;
+}
+
+// 0x0807 - DMMessageAck (server -> client)
+message DMMessageAck {
+    bool success = 1;
+    string message_id = 2;
+    string client_message_id = 3;
+    string error_message = 4;
+    int32 error_code = 5;
+}
+
+// 0x0808 - DMReadReceipt (client -> server)
+message DMReadReceipt {
+    string dm_channel_id = 1;
+    string last_read_message_id = 2;
+    int64 last_read_timestamp = 3;
+}
+
+// 0x0809 - DMReadReceiptNotify (server -> client)
+message DMReadReceiptNotify {
+    string dm_channel_id = 1;
+    string reader_user_id = 2;
+    string last_read_message_id = 3;
+    int64 last_read_timestamp = 4;
+}
+
+// 0x080A - DMHistoryRequest (client -> server)
+message DMHistoryRequest {
+    string dm_channel_id = 1;
+    int64 before_timestamp = 2;
+    int32 limit = 3;
+}
+
+// 0x080B - DMHistoryResponse (server -> client)
+message DMHistoryResponse {
+    string dm_channel_id = 1;
+    repeated ChatMessageData messages = 2;
+    bool has_more = 3;
+}
+
+// 0x080C - DMDeleteRequest (client -> server)
+message DMDeleteRequest {
+    string dm_channel_id = 1;
+}
+
+// 0x080D - DMDeleteResponse (server -> client)
+message DMDeleteResponse {
+    bool success = 1;
+    string dm_channel_id = 2;
+    string error_message = 3;
+    int32 error_code = 4;
+}
+
+// DM conversation summary (for list)
+message DMConversationInfo {
+    string dm_channel_id = 1;
+    string peer_user_id = 2;
+    string peer_nickname = 3;
+    string peer_profile_image = 4;
+    string peer_frame_image = 5;
+    string peer_extra_data = 6;
+    string last_message_content = 7;
+    int64 last_message_timestamp = 8;
+    int32 unread_count = 9;
+}
+
+// ============================================
 // Error (0xFFxx)
 // ============================================
 

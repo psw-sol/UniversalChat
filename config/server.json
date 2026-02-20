@@ -37,7 +37,16 @@
                 "max_members": 200,
                 "is_system": true
             }
-        ]
+        ],
+        "auto_create_prefixes": ["guild_", "alliance_", "party_"],
+        "auto_create_max_members": 200
+    },
+
+    "dm": {
+        "enabled": true,
+        "history_max_per_channel": 500,
+        "history_ttl_seconds": 2592000,
+        "list_default_limit": 50
     },
 
     "auth": {

@@ -443,6 +443,61 @@ namespace UniversalChat.Core
     }
 
     /// <summary>
+    /// DM 대화 요약 정보 (proto: DMConversationInfo)
+    /// </summary>
+    [Serializable]
+    public class DMConversation
+    {
+        public string DMChannelId { get; set; }
+        public string PeerUserId { get; set; }
+        public string PeerNickname { get; set; }
+        public string PeerProfileImage { get; set; }
+        public string PeerFrameImage { get; set; }
+        public string PeerExtraData { get; set; }
+        public string LastMessageContent { get; set; }
+        public long LastMessageTimestamp { get; set; }
+        public int UnreadCount { get; set; }
+        public DateTime LastMessageDateTime => DateTimeOffset.FromUnixTimeMilliseconds(LastMessageTimestamp).LocalDateTime;
+
+        public DMConversation() { }
+
+        public DMConversation(Chat.Protocol.DMConversationInfo proto)
+        {
+            DMChannelId = proto.DmChannelId;
+            PeerUserId = proto.PeerUserId;
+            PeerNickname = proto.PeerNickname;
+            PeerProfileImage = proto.PeerProfileImage;
+            PeerFrameImage = proto.PeerFrameImage;
+            PeerExtraData = proto.PeerExtraData;
+            LastMessageContent = proto.LastMessageContent;
+            LastMessageTimestamp = proto.LastMessageTimestamp;
+            UnreadCount = proto.UnreadCount;
+        }
+    }
+
+    /// <summary>
+    /// DM 읽음 확인 데이터 (proto: DMReadReceiptNotify)
+    /// </summary>
+    [Serializable]
+    public class DMReadReceiptData
+    {
+        public string DMChannelId { get; set; }
+        public string ReaderUserId { get; set; }
+        public string LastReadMessageId { get; set; }
+        public long LastReadTimestamp { get; set; }
+
+        public DMReadReceiptData() { }
+
+        public DMReadReceiptData(Chat.Protocol.DMReadReceiptNotify proto)
+        {
+            DMChannelId = proto.DmChannelId;
+            ReaderUserId = proto.ReaderUserId;
+            LastReadMessageId = proto.LastReadMessageId;
+            LastReadTimestamp = proto.LastReadTimestamp;
+        }
+    }
+
+    /// <summary>
     /// 유저 행동 알림 메시지 (proto: UserActionNotificationReceive)
     /// </summary>
     [Serializable]

@@ -16,6 +16,7 @@ class WorldChannelManager;
 class Config;
 class AnnouncementService;
 class UserActionService;
+class DMManager;
 
 #ifdef ENABLE_REDIS
 class SessionRegistry;
@@ -51,6 +52,12 @@ public:
      * @param user_action_service The user action service instance
      */
     void setUserActionService(std::shared_ptr<UserActionService> user_action_service);
+
+    /**
+     * Set DM manager for direct message handling
+     * @param dm_manager The DM manager instance
+     */
+    void setDMManager(DMManager* dm_manager);
 
 #ifdef ENABLE_REDIS
     /**
@@ -90,6 +97,14 @@ private:
     void handleAnnouncementSend(SessionPtr session, const Packet& packet);
     void handleUserActionNotificationSend(SessionPtr session, const Packet& packet);
 
+    // DM Handlers
+    void handleDMStart(SessionPtr session, const Packet& packet);
+    void handleDMList(SessionPtr session, const Packet& packet);
+    void handleDMMessageSend(SessionPtr session, const Packet& packet);
+    void handleDMReadReceipt(SessionPtr session, const Packet& packet);
+    void handleDMHistory(SessionPtr session, const Packet& packet);
+    void handleDMDelete(SessionPtr session, const Packet& packet);
+
     // === Helper Functions ===
     void sendError(SessionPtr session, int error_code, const std::string& message);
     bool checkAuthenticated(SessionPtr session, const Packet& packet);
@@ -110,6 +125,9 @@ private:
 
     // User action notification service
     std::shared_ptr<UserActionService> user_action_service_;
+
+    // DM manager (owned by Server)
+    DMManager* dm_manager_ = nullptr;
 
 #ifdef ENABLE_REDIS
     // Cross-server components

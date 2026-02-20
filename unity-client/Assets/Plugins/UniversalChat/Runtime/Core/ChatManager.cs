@@ -108,6 +108,12 @@ namespace UniversalChat.Core
         /// </summary>
         public event Action OnChatReady;
 
+        // DM Events
+        public event Action<DMConversation> OnDMStarted;
+        public event Action<ChannelMessage> OnDMMessageReceived;
+        public event Action<DMReadReceiptData> OnDMReadReceiptReceived;
+        public event Action<List<DMConversation>> OnDMListUpdated;
+
         #endregion
 
         #region Properties
@@ -130,6 +136,13 @@ namespace UniversalChat.Core
         private readonly List<string> _joinedChannels = new List<string>();
         private int _reconnectAttempts;
         private bool _isReconnecting;
+
+        // DM 상태
+        private readonly Dictionary<string, DMConversation> _dmConversations = new Dictionary<string, DMConversation>();
+        private TaskCompletionSource<DMConversation> _dmStartTcs;
+        private TaskCompletionSource<List<DMConversation>> _dmListTcs;
+        private TaskCompletionSource<List<ChannelMessage>> _dmHistoryTcs;
+        private TaskCompletionSource<bool> _dmDeleteTcs;
 
         // 재연결 시 사용할 인증 정보
         private string _lastUserId;
@@ -207,6 +220,14 @@ namespace UniversalChat.Core
             _client.OnWhisperReceived += HandleWhisperReceived;
             _client.OnAnnouncementReceived += HandleAnnouncementReceived;
             _client.OnUserActionNotificationReceived += HandleUserActionNotificationReceived;
+
+            // DM events
+            _client.OnDMStartResponse += HandleDMStartResponse;
+            _client.OnDMListResponse += HandleDMListResponse;
+            _client.OnDMMessageReceived += HandleDMMessageReceived;
+            _client.OnDMReadReceiptNotify += HandleDMReadReceiptNotify;
+            _client.OnDMHistoryResponse += HandleDMHistoryResponse;
+            _client.OnDMDeleteResponse += HandleDMDeleteResponse;
         }
 
         private void Cleanup()
@@ -226,6 +247,14 @@ namespace UniversalChat.Core
                 _client.OnWhisperReceived -= HandleWhisperReceived;
                 _client.OnAnnouncementReceived -= HandleAnnouncementReceived;
                 _client.OnUserActionNotificationReceived -= HandleUserActionNotificationReceived;
+
+                // DM events
+                _client.OnDMStartResponse -= HandleDMStartResponse;
+                _client.OnDMListResponse -= HandleDMListResponse;
+                _client.OnDMMessageReceived -= HandleDMMessageReceived;
+                _client.OnDMReadReceiptNotify -= HandleDMReadReceiptNotify;
+                _client.OnDMHistoryResponse -= HandleDMHistoryResponse;
+                _client.OnDMDeleteResponse -= HandleDMDeleteResponse;
 
                 _client.Dispose();
                 _client = null;
@@ -433,6 +462,161 @@ namespace UniversalChat.Core
             string extraData = null)
         {
             await _client.UpdateProfileAsync(nickname, profileImage, frameImage, extraData);
+        }
+
+        #endregion
+
+        #region DM Methods (IChatService)
+
+        public async Task<DMConversation> StartDMAsync(string targetUserId)
+        {
+            _dmStartTcs = new TaskCompletionSource<DMConversation>();
+            await _client.SendDMStartAsync(targetUserId);
+
+            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(10));
+            var completed = await Task.WhenAny(_dmStartTcs.Task, timeoutTask);
+            if (completed == timeoutTask) { _dmStartTcs = null; LogError("DM start timed out"); return null; }
+            return _dmStartTcs.Task.Result;
+        }
+
+        public async Task<List<DMConversation>> GetDMListAsync(int limit = 50)
+        {
+            _dmListTcs = new TaskCompletionSource<List<DMConversation>>();
+            await _client.SendDMListRequestAsync(limit);
+
+            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(10));
+            var completed = await Task.WhenAny(_dmListTcs.Task, timeoutTask);
+            if (completed == timeoutTask) { _dmListTcs = null; LogError("DM list timed out"); return new List<DMConversation>(); }
+            return _dmListTcs.Task.Result;
+        }
+
+        public async Task SendDMMessageAsync(string dmChannelId, string content, int messageType = 0)
+        {
+            await _client.SendDMMessageAsync(dmChannelId, content, (MessageType)messageType);
+        }
+
+        public async Task MarkDMReadAsync(string dmChannelId, string lastMessageId)
+        {
+            await _client.SendDMReadReceiptAsync(dmChannelId, lastMessageId);
+        }
+
+        public async Task<List<ChannelMessage>> LoadDMHistoryAsync(string dmChannelId, long beforeTimestamp = 0, int limit = 30)
+        {
+            _dmHistoryTcs = new TaskCompletionSource<List<ChannelMessage>>();
+            await _client.SendDMHistoryRequestAsync(dmChannelId, beforeTimestamp, limit);
+
+            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(10));
+            var completed = await Task.WhenAny(_dmHistoryTcs.Task, timeoutTask);
+            if (completed == timeoutTask) { _dmHistoryTcs = null; LogError("DM history timed out"); return new List<ChannelMessage>(); }
+            return _dmHistoryTcs.Task.Result;
+        }
+
+        public async Task DeleteDMAsync(string dmChannelId)
+        {
+            _dmDeleteTcs = new TaskCompletionSource<bool>();
+            await _client.SendDMDeleteRequestAsync(dmChannelId);
+
+            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(10));
+            var completed = await Task.WhenAny(_dmDeleteTcs.Task, timeoutTask);
+            if (completed == timeoutTask) { _dmDeleteTcs = null; LogError("DM delete timed out"); }
+            else if (_dmDeleteTcs.Task.Result) { _dmConversations.Remove(dmChannelId); }
+        }
+
+        #endregion
+
+        #region DM Event Handlers
+
+        private void HandleDMStartResponse(Chat.Protocol.DMStartResponse proto)
+        {
+            if (proto.Success)
+            {
+                var conv = new DMConversation
+                {
+                    DMChannelId = proto.DmChannelId,
+                    PeerUserId = proto.PeerInfo?.UserId ?? string.Empty,
+                    PeerNickname = proto.PeerInfo?.Nickname ?? string.Empty,
+                    PeerProfileImage = proto.PeerInfo?.ProfileImage ?? string.Empty,
+                    PeerFrameImage = proto.PeerInfo?.FrameImage ?? string.Empty,
+                    PeerExtraData = proto.PeerInfo?.ExtraData ?? string.Empty,
+                };
+                _dmConversations[proto.DmChannelId] = conv;
+                Log($"DM started: {proto.DmChannelId}");
+                OnDMStarted?.Invoke(conv);
+                _dmStartTcs?.TrySetResult(conv);
+            }
+            else
+            {
+                LogError($"DM start failed: {proto.ErrorMessage}");
+                OnError?.Invoke(proto.ErrorMessage);
+                _dmStartTcs?.TrySetResult(null);
+            }
+        }
+
+        private void HandleDMListResponse(Chat.Protocol.DMListResponse proto)
+        {
+            var list = new List<DMConversation>();
+            foreach (var info in proto.Conversations)
+            {
+                var conv = new DMConversation(info);
+                list.Add(conv);
+                _dmConversations[conv.DMChannelId] = conv;
+            }
+            Log($"DM list: {list.Count} conversations");
+            OnDMListUpdated?.Invoke(list);
+            _dmListTcs?.TrySetResult(list);
+        }
+
+        private void HandleDMMessageReceived(Chat.Protocol.DMMessageReceive proto)
+        {
+            if (proto.Message != null)
+            {
+                var message = new ChannelMessage(proto.Message);
+                message.ChannelId = proto.DmChannelId;
+
+                if (_dmConversations.TryGetValue(proto.DmChannelId, out var conv))
+                {
+                    conv.LastMessageContent = message.Content;
+                    conv.LastMessageTimestamp = message.Timestamp;
+                    if (message.SenderId != UserId) conv.UnreadCount++;
+                }
+
+                Log($"[DM:{proto.DmChannelId}] {message.SenderNickname}: {message.Content}");
+                OnDMMessageReceived?.Invoke(message);
+            }
+        }
+
+        private void HandleDMReadReceiptNotify(Chat.Protocol.DMReadReceiptNotify proto)
+        {
+            var receipt = new DMReadReceiptData(proto);
+            Log($"DM read receipt: {proto.DmChannelId} by {proto.ReaderUserId}");
+            OnDMReadReceiptReceived?.Invoke(receipt);
+        }
+
+        private void HandleDMHistoryResponse(Chat.Protocol.DMHistoryResponse proto)
+        {
+            var messages = new List<ChannelMessage>();
+            foreach (var msg in proto.Messages)
+            {
+                var channelMessage = new ChannelMessage(msg);
+                channelMessage.ChannelId = proto.DmChannelId;
+                messages.Add(channelMessage);
+            }
+            Log($"DM history: {messages.Count} messages");
+            _dmHistoryTcs?.TrySetResult(messages);
+        }
+
+        private void HandleDMDeleteResponse(Chat.Protocol.DMDeleteResponse proto)
+        {
+            if (proto.Success)
+            {
+                Log($"DM deleted: {proto.DmChannelId}");
+                _dmDeleteTcs?.TrySetResult(true);
+            }
+            else
+            {
+                LogError("DM delete failed");
+                _dmDeleteTcs?.TrySetResult(false);
+            }
         }
 
         #endregion

@@ -70,6 +70,11 @@ set(ANNOUNCEMENT_SOURCES
     src/announcement/AnnouncementService.cpp
 )
 
+set(DM_SOURCES
+    src/dm/DMChannel.cpp
+    src/dm/DMManager.cpp
+)
+
 set(NOTIFICATION_SOURCES
     src/notification/UserActionService.cpp
 )
@@ -89,6 +94,7 @@ set(UTIL_SOURCES
 set(ALL_SOURCES
     ${CORE_SOURCES}
     ${CHANNEL_SOURCES}
+    ${DM_SOURCES}
     ${MESSAGE_SOURCES}
     ${ANNOUNCEMENT_SOURCES}
     ${NOTIFICATION_SOURCES}

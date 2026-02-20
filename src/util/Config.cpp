@@ -123,6 +123,24 @@ void Config::parseJson(const nlohmann::json& j) {
         if (channel.contains("world_channel_min_count")) world_channel_min_count = channel["world_channel_min_count"];
         if (channel.contains("world_channel_max_members")) world_channel_max_members = channel["world_channel_max_members"];
         if (channel.contains("world_channel_scale_threshold")) world_channel_scale_threshold = channel["world_channel_scale_threshold"];
+
+        // Auto-create settings
+        if (channel.contains("auto_create_prefixes")) {
+            auto_create_prefixes.clear();
+            for (const auto& prefix : channel["auto_create_prefixes"]) {
+                auto_create_prefixes.push_back(prefix.get<std::string>());
+            }
+        }
+        if (channel.contains("auto_create_max_members")) auto_create_max_members = channel["auto_create_max_members"];
+    }
+
+    // DM settings
+    if (j.contains("dm")) {
+        const auto& dm = j["dm"];
+        if (dm.contains("enabled")) dm_enabled = dm["enabled"];
+        if (dm.contains("history_max_per_channel")) dm_history_max_per_channel = dm["history_max_per_channel"];
+        if (dm.contains("history_ttl_seconds")) dm_history_ttl_seconds = dm["history_ttl_seconds"];
+        if (dm.contains("list_default_limit")) dm_list_default_limit = dm["list_default_limit"];
     }
 
     // Auth settings
@@ -244,6 +262,14 @@ nlohmann::json Config::toJson() const {
     j["channel"]["world_channel_min_count"] = world_channel_min_count;
     j["channel"]["world_channel_max_members"] = world_channel_max_members;
     j["channel"]["world_channel_scale_threshold"] = world_channel_scale_threshold;
+    j["channel"]["auto_create_prefixes"] = auto_create_prefixes;
+    j["channel"]["auto_create_max_members"] = auto_create_max_members;
+
+    // DM
+    j["dm"]["enabled"] = dm_enabled;
+    j["dm"]["history_max_per_channel"] = dm_history_max_per_channel;
+    j["dm"]["history_ttl_seconds"] = dm_history_ttl_seconds;
+    j["dm"]["list_default_limit"] = dm_list_default_limit;
 
     // Auth
     j["auth"]["provider"] = auth_provider;

@@ -161,14 +161,37 @@ size_t ChannelManager::channelCount() const {
     return channels_.size();
 }
 
+bool ChannelManager::isAutoCreatablePrefix(const std::string& channel_id) const {
+    for (const auto& prefix : config_.auto_create_prefixes) {
+        if (channel_id.size() > prefix.size() &&
+            channel_id.compare(0, prefix.size(), prefix) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 Channel::JoinResult ChannelManager::joinChannel(const std::string& channel_id,
                                                  SessionPtr session,
                                                  const std::string& password) {
     Channel* channel = getChannel(channel_id);
     if (!channel) {
-        // Channel doesn't exist - could auto-create non-system channels here
-        LOG_WARN("Join failed: channel {} not found", channel_id);
-        return Channel::JoinResult::Forbidden;
+        // Auto-create channel if prefix matches
+        if (isAutoCreatablePrefix(channel_id)) {
+            ChannelConfig auto_config;
+            auto_config.channel_id = channel_id;
+            auto_config.channel_name = channel_id;
+            auto_config.max_members = config_.auto_create_max_members;
+            auto_config.is_persistent = false;
+            auto_config.is_system = false;
+            channel = createChannel(auto_config);
+            LOG_INFO("Auto-created channel: {} (prefix match)", channel_id);
+        }
+
+        if (!channel) {
+            LOG_WARN("Join failed: channel {} not found", channel_id);
+            return Channel::JoinResult::Forbidden;
+        }
     }
 
     auto result = channel->addMember(session, password);

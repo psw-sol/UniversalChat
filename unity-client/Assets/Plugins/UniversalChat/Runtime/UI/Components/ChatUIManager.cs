@@ -106,6 +106,19 @@ namespace UniversalChat.UI
         [Tooltip("Rich Content 링크 클릭 (아이템, 유저 등)")]
         public UnityEvent<RichLinkData> OnLinkClickedEvent;
 
+        [Header("DM Events")]
+        [Tooltip("DM 대화 시작됨")]
+        public UnityEvent<DMConversation> OnDMStartedEvent;
+
+        [Tooltip("DM 메시지 수신")]
+        public UnityEvent<ChannelMessage> OnDMMessageReceivedEvent;
+
+        [Tooltip("DM 읽음 확인 수신")]
+        public UnityEvent<DMReadReceiptData> OnDMReadReceiptEvent;
+
+        [Tooltip("DM 대화 목록 업데이트")]
+        public UnityEvent<List<DMConversation>> OnDMListUpdatedEvent;
+
         #endregion
 
         #region Properties
@@ -234,6 +247,12 @@ namespace UniversalChat.UI
             _chatService.OnUserActionNotificationReceived += HandleUserActionNotificationReceived;
             _chatService.OnChatReady += HandleChatReady;
 
+            // DM events
+            _chatService.OnDMStarted += HandleDMStarted;
+            _chatService.OnDMMessageReceived += HandleDMMessageReceived;
+            _chatService.OnDMReadReceiptReceived += HandleDMReadReceiptReceived;
+            _chatService.OnDMListUpdated += HandleDMListUpdated;
+
             // RichContent 링크 클릭 이벤트
             if (RichContentManager.HasInstance)
             {
@@ -258,6 +277,12 @@ namespace UniversalChat.UI
             _chatService.OnAnnouncementReceived -= HandleAnnouncementReceived;
             _chatService.OnUserActionNotificationReceived -= HandleUserActionNotificationReceived;
             _chatService.OnChatReady -= HandleChatReady;
+
+            // DM events
+            _chatService.OnDMStarted -= HandleDMStarted;
+            _chatService.OnDMMessageReceived -= HandleDMMessageReceived;
+            _chatService.OnDMReadReceiptReceived -= HandleDMReadReceiptReceived;
+            _chatService.OnDMListUpdated -= HandleDMListUpdated;
 
             if (RichContentManager.HasInstance)
             {
@@ -399,6 +424,60 @@ namespace UniversalChat.UI
         {
             _messageHistory.Clear();
             _virtualizedChatPanel?.Clear();
+        }
+
+        /// <summary>
+        /// DM 대화 시작
+        /// </summary>
+        public async Task<DMConversation> StartDMAsync(string targetUserId)
+        {
+            if (_chatService == null) return null;
+            return await _chatService.StartDMAsync(targetUserId);
+        }
+
+        /// <summary>
+        /// DM 대화 목록 조회
+        /// </summary>
+        public async Task<List<DMConversation>> GetDMListAsync(int limit = 50)
+        {
+            if (_chatService == null) return new List<DMConversation>();
+            return await _chatService.GetDMListAsync(limit);
+        }
+
+        /// <summary>
+        /// DM 메시지 전송
+        /// </summary>
+        public async Task SendDMMessageAsync(string dmChannelId, string content, int messageType = 0)
+        {
+            if (_chatService == null) return;
+            await _chatService.SendDMMessageAsync(dmChannelId, content, messageType);
+        }
+
+        /// <summary>
+        /// DM 읽음 확인
+        /// </summary>
+        public async Task MarkDMReadAsync(string dmChannelId, string lastMessageId)
+        {
+            if (_chatService == null) return;
+            await _chatService.MarkDMReadAsync(dmChannelId, lastMessageId);
+        }
+
+        /// <summary>
+        /// DM 히스토리 조회
+        /// </summary>
+        public async Task<List<ChannelMessage>> LoadDMHistoryAsync(string dmChannelId, long beforeTimestamp = 0, int limit = 30)
+        {
+            if (_chatService == null) return new List<ChannelMessage>();
+            return await _chatService.LoadDMHistoryAsync(dmChannelId, beforeTimestamp, limit);
+        }
+
+        /// <summary>
+        /// DM 삭제
+        /// </summary>
+        public async Task DeleteDMAsync(string dmChannelId)
+        {
+            if (_chatService == null) return;
+            await _chatService.DeleteDMAsync(dmChannelId);
         }
 
         #endregion
@@ -564,6 +643,26 @@ namespace UniversalChat.UI
         private void HandleLinkClicked(RichLinkData linkData)
         {
             OnLinkClickedEvent?.Invoke(linkData);
+        }
+
+        private void HandleDMStarted(DMConversation conversation)
+        {
+            OnDMStartedEvent?.Invoke(conversation);
+        }
+
+        private void HandleDMMessageReceived(ChannelMessage message)
+        {
+            OnDMMessageReceivedEvent?.Invoke(message);
+        }
+
+        private void HandleDMReadReceiptReceived(DMReadReceiptData receipt)
+        {
+            OnDMReadReceiptEvent?.Invoke(receipt);
+        }
+
+        private void HandleDMListUpdated(List<DMConversation> conversations)
+        {
+            OnDMListUpdatedEvent?.Invoke(conversations);
         }
 
         #endregion

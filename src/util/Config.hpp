@@ -42,6 +42,16 @@ public:
     int world_channel_max_members = 1000;      // 월드 채널당 최대 인원
     float world_channel_scale_threshold = 0.7f; // 확장 임계치 (70%)
 
+    // === Channel Auto-Create Settings ===
+    std::vector<std::string> auto_create_prefixes;  // e.g., "guild_", "alliance_", "party_"
+    int auto_create_max_members = 200;
+
+    // === DM Settings ===
+    bool dm_enabled = true;
+    int dm_history_max_per_channel = 500;
+    int dm_history_ttl_seconds = 86400 * 30;  // 30 days
+    int dm_list_default_limit = 50;
+
     // === Auth Settings ===
     std::string auth_provider = "simple";
     bool token_validation = false;

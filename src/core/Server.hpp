@@ -19,6 +19,7 @@ class MessageDispatcher;
 class Session;
 class AnnouncementService;
 class UserActionService;
+class DMManager;
 
 #ifdef ENABLE_REDIS
 class RedisClient;
@@ -85,6 +86,7 @@ private:
     std::unique_ptr<MessageDispatcher> message_dispatcher_;
     std::shared_ptr<AnnouncementService> announcement_service_;
     std::shared_ptr<UserActionService> user_action_service_;
+    std::unique_ptr<DMManager> dm_manager_;
 #ifdef ENABLE_REDIS
     std::shared_ptr<RedisClient> redis_client_;
     std::shared_ptr<RedisPubSub> pubsub_;

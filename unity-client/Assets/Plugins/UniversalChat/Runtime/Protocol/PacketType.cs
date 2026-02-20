@@ -55,6 +55,21 @@ namespace UniversalChat.Protocol
         UserActionNotificationReceive = 0x0702,  // 채팅서버 -> 클라이언트
         UserActionNotificationAck     = 0x0703,  // 채팅서버 -> 게임서버
 
+        // === DM (0x08xx) ===
+        DMStart              = 0x0801,
+        DMStartResponse      = 0x0802,
+        DMListRequest        = 0x0803,
+        DMListResponse       = 0x0804,
+        DMMessageSend        = 0x0805,
+        DMMessageReceive     = 0x0806,
+        DMMessageAck         = 0x0807,
+        DMReadReceipt        = 0x0808,
+        DMReadReceiptNotify  = 0x0809,
+        DMHistoryRequest     = 0x080A,
+        DMHistoryResponse    = 0x080B,
+        DMDeleteRequest      = 0x080C,
+        DMDeleteResponse     = 0x080D,
+
         // === Error (0xFFxx) ===
         Error               = 0xFF01,
 

@@ -68,6 +68,21 @@ enum class PacketType : uint16_t {
     UserActionNotificationReceive = 0x0702,  // 채팅서버 -> 클라이언트
     UserActionNotificationAck     = 0x0703,  // 채팅서버 -> 게임서버
 
+    // === DM / Direct Message (0x08xx) ===
+    DMStart                = 0x0801,
+    DMStartResponse        = 0x0802,
+    DMListRequest          = 0x0803,
+    DMListResponse         = 0x0804,
+    DMMessageSend          = 0x0805,
+    DMMessageReceive       = 0x0806,
+    DMMessageAck           = 0x0807,
+    DMReadReceipt          = 0x0808,
+    DMReadReceiptNotify    = 0x0809,
+    DMHistoryRequest       = 0x080A,
+    DMHistoryResponse      = 0x080B,
+    DMDeleteRequest        = 0x080C,
+    DMDeleteResponse       = 0x080D,
+
     // === Error (0xFFxx) ===
     Error               = 0xFF01,
 
@@ -146,6 +161,19 @@ inline const char* getPacketTypeName(PacketType type) {
         case PacketType::UserActionNotificationSend:    return "UserActionNotificationSend";
         case PacketType::UserActionNotificationReceive: return "UserActionNotificationReceive";
         case PacketType::UserActionNotificationAck:     return "UserActionNotificationAck";
+        case PacketType::DMStart:              return "DMStart";
+        case PacketType::DMStartResponse:     return "DMStartResponse";
+        case PacketType::DMListRequest:       return "DMListRequest";
+        case PacketType::DMListResponse:      return "DMListResponse";
+        case PacketType::DMMessageSend:       return "DMMessageSend";
+        case PacketType::DMMessageReceive:    return "DMMessageReceive";
+        case PacketType::DMMessageAck:        return "DMMessageAck";
+        case PacketType::DMReadReceipt:       return "DMReadReceipt";
+        case PacketType::DMReadReceiptNotify: return "DMReadReceiptNotify";
+        case PacketType::DMHistoryRequest:    return "DMHistoryRequest";
+        case PacketType::DMHistoryResponse:   return "DMHistoryResponse";
+        case PacketType::DMDeleteRequest:     return "DMDeleteRequest";
+        case PacketType::DMDeleteResponse:    return "DMDeleteResponse";
         case PacketType::Error:               return "Error";
         default:                              return "Unknown";
     }

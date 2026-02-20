@@ -119,16 +119,51 @@ namespace Chat.Protocol {
             "ZGF0YRgKIAEoCRIRCgl0aW1lc3RhbXAYCyABKAMiiQEKGVVzZXJBY3Rpb25O",
             "b3RpZmljYXRpb25BY2sSDwoHc3VjY2VzcxgBIAEoCBIXCg9ub3RpZmljYXRp",
             "b25faWQYAiABKAkSFwoPZGVsaXZlcmVkX2NvdW50GAMgASgFEhUKDWVycm9y",
-            "X21lc3NhZ2UYBCABKAkSEgoKZXJyb3JfY29kZRgFIAEoBSJDCgVFcnJvchIS",
-            "CgplcnJvcl9jb2RlGAEgASgFEhUKDWVycm9yX21lc3NhZ2UYAiABKAkSDwoH",
-            "ZGV0YWlscxgDIAEoCSo5CgtNZXNzYWdlVHlwZRIICgRURVhUEAASCgoGU1lT",
-            "VEVNEAESCQoFRU1PVEUQAhIJCgVJTUFHRRADKnoKEEFubm91bmNlbWVudFR5",
-            "cGUSFwoTQU5OT1VOQ0VNRU5UX05PUk1BTBAAEhcKE0FOTk9VTkNFTUVOVF9V",
-            "UkdFTlQQARIcChhBTk5PVU5DRU1FTlRfTUFJTlRFTkFOQ0UQAhIWChJBTk5P",
-            "VU5DRU1FTlRfRVZFTlQQAyqSAQoOVXNlckFjdGlvblR5cGUSFwoTQUNUSU9O",
-            "X0lURU1fQUNRVUlSRRAAEh8KG0FDVElPTl9SQU5LSU5HX0JSRUFLVEhST1VH",
-            "SBABEhsKF0FDVElPTl9NSVNTSU9OX0NPTVBMRVRFEAISFgoSQUNUSU9OX0FD",
-            "SElFVkVNRU5UEAMSEQoNQUNUSU9OX0NVU1RPTRBjQgVIAfgBAWIGcHJvdG8z"));
+            "X21lc3NhZ2UYBCABKAkSEgoKZXJyb3JfY29kZRgFIAEoBSIoCg5ETVN0YXJ0",
+            "UmVxdWVzdBIWCg50YXJnZXRfdXNlcl9pZBgBIAEoCSLJAQoPRE1TdGFydFJl",
+            "c3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSFQoNZG1fY2hhbm5lbF9pZBgCIAEo",
+            "CRIVCg1lcnJvcl9tZXNzYWdlGAMgASgJEhIKCmVycm9yX2NvZGUYBCABKAUS",
+            "NwoPcmVjZW50X21lc3NhZ2VzGAUgAygLMh4uY2hhdC5wcm90b2NvbC5DaGF0",
+            "TWVzc2FnZURhdGESKgoJcGVlcl9pbmZvGAYgASgLMhcuY2hhdC5wcm90b2Nv",
+            "bC5Vc2VySW5mbyI4Cg1ETUxpc3RSZXF1ZXN0Eg0KBWxpbWl0GAEgASgFEhgK",
+            "EGJlZm9yZV90aW1lc3RhbXAYAiABKAMiXAoORE1MaXN0UmVzcG9uc2USOAoN",
+            "Y29udmVyc2F0aW9ucxgBIAMoCzIhLmNoYXQucHJvdG9jb2wuRE1Db252ZXJz",
+            "YXRpb25JbmZvEhAKCGhhc19tb3JlGAIgASgIIoQBCg1ETU1lc3NhZ2VTZW5k",
+            "EhUKDWRtX2NoYW5uZWxfaWQYASABKAkSDwoHY29udGVudBgCIAEoCRIwCgxt",
+            "ZXNzYWdlX3R5cGUYAyABKA4yGi5jaGF0LnByb3RvY29sLk1lc3NhZ2VUeXBl",
+            "EhkKEWNsaWVudF9tZXNzYWdlX2lkGAQgASgJIloKEERNTWVzc2FnZVJlY2Vp",
+            "dmUSLwoHbWVzc2FnZRgBIAEoCzIeLmNoYXQucHJvdG9jb2wuQ2hhdE1lc3Nh",
+            "Z2VEYXRhEhUKDWRtX2NoYW5uZWxfaWQYAiABKAkieQoMRE1NZXNzYWdlQWNr",
+            "Eg8KB3N1Y2Nlc3MYASABKAgSEgoKbWVzc2FnZV9pZBgCIAEoCRIZChFjbGll",
+            "bnRfbWVzc2FnZV9pZBgDIAEoCRIVCg1lcnJvcl9tZXNzYWdlGAQgASgJEhIK",
+            "CmVycm9yX2NvZGUYBSABKAUiYQoNRE1SZWFkUmVjZWlwdBIVCg1kbV9jaGFu",
+            "bmVsX2lkGAEgASgJEhwKFGxhc3RfcmVhZF9tZXNzYWdlX2lkGAIgASgJEhsK",
+            "E2xhc3RfcmVhZF90aW1lc3RhbXAYAyABKAMifwoTRE1SZWFkUmVjZWlwdE5v",
+            "dGlmeRIVCg1kbV9jaGFubmVsX2lkGAEgASgJEhYKDnJlYWRlcl91c2VyX2lk",
+            "GAIgASgJEhwKFGxhc3RfcmVhZF9tZXNzYWdlX2lkGAMgASgJEhsKE2xhc3Rf",
+            "cmVhZF90aW1lc3RhbXAYBCABKAMiUgoQRE1IaXN0b3J5UmVxdWVzdBIVCg1k",
+            "bV9jaGFubmVsX2lkGAEgASgJEhgKEGJlZm9yZV90aW1lc3RhbXAYAiABKAMS",
+            "DQoFbGltaXQYAyABKAUibgoRRE1IaXN0b3J5UmVzcG9uc2USFQoNZG1fY2hh",
+            "bm5lbF9pZBgBIAEoCRIwCghtZXNzYWdlcxgCIAMoCzIeLmNoYXQucHJvdG9j",
+            "b2wuQ2hhdE1lc3NhZ2VEYXRhEhAKCGhhc19tb3JlGAMgASgIIigKD0RNRGVs",
+            "ZXRlUmVxdWVzdBIVCg1kbV9jaGFubmVsX2lkGAEgASgJImUKEERNRGVsZXRl",
+            "UmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBIVCg1kbV9jaGFubmVsX2lkGAIg",
+            "ASgJEhUKDWVycm9yX21lc3NhZ2UYAyABKAkSEgoKZXJyb3JfY29kZRgEIAEo",
+            "BSL7AQoSRE1Db252ZXJzYXRpb25JbmZvEhUKDWRtX2NoYW5uZWxfaWQYASAB",
+            "KAkSFAoMcGVlcl91c2VyX2lkGAIgASgJEhUKDXBlZXJfbmlja25hbWUYAyAB",
+            "KAkSGgoScGVlcl9wcm9maWxlX2ltYWdlGAQgASgJEhgKEHBlZXJfZnJhbWVf",
+            "aW1hZ2UYBSABKAkSFwoPcGVlcl9leHRyYV9kYXRhGAYgASgJEhwKFGxhc3Rf",
+            "bWVzc2FnZV9jb250ZW50GAcgASgJEh4KFmxhc3RfbWVzc2FnZV90aW1lc3Rh",
+            "bXAYCCABKAMSFAoMdW5yZWFkX2NvdW50GAkgASgFIkMKBUVycm9yEhIKCmVy",
+            "cm9yX2NvZGUYASABKAUSFQoNZXJyb3JfbWVzc2FnZRgCIAEoCRIPCgdkZXRh",
+            "aWxzGAMgASgJKjkKC01lc3NhZ2VUeXBlEggKBFRFWFQQABIKCgZTWVNURU0Q",
+            "ARIJCgVFTU9URRACEgkKBUlNQUdFEAMqegoQQW5ub3VuY2VtZW50VHlwZRIX",
+            "ChNBTk5PVU5DRU1FTlRfTk9STUFMEAASFwoTQU5OT1VOQ0VNRU5UX1VSR0VO",
+            "VBABEhwKGEFOTk9VTkNFTUVOVF9NQUlOVEVOQU5DRRACEhYKEkFOTk9VTkNF",
+            "TUVOVF9FVkVOVBADKpIBCg5Vc2VyQWN0aW9uVHlwZRIXChNBQ1RJT05fSVRF",
+            "TV9BQ1FVSVJFEAASHwobQUNUSU9OX1JBTktJTkdfQlJFQUtUSFJPVUdIEAES",
+            "GwoXQUNUSU9OX01JU1NJT05fQ09NUExFVEUQAhIWChJBQ1RJT05fQUNISUVW",
+            "RU1FTlQQAxIRCg1BQ1RJT05fQ1VTVE9NEGNCBUgB+AEBYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Chat.Protocol.MessageType), typeof(global::Chat.Protocol.AnnouncementType), typeof(global::Chat.Protocol.UserActionType), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -163,6 +198,20 @@ namespace Chat.Protocol {
             new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.UserActionNotificationSend), global::Chat.Protocol.UserActionNotificationSend.Parser, new[]{ "NotificationId", "ActionType", "ActorUserId", "ActorNickname", "ActorProfileImage", "ActorFrameImage", "Title", "Content", "IconId", "ExtraData", "TargetChannel", "ExcludeActor", "AdminToken" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.UserActionNotificationReceive), global::Chat.Protocol.UserActionNotificationReceive.Parser, new[]{ "NotificationId", "ActionType", "ActorUserId", "ActorNickname", "ActorProfileImage", "ActorFrameImage", "Title", "Content", "IconId", "ExtraData", "Timestamp" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.UserActionNotificationAck), global::Chat.Protocol.UserActionNotificationAck.Parser, new[]{ "Success", "NotificationId", "DeliveredCount", "ErrorMessage", "ErrorCode" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.DMStartRequest), global::Chat.Protocol.DMStartRequest.Parser, new[]{ "TargetUserId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.DMStartResponse), global::Chat.Protocol.DMStartResponse.Parser, new[]{ "Success", "DmChannelId", "ErrorMessage", "ErrorCode", "RecentMessages", "PeerInfo" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.DMListRequest), global::Chat.Protocol.DMListRequest.Parser, new[]{ "Limit", "BeforeTimestamp" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.DMListResponse), global::Chat.Protocol.DMListResponse.Parser, new[]{ "Conversations", "HasMore" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.DMMessageSend), global::Chat.Protocol.DMMessageSend.Parser, new[]{ "DmChannelId", "Content", "MessageType", "ClientMessageId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.DMMessageReceive), global::Chat.Protocol.DMMessageReceive.Parser, new[]{ "Message", "DmChannelId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.DMMessageAck), global::Chat.Protocol.DMMessageAck.Parser, new[]{ "Success", "MessageId", "ClientMessageId", "ErrorMessage", "ErrorCode" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.DMReadReceipt), global::Chat.Protocol.DMReadReceipt.Parser, new[]{ "DmChannelId", "LastReadMessageId", "LastReadTimestamp" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.DMReadReceiptNotify), global::Chat.Protocol.DMReadReceiptNotify.Parser, new[]{ "DmChannelId", "ReaderUserId", "LastReadMessageId", "LastReadTimestamp" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.DMHistoryRequest), global::Chat.Protocol.DMHistoryRequest.Parser, new[]{ "DmChannelId", "BeforeTimestamp", "Limit" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.DMHistoryResponse), global::Chat.Protocol.DMHistoryResponse.Parser, new[]{ "DmChannelId", "Messages", "HasMore" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.DMDeleteRequest), global::Chat.Protocol.DMDeleteRequest.Parser, new[]{ "DmChannelId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.DMDeleteResponse), global::Chat.Protocol.DMDeleteResponse.Parser, new[]{ "Success", "DmChannelId", "ErrorMessage", "ErrorCode" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.DMConversationInfo), global::Chat.Protocol.DMConversationInfo.Parser, new[]{ "DmChannelId", "PeerUserId", "PeerNickname", "PeerProfileImage", "PeerFrameImage", "PeerExtraData", "LastMessageContent", "LastMessageTimestamp", "UnreadCount" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Chat.Protocol.Error), global::Chat.Protocol.Error.Parser, new[]{ "ErrorCode", "ErrorMessage", "Details" }, null, null, null, null)
           }));
     }
@@ -9893,6 +9942,3701 @@ namespace Chat.Protocol {
   }
 
   /// <summary>
+  /// 0x0801 - DMStartRequest (client -> server)
+  /// </summary>
+  public sealed partial class DMStartRequest : pb::IMessage<DMStartRequest>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DMStartRequest> _parser = new pb::MessageParser<DMStartRequest>(() => new DMStartRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DMStartRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[31]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMStartRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMStartRequest(DMStartRequest other) : this() {
+      targetUserId_ = other.targetUserId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMStartRequest Clone() {
+      return new DMStartRequest(this);
+    }
+
+    /// <summary>Field number for the "target_user_id" field.</summary>
+    public const int TargetUserIdFieldNumber = 1;
+    private string targetUserId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string TargetUserId {
+      get { return targetUserId_; }
+      set {
+        targetUserId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DMStartRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DMStartRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (TargetUserId != other.TargetUserId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (TargetUserId.Length != 0) hash ^= TargetUserId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (TargetUserId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(TargetUserId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (TargetUserId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(TargetUserId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (TargetUserId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(TargetUserId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DMStartRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.TargetUserId.Length != 0) {
+        TargetUserId = other.TargetUserId;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            TargetUserId = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            TargetUserId = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 0x0802 - DMStartResponse (server -> client)
+  /// </summary>
+  public sealed partial class DMStartResponse : pb::IMessage<DMStartResponse>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DMStartResponse> _parser = new pb::MessageParser<DMStartResponse>(() => new DMStartResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DMStartResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[32]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMStartResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMStartResponse(DMStartResponse other) : this() {
+      success_ = other.success_;
+      dmChannelId_ = other.dmChannelId_;
+      errorMessage_ = other.errorMessage_;
+      errorCode_ = other.errorCode_;
+      recentMessages_ = other.recentMessages_.Clone();
+      peerInfo_ = other.peerInfo_ != null ? other.peerInfo_.Clone() : null;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMStartResponse Clone() {
+      return new DMStartResponse(this);
+    }
+
+    /// <summary>Field number for the "success" field.</summary>
+    public const int SuccessFieldNumber = 1;
+    private bool success_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Success {
+      get { return success_; }
+      set {
+        success_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "dm_channel_id" field.</summary>
+    public const int DmChannelIdFieldNumber = 2;
+    private string dmChannelId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DmChannelId {
+      get { return dmChannelId_; }
+      set {
+        dmChannelId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "error_message" field.</summary>
+    public const int ErrorMessageFieldNumber = 3;
+    private string errorMessage_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ErrorMessage {
+      get { return errorMessage_; }
+      set {
+        errorMessage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "error_code" field.</summary>
+    public const int ErrorCodeFieldNumber = 4;
+    private int errorCode_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int ErrorCode {
+      get { return errorCode_; }
+      set {
+        errorCode_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "recent_messages" field.</summary>
+    public const int RecentMessagesFieldNumber = 5;
+    private static readonly pb::FieldCodec<global::Chat.Protocol.ChatMessageData> _repeated_recentMessages_codec
+        = pb::FieldCodec.ForMessage(42, global::Chat.Protocol.ChatMessageData.Parser);
+    private readonly pbc::RepeatedField<global::Chat.Protocol.ChatMessageData> recentMessages_ = new pbc::RepeatedField<global::Chat.Protocol.ChatMessageData>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::Chat.Protocol.ChatMessageData> RecentMessages {
+      get { return recentMessages_; }
+    }
+
+    /// <summary>Field number for the "peer_info" field.</summary>
+    public const int PeerInfoFieldNumber = 6;
+    private global::Chat.Protocol.UserInfo peerInfo_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Chat.Protocol.UserInfo PeerInfo {
+      get { return peerInfo_; }
+      set {
+        peerInfo_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DMStartResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DMStartResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Success != other.Success) return false;
+      if (DmChannelId != other.DmChannelId) return false;
+      if (ErrorMessage != other.ErrorMessage) return false;
+      if (ErrorCode != other.ErrorCode) return false;
+      if(!recentMessages_.Equals(other.recentMessages_)) return false;
+      if (!object.Equals(PeerInfo, other.PeerInfo)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Success != false) hash ^= Success.GetHashCode();
+      if (DmChannelId.Length != 0) hash ^= DmChannelId.GetHashCode();
+      if (ErrorMessage.Length != 0) hash ^= ErrorMessage.GetHashCode();
+      if (ErrorCode != 0) hash ^= ErrorCode.GetHashCode();
+      hash ^= recentMessages_.GetHashCode();
+      if (peerInfo_ != null) hash ^= PeerInfo.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(DmChannelId);
+      }
+      if (ErrorMessage.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ErrorMessage);
+      }
+      if (ErrorCode != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(ErrorCode);
+      }
+      recentMessages_.WriteTo(output, _repeated_recentMessages_codec);
+      if (peerInfo_ != null) {
+        output.WriteRawTag(50);
+        output.WriteMessage(PeerInfo);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(DmChannelId);
+      }
+      if (ErrorMessage.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ErrorMessage);
+      }
+      if (ErrorCode != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(ErrorCode);
+      }
+      recentMessages_.WriteTo(ref output, _repeated_recentMessages_codec);
+      if (peerInfo_ != null) {
+        output.WriteRawTag(50);
+        output.WriteMessage(PeerInfo);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Success != false) {
+        size += 1 + 1;
+      }
+      if (DmChannelId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DmChannelId);
+      }
+      if (ErrorMessage.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ErrorMessage);
+      }
+      if (ErrorCode != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ErrorCode);
+      }
+      size += recentMessages_.CalculateSize(_repeated_recentMessages_codec);
+      if (peerInfo_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(PeerInfo);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DMStartResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Success != false) {
+        Success = other.Success;
+      }
+      if (other.DmChannelId.Length != 0) {
+        DmChannelId = other.DmChannelId;
+      }
+      if (other.ErrorMessage.Length != 0) {
+        ErrorMessage = other.ErrorMessage;
+      }
+      if (other.ErrorCode != 0) {
+        ErrorCode = other.ErrorCode;
+      }
+      recentMessages_.Add(other.recentMessages_);
+      if (other.peerInfo_ != null) {
+        if (peerInfo_ == null) {
+          PeerInfo = new global::Chat.Protocol.UserInfo();
+        }
+        PeerInfo.MergeFrom(other.PeerInfo);
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+          case 18: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 26: {
+            ErrorMessage = input.ReadString();
+            break;
+          }
+          case 32: {
+            ErrorCode = input.ReadInt32();
+            break;
+          }
+          case 42: {
+            recentMessages_.AddEntriesFrom(input, _repeated_recentMessages_codec);
+            break;
+          }
+          case 50: {
+            if (peerInfo_ == null) {
+              PeerInfo = new global::Chat.Protocol.UserInfo();
+            }
+            input.ReadMessage(PeerInfo);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+          case 18: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 26: {
+            ErrorMessage = input.ReadString();
+            break;
+          }
+          case 32: {
+            ErrorCode = input.ReadInt32();
+            break;
+          }
+          case 42: {
+            recentMessages_.AddEntriesFrom(ref input, _repeated_recentMessages_codec);
+            break;
+          }
+          case 50: {
+            if (peerInfo_ == null) {
+              PeerInfo = new global::Chat.Protocol.UserInfo();
+            }
+            input.ReadMessage(PeerInfo);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 0x0803 - DMListRequest (client -> server)
+  /// </summary>
+  public sealed partial class DMListRequest : pb::IMessage<DMListRequest>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DMListRequest> _parser = new pb::MessageParser<DMListRequest>(() => new DMListRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DMListRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[33]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMListRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMListRequest(DMListRequest other) : this() {
+      limit_ = other.limit_;
+      beforeTimestamp_ = other.beforeTimestamp_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMListRequest Clone() {
+      return new DMListRequest(this);
+    }
+
+    /// <summary>Field number for the "limit" field.</summary>
+    public const int LimitFieldNumber = 1;
+    private int limit_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Limit {
+      get { return limit_; }
+      set {
+        limit_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "before_timestamp" field.</summary>
+    public const int BeforeTimestampFieldNumber = 2;
+    private long beforeTimestamp_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long BeforeTimestamp {
+      get { return beforeTimestamp_; }
+      set {
+        beforeTimestamp_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DMListRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DMListRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Limit != other.Limit) return false;
+      if (BeforeTimestamp != other.BeforeTimestamp) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Limit != 0) hash ^= Limit.GetHashCode();
+      if (BeforeTimestamp != 0L) hash ^= BeforeTimestamp.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Limit != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(Limit);
+      }
+      if (BeforeTimestamp != 0L) {
+        output.WriteRawTag(16);
+        output.WriteInt64(BeforeTimestamp);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Limit != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(Limit);
+      }
+      if (BeforeTimestamp != 0L) {
+        output.WriteRawTag(16);
+        output.WriteInt64(BeforeTimestamp);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Limit != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Limit);
+      }
+      if (BeforeTimestamp != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(BeforeTimestamp);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DMListRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Limit != 0) {
+        Limit = other.Limit;
+      }
+      if (other.BeforeTimestamp != 0L) {
+        BeforeTimestamp = other.BeforeTimestamp;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Limit = input.ReadInt32();
+            break;
+          }
+          case 16: {
+            BeforeTimestamp = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Limit = input.ReadInt32();
+            break;
+          }
+          case 16: {
+            BeforeTimestamp = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 0x0804 - DMListResponse (server -> client)
+  /// </summary>
+  public sealed partial class DMListResponse : pb::IMessage<DMListResponse>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DMListResponse> _parser = new pb::MessageParser<DMListResponse>(() => new DMListResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DMListResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[34]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMListResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMListResponse(DMListResponse other) : this() {
+      conversations_ = other.conversations_.Clone();
+      hasMore_ = other.hasMore_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMListResponse Clone() {
+      return new DMListResponse(this);
+    }
+
+    /// <summary>Field number for the "conversations" field.</summary>
+    public const int ConversationsFieldNumber = 1;
+    private static readonly pb::FieldCodec<global::Chat.Protocol.DMConversationInfo> _repeated_conversations_codec
+        = pb::FieldCodec.ForMessage(10, global::Chat.Protocol.DMConversationInfo.Parser);
+    private readonly pbc::RepeatedField<global::Chat.Protocol.DMConversationInfo> conversations_ = new pbc::RepeatedField<global::Chat.Protocol.DMConversationInfo>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::Chat.Protocol.DMConversationInfo> Conversations {
+      get { return conversations_; }
+    }
+
+    /// <summary>Field number for the "has_more" field.</summary>
+    public const int HasMoreFieldNumber = 2;
+    private bool hasMore_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool HasMore {
+      get { return hasMore_; }
+      set {
+        hasMore_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DMListResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DMListResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if(!conversations_.Equals(other.conversations_)) return false;
+      if (HasMore != other.HasMore) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= conversations_.GetHashCode();
+      if (HasMore != false) hash ^= HasMore.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      conversations_.WriteTo(output, _repeated_conversations_codec);
+      if (HasMore != false) {
+        output.WriteRawTag(16);
+        output.WriteBool(HasMore);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      conversations_.WriteTo(ref output, _repeated_conversations_codec);
+      if (HasMore != false) {
+        output.WriteRawTag(16);
+        output.WriteBool(HasMore);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      size += conversations_.CalculateSize(_repeated_conversations_codec);
+      if (HasMore != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DMListResponse other) {
+      if (other == null) {
+        return;
+      }
+      conversations_.Add(other.conversations_);
+      if (other.HasMore != false) {
+        HasMore = other.HasMore;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            conversations_.AddEntriesFrom(input, _repeated_conversations_codec);
+            break;
+          }
+          case 16: {
+            HasMore = input.ReadBool();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            conversations_.AddEntriesFrom(ref input, _repeated_conversations_codec);
+            break;
+          }
+          case 16: {
+            HasMore = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 0x0805 - DMMessageSend (client -> server)
+  /// </summary>
+  public sealed partial class DMMessageSend : pb::IMessage<DMMessageSend>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DMMessageSend> _parser = new pb::MessageParser<DMMessageSend>(() => new DMMessageSend());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DMMessageSend> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[35]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMMessageSend() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMMessageSend(DMMessageSend other) : this() {
+      dmChannelId_ = other.dmChannelId_;
+      content_ = other.content_;
+      messageType_ = other.messageType_;
+      clientMessageId_ = other.clientMessageId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMMessageSend Clone() {
+      return new DMMessageSend(this);
+    }
+
+    /// <summary>Field number for the "dm_channel_id" field.</summary>
+    public const int DmChannelIdFieldNumber = 1;
+    private string dmChannelId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DmChannelId {
+      get { return dmChannelId_; }
+      set {
+        dmChannelId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "content" field.</summary>
+    public const int ContentFieldNumber = 2;
+    private string content_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Content {
+      get { return content_; }
+      set {
+        content_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "message_type" field.</summary>
+    public const int MessageTypeFieldNumber = 3;
+    private global::Chat.Protocol.MessageType messageType_ = global::Chat.Protocol.MessageType.Text;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Chat.Protocol.MessageType MessageType {
+      get { return messageType_; }
+      set {
+        messageType_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "client_message_id" field.</summary>
+    public const int ClientMessageIdFieldNumber = 4;
+    private string clientMessageId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ClientMessageId {
+      get { return clientMessageId_; }
+      set {
+        clientMessageId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DMMessageSend);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DMMessageSend other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (DmChannelId != other.DmChannelId) return false;
+      if (Content != other.Content) return false;
+      if (MessageType != other.MessageType) return false;
+      if (ClientMessageId != other.ClientMessageId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (DmChannelId.Length != 0) hash ^= DmChannelId.GetHashCode();
+      if (Content.Length != 0) hash ^= Content.GetHashCode();
+      if (MessageType != global::Chat.Protocol.MessageType.Text) hash ^= MessageType.GetHashCode();
+      if (ClientMessageId.Length != 0) hash ^= ClientMessageId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DmChannelId);
+      }
+      if (Content.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Content);
+      }
+      if (MessageType != global::Chat.Protocol.MessageType.Text) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) MessageType);
+      }
+      if (ClientMessageId.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(ClientMessageId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DmChannelId);
+      }
+      if (Content.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Content);
+      }
+      if (MessageType != global::Chat.Protocol.MessageType.Text) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) MessageType);
+      }
+      if (ClientMessageId.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(ClientMessageId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (DmChannelId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DmChannelId);
+      }
+      if (Content.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Content);
+      }
+      if (MessageType != global::Chat.Protocol.MessageType.Text) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) MessageType);
+      }
+      if (ClientMessageId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ClientMessageId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DMMessageSend other) {
+      if (other == null) {
+        return;
+      }
+      if (other.DmChannelId.Length != 0) {
+        DmChannelId = other.DmChannelId;
+      }
+      if (other.Content.Length != 0) {
+        Content = other.Content;
+      }
+      if (other.MessageType != global::Chat.Protocol.MessageType.Text) {
+        MessageType = other.MessageType;
+      }
+      if (other.ClientMessageId.Length != 0) {
+        ClientMessageId = other.ClientMessageId;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 18: {
+            Content = input.ReadString();
+            break;
+          }
+          case 24: {
+            MessageType = (global::Chat.Protocol.MessageType) input.ReadEnum();
+            break;
+          }
+          case 34: {
+            ClientMessageId = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 18: {
+            Content = input.ReadString();
+            break;
+          }
+          case 24: {
+            MessageType = (global::Chat.Protocol.MessageType) input.ReadEnum();
+            break;
+          }
+          case 34: {
+            ClientMessageId = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 0x0806 - DMMessageReceive (server -> client)
+  /// </summary>
+  public sealed partial class DMMessageReceive : pb::IMessage<DMMessageReceive>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DMMessageReceive> _parser = new pb::MessageParser<DMMessageReceive>(() => new DMMessageReceive());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DMMessageReceive> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[36]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMMessageReceive() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMMessageReceive(DMMessageReceive other) : this() {
+      message_ = other.message_ != null ? other.message_.Clone() : null;
+      dmChannelId_ = other.dmChannelId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMMessageReceive Clone() {
+      return new DMMessageReceive(this);
+    }
+
+    /// <summary>Field number for the "message" field.</summary>
+    public const int MessageFieldNumber = 1;
+    private global::Chat.Protocol.ChatMessageData message_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Chat.Protocol.ChatMessageData Message {
+      get { return message_; }
+      set {
+        message_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "dm_channel_id" field.</summary>
+    public const int DmChannelIdFieldNumber = 2;
+    private string dmChannelId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DmChannelId {
+      get { return dmChannelId_; }
+      set {
+        dmChannelId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DMMessageReceive);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DMMessageReceive other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Message, other.Message)) return false;
+      if (DmChannelId != other.DmChannelId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (message_ != null) hash ^= Message.GetHashCode();
+      if (DmChannelId.Length != 0) hash ^= DmChannelId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (message_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Message);
+      }
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(DmChannelId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (message_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Message);
+      }
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(DmChannelId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (message_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Message);
+      }
+      if (DmChannelId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DmChannelId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DMMessageReceive other) {
+      if (other == null) {
+        return;
+      }
+      if (other.message_ != null) {
+        if (message_ == null) {
+          Message = new global::Chat.Protocol.ChatMessageData();
+        }
+        Message.MergeFrom(other.Message);
+      }
+      if (other.DmChannelId.Length != 0) {
+        DmChannelId = other.DmChannelId;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (message_ == null) {
+              Message = new global::Chat.Protocol.ChatMessageData();
+            }
+            input.ReadMessage(Message);
+            break;
+          }
+          case 18: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            if (message_ == null) {
+              Message = new global::Chat.Protocol.ChatMessageData();
+            }
+            input.ReadMessage(Message);
+            break;
+          }
+          case 18: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 0x0807 - DMMessageAck (server -> client)
+  /// </summary>
+  public sealed partial class DMMessageAck : pb::IMessage<DMMessageAck>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DMMessageAck> _parser = new pb::MessageParser<DMMessageAck>(() => new DMMessageAck());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DMMessageAck> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[37]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMMessageAck() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMMessageAck(DMMessageAck other) : this() {
+      success_ = other.success_;
+      messageId_ = other.messageId_;
+      clientMessageId_ = other.clientMessageId_;
+      errorMessage_ = other.errorMessage_;
+      errorCode_ = other.errorCode_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMMessageAck Clone() {
+      return new DMMessageAck(this);
+    }
+
+    /// <summary>Field number for the "success" field.</summary>
+    public const int SuccessFieldNumber = 1;
+    private bool success_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Success {
+      get { return success_; }
+      set {
+        success_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "message_id" field.</summary>
+    public const int MessageIdFieldNumber = 2;
+    private string messageId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string MessageId {
+      get { return messageId_; }
+      set {
+        messageId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "client_message_id" field.</summary>
+    public const int ClientMessageIdFieldNumber = 3;
+    private string clientMessageId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ClientMessageId {
+      get { return clientMessageId_; }
+      set {
+        clientMessageId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "error_message" field.</summary>
+    public const int ErrorMessageFieldNumber = 4;
+    private string errorMessage_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ErrorMessage {
+      get { return errorMessage_; }
+      set {
+        errorMessage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "error_code" field.</summary>
+    public const int ErrorCodeFieldNumber = 5;
+    private int errorCode_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int ErrorCode {
+      get { return errorCode_; }
+      set {
+        errorCode_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DMMessageAck);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DMMessageAck other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Success != other.Success) return false;
+      if (MessageId != other.MessageId) return false;
+      if (ClientMessageId != other.ClientMessageId) return false;
+      if (ErrorMessage != other.ErrorMessage) return false;
+      if (ErrorCode != other.ErrorCode) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Success != false) hash ^= Success.GetHashCode();
+      if (MessageId.Length != 0) hash ^= MessageId.GetHashCode();
+      if (ClientMessageId.Length != 0) hash ^= ClientMessageId.GetHashCode();
+      if (ErrorMessage.Length != 0) hash ^= ErrorMessage.GetHashCode();
+      if (ErrorCode != 0) hash ^= ErrorCode.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (MessageId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(MessageId);
+      }
+      if (ClientMessageId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ClientMessageId);
+      }
+      if (ErrorMessage.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(ErrorMessage);
+      }
+      if (ErrorCode != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(ErrorCode);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (MessageId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(MessageId);
+      }
+      if (ClientMessageId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ClientMessageId);
+      }
+      if (ErrorMessage.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(ErrorMessage);
+      }
+      if (ErrorCode != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(ErrorCode);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Success != false) {
+        size += 1 + 1;
+      }
+      if (MessageId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(MessageId);
+      }
+      if (ClientMessageId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ClientMessageId);
+      }
+      if (ErrorMessage.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ErrorMessage);
+      }
+      if (ErrorCode != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ErrorCode);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DMMessageAck other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Success != false) {
+        Success = other.Success;
+      }
+      if (other.MessageId.Length != 0) {
+        MessageId = other.MessageId;
+      }
+      if (other.ClientMessageId.Length != 0) {
+        ClientMessageId = other.ClientMessageId;
+      }
+      if (other.ErrorMessage.Length != 0) {
+        ErrorMessage = other.ErrorMessage;
+      }
+      if (other.ErrorCode != 0) {
+        ErrorCode = other.ErrorCode;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+          case 18: {
+            MessageId = input.ReadString();
+            break;
+          }
+          case 26: {
+            ClientMessageId = input.ReadString();
+            break;
+          }
+          case 34: {
+            ErrorMessage = input.ReadString();
+            break;
+          }
+          case 40: {
+            ErrorCode = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+          case 18: {
+            MessageId = input.ReadString();
+            break;
+          }
+          case 26: {
+            ClientMessageId = input.ReadString();
+            break;
+          }
+          case 34: {
+            ErrorMessage = input.ReadString();
+            break;
+          }
+          case 40: {
+            ErrorCode = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 0x0808 - DMReadReceipt (client -> server)
+  /// </summary>
+  public sealed partial class DMReadReceipt : pb::IMessage<DMReadReceipt>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DMReadReceipt> _parser = new pb::MessageParser<DMReadReceipt>(() => new DMReadReceipt());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DMReadReceipt> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[38]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMReadReceipt() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMReadReceipt(DMReadReceipt other) : this() {
+      dmChannelId_ = other.dmChannelId_;
+      lastReadMessageId_ = other.lastReadMessageId_;
+      lastReadTimestamp_ = other.lastReadTimestamp_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMReadReceipt Clone() {
+      return new DMReadReceipt(this);
+    }
+
+    /// <summary>Field number for the "dm_channel_id" field.</summary>
+    public const int DmChannelIdFieldNumber = 1;
+    private string dmChannelId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DmChannelId {
+      get { return dmChannelId_; }
+      set {
+        dmChannelId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "last_read_message_id" field.</summary>
+    public const int LastReadMessageIdFieldNumber = 2;
+    private string lastReadMessageId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string LastReadMessageId {
+      get { return lastReadMessageId_; }
+      set {
+        lastReadMessageId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "last_read_timestamp" field.</summary>
+    public const int LastReadTimestampFieldNumber = 3;
+    private long lastReadTimestamp_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long LastReadTimestamp {
+      get { return lastReadTimestamp_; }
+      set {
+        lastReadTimestamp_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DMReadReceipt);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DMReadReceipt other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (DmChannelId != other.DmChannelId) return false;
+      if (LastReadMessageId != other.LastReadMessageId) return false;
+      if (LastReadTimestamp != other.LastReadTimestamp) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (DmChannelId.Length != 0) hash ^= DmChannelId.GetHashCode();
+      if (LastReadMessageId.Length != 0) hash ^= LastReadMessageId.GetHashCode();
+      if (LastReadTimestamp != 0L) hash ^= LastReadTimestamp.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DmChannelId);
+      }
+      if (LastReadMessageId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(LastReadMessageId);
+      }
+      if (LastReadTimestamp != 0L) {
+        output.WriteRawTag(24);
+        output.WriteInt64(LastReadTimestamp);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DmChannelId);
+      }
+      if (LastReadMessageId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(LastReadMessageId);
+      }
+      if (LastReadTimestamp != 0L) {
+        output.WriteRawTag(24);
+        output.WriteInt64(LastReadTimestamp);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (DmChannelId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DmChannelId);
+      }
+      if (LastReadMessageId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(LastReadMessageId);
+      }
+      if (LastReadTimestamp != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(LastReadTimestamp);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DMReadReceipt other) {
+      if (other == null) {
+        return;
+      }
+      if (other.DmChannelId.Length != 0) {
+        DmChannelId = other.DmChannelId;
+      }
+      if (other.LastReadMessageId.Length != 0) {
+        LastReadMessageId = other.LastReadMessageId;
+      }
+      if (other.LastReadTimestamp != 0L) {
+        LastReadTimestamp = other.LastReadTimestamp;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 18: {
+            LastReadMessageId = input.ReadString();
+            break;
+          }
+          case 24: {
+            LastReadTimestamp = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 18: {
+            LastReadMessageId = input.ReadString();
+            break;
+          }
+          case 24: {
+            LastReadTimestamp = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 0x0809 - DMReadReceiptNotify (server -> client)
+  /// </summary>
+  public sealed partial class DMReadReceiptNotify : pb::IMessage<DMReadReceiptNotify>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DMReadReceiptNotify> _parser = new pb::MessageParser<DMReadReceiptNotify>(() => new DMReadReceiptNotify());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DMReadReceiptNotify> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[39]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMReadReceiptNotify() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMReadReceiptNotify(DMReadReceiptNotify other) : this() {
+      dmChannelId_ = other.dmChannelId_;
+      readerUserId_ = other.readerUserId_;
+      lastReadMessageId_ = other.lastReadMessageId_;
+      lastReadTimestamp_ = other.lastReadTimestamp_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMReadReceiptNotify Clone() {
+      return new DMReadReceiptNotify(this);
+    }
+
+    /// <summary>Field number for the "dm_channel_id" field.</summary>
+    public const int DmChannelIdFieldNumber = 1;
+    private string dmChannelId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DmChannelId {
+      get { return dmChannelId_; }
+      set {
+        dmChannelId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "reader_user_id" field.</summary>
+    public const int ReaderUserIdFieldNumber = 2;
+    private string readerUserId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ReaderUserId {
+      get { return readerUserId_; }
+      set {
+        readerUserId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "last_read_message_id" field.</summary>
+    public const int LastReadMessageIdFieldNumber = 3;
+    private string lastReadMessageId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string LastReadMessageId {
+      get { return lastReadMessageId_; }
+      set {
+        lastReadMessageId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "last_read_timestamp" field.</summary>
+    public const int LastReadTimestampFieldNumber = 4;
+    private long lastReadTimestamp_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long LastReadTimestamp {
+      get { return lastReadTimestamp_; }
+      set {
+        lastReadTimestamp_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DMReadReceiptNotify);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DMReadReceiptNotify other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (DmChannelId != other.DmChannelId) return false;
+      if (ReaderUserId != other.ReaderUserId) return false;
+      if (LastReadMessageId != other.LastReadMessageId) return false;
+      if (LastReadTimestamp != other.LastReadTimestamp) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (DmChannelId.Length != 0) hash ^= DmChannelId.GetHashCode();
+      if (ReaderUserId.Length != 0) hash ^= ReaderUserId.GetHashCode();
+      if (LastReadMessageId.Length != 0) hash ^= LastReadMessageId.GetHashCode();
+      if (LastReadTimestamp != 0L) hash ^= LastReadTimestamp.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DmChannelId);
+      }
+      if (ReaderUserId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(ReaderUserId);
+      }
+      if (LastReadMessageId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(LastReadMessageId);
+      }
+      if (LastReadTimestamp != 0L) {
+        output.WriteRawTag(32);
+        output.WriteInt64(LastReadTimestamp);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DmChannelId);
+      }
+      if (ReaderUserId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(ReaderUserId);
+      }
+      if (LastReadMessageId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(LastReadMessageId);
+      }
+      if (LastReadTimestamp != 0L) {
+        output.WriteRawTag(32);
+        output.WriteInt64(LastReadTimestamp);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (DmChannelId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DmChannelId);
+      }
+      if (ReaderUserId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ReaderUserId);
+      }
+      if (LastReadMessageId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(LastReadMessageId);
+      }
+      if (LastReadTimestamp != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(LastReadTimestamp);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DMReadReceiptNotify other) {
+      if (other == null) {
+        return;
+      }
+      if (other.DmChannelId.Length != 0) {
+        DmChannelId = other.DmChannelId;
+      }
+      if (other.ReaderUserId.Length != 0) {
+        ReaderUserId = other.ReaderUserId;
+      }
+      if (other.LastReadMessageId.Length != 0) {
+        LastReadMessageId = other.LastReadMessageId;
+      }
+      if (other.LastReadTimestamp != 0L) {
+        LastReadTimestamp = other.LastReadTimestamp;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 18: {
+            ReaderUserId = input.ReadString();
+            break;
+          }
+          case 26: {
+            LastReadMessageId = input.ReadString();
+            break;
+          }
+          case 32: {
+            LastReadTimestamp = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 18: {
+            ReaderUserId = input.ReadString();
+            break;
+          }
+          case 26: {
+            LastReadMessageId = input.ReadString();
+            break;
+          }
+          case 32: {
+            LastReadTimestamp = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 0x080A - DMHistoryRequest (client -> server)
+  /// </summary>
+  public sealed partial class DMHistoryRequest : pb::IMessage<DMHistoryRequest>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DMHistoryRequest> _parser = new pb::MessageParser<DMHistoryRequest>(() => new DMHistoryRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DMHistoryRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[40]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMHistoryRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMHistoryRequest(DMHistoryRequest other) : this() {
+      dmChannelId_ = other.dmChannelId_;
+      beforeTimestamp_ = other.beforeTimestamp_;
+      limit_ = other.limit_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMHistoryRequest Clone() {
+      return new DMHistoryRequest(this);
+    }
+
+    /// <summary>Field number for the "dm_channel_id" field.</summary>
+    public const int DmChannelIdFieldNumber = 1;
+    private string dmChannelId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DmChannelId {
+      get { return dmChannelId_; }
+      set {
+        dmChannelId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "before_timestamp" field.</summary>
+    public const int BeforeTimestampFieldNumber = 2;
+    private long beforeTimestamp_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long BeforeTimestamp {
+      get { return beforeTimestamp_; }
+      set {
+        beforeTimestamp_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "limit" field.</summary>
+    public const int LimitFieldNumber = 3;
+    private int limit_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Limit {
+      get { return limit_; }
+      set {
+        limit_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DMHistoryRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DMHistoryRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (DmChannelId != other.DmChannelId) return false;
+      if (BeforeTimestamp != other.BeforeTimestamp) return false;
+      if (Limit != other.Limit) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (DmChannelId.Length != 0) hash ^= DmChannelId.GetHashCode();
+      if (BeforeTimestamp != 0L) hash ^= BeforeTimestamp.GetHashCode();
+      if (Limit != 0) hash ^= Limit.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DmChannelId);
+      }
+      if (BeforeTimestamp != 0L) {
+        output.WriteRawTag(16);
+        output.WriteInt64(BeforeTimestamp);
+      }
+      if (Limit != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(Limit);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DmChannelId);
+      }
+      if (BeforeTimestamp != 0L) {
+        output.WriteRawTag(16);
+        output.WriteInt64(BeforeTimestamp);
+      }
+      if (Limit != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(Limit);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (DmChannelId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DmChannelId);
+      }
+      if (BeforeTimestamp != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(BeforeTimestamp);
+      }
+      if (Limit != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Limit);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DMHistoryRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.DmChannelId.Length != 0) {
+        DmChannelId = other.DmChannelId;
+      }
+      if (other.BeforeTimestamp != 0L) {
+        BeforeTimestamp = other.BeforeTimestamp;
+      }
+      if (other.Limit != 0) {
+        Limit = other.Limit;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 16: {
+            BeforeTimestamp = input.ReadInt64();
+            break;
+          }
+          case 24: {
+            Limit = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 16: {
+            BeforeTimestamp = input.ReadInt64();
+            break;
+          }
+          case 24: {
+            Limit = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 0x080B - DMHistoryResponse (server -> client)
+  /// </summary>
+  public sealed partial class DMHistoryResponse : pb::IMessage<DMHistoryResponse>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DMHistoryResponse> _parser = new pb::MessageParser<DMHistoryResponse>(() => new DMHistoryResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DMHistoryResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[41]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMHistoryResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMHistoryResponse(DMHistoryResponse other) : this() {
+      dmChannelId_ = other.dmChannelId_;
+      messages_ = other.messages_.Clone();
+      hasMore_ = other.hasMore_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMHistoryResponse Clone() {
+      return new DMHistoryResponse(this);
+    }
+
+    /// <summary>Field number for the "dm_channel_id" field.</summary>
+    public const int DmChannelIdFieldNumber = 1;
+    private string dmChannelId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DmChannelId {
+      get { return dmChannelId_; }
+      set {
+        dmChannelId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "messages" field.</summary>
+    public const int MessagesFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::Chat.Protocol.ChatMessageData> _repeated_messages_codec
+        = pb::FieldCodec.ForMessage(18, global::Chat.Protocol.ChatMessageData.Parser);
+    private readonly pbc::RepeatedField<global::Chat.Protocol.ChatMessageData> messages_ = new pbc::RepeatedField<global::Chat.Protocol.ChatMessageData>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::Chat.Protocol.ChatMessageData> Messages {
+      get { return messages_; }
+    }
+
+    /// <summary>Field number for the "has_more" field.</summary>
+    public const int HasMoreFieldNumber = 3;
+    private bool hasMore_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool HasMore {
+      get { return hasMore_; }
+      set {
+        hasMore_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DMHistoryResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DMHistoryResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (DmChannelId != other.DmChannelId) return false;
+      if(!messages_.Equals(other.messages_)) return false;
+      if (HasMore != other.HasMore) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (DmChannelId.Length != 0) hash ^= DmChannelId.GetHashCode();
+      hash ^= messages_.GetHashCode();
+      if (HasMore != false) hash ^= HasMore.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DmChannelId);
+      }
+      messages_.WriteTo(output, _repeated_messages_codec);
+      if (HasMore != false) {
+        output.WriteRawTag(24);
+        output.WriteBool(HasMore);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DmChannelId);
+      }
+      messages_.WriteTo(ref output, _repeated_messages_codec);
+      if (HasMore != false) {
+        output.WriteRawTag(24);
+        output.WriteBool(HasMore);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (DmChannelId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DmChannelId);
+      }
+      size += messages_.CalculateSize(_repeated_messages_codec);
+      if (HasMore != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DMHistoryResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.DmChannelId.Length != 0) {
+        DmChannelId = other.DmChannelId;
+      }
+      messages_.Add(other.messages_);
+      if (other.HasMore != false) {
+        HasMore = other.HasMore;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 18: {
+            messages_.AddEntriesFrom(input, _repeated_messages_codec);
+            break;
+          }
+          case 24: {
+            HasMore = input.ReadBool();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 18: {
+            messages_.AddEntriesFrom(ref input, _repeated_messages_codec);
+            break;
+          }
+          case 24: {
+            HasMore = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 0x080C - DMDeleteRequest (client -> server)
+  /// </summary>
+  public sealed partial class DMDeleteRequest : pb::IMessage<DMDeleteRequest>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DMDeleteRequest> _parser = new pb::MessageParser<DMDeleteRequest>(() => new DMDeleteRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DMDeleteRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[42]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMDeleteRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMDeleteRequest(DMDeleteRequest other) : this() {
+      dmChannelId_ = other.dmChannelId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMDeleteRequest Clone() {
+      return new DMDeleteRequest(this);
+    }
+
+    /// <summary>Field number for the "dm_channel_id" field.</summary>
+    public const int DmChannelIdFieldNumber = 1;
+    private string dmChannelId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DmChannelId {
+      get { return dmChannelId_; }
+      set {
+        dmChannelId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DMDeleteRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DMDeleteRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (DmChannelId != other.DmChannelId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (DmChannelId.Length != 0) hash ^= DmChannelId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DmChannelId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DmChannelId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (DmChannelId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DmChannelId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DMDeleteRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.DmChannelId.Length != 0) {
+        DmChannelId = other.DmChannelId;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// 0x080D - DMDeleteResponse (server -> client)
+  /// </summary>
+  public sealed partial class DMDeleteResponse : pb::IMessage<DMDeleteResponse>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DMDeleteResponse> _parser = new pb::MessageParser<DMDeleteResponse>(() => new DMDeleteResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DMDeleteResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[43]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMDeleteResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMDeleteResponse(DMDeleteResponse other) : this() {
+      success_ = other.success_;
+      dmChannelId_ = other.dmChannelId_;
+      errorMessage_ = other.errorMessage_;
+      errorCode_ = other.errorCode_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMDeleteResponse Clone() {
+      return new DMDeleteResponse(this);
+    }
+
+    /// <summary>Field number for the "success" field.</summary>
+    public const int SuccessFieldNumber = 1;
+    private bool success_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Success {
+      get { return success_; }
+      set {
+        success_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "dm_channel_id" field.</summary>
+    public const int DmChannelIdFieldNumber = 2;
+    private string dmChannelId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DmChannelId {
+      get { return dmChannelId_; }
+      set {
+        dmChannelId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "error_message" field.</summary>
+    public const int ErrorMessageFieldNumber = 3;
+    private string errorMessage_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ErrorMessage {
+      get { return errorMessage_; }
+      set {
+        errorMessage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "error_code" field.</summary>
+    public const int ErrorCodeFieldNumber = 4;
+    private int errorCode_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int ErrorCode {
+      get { return errorCode_; }
+      set {
+        errorCode_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DMDeleteResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DMDeleteResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Success != other.Success) return false;
+      if (DmChannelId != other.DmChannelId) return false;
+      if (ErrorMessage != other.ErrorMessage) return false;
+      if (ErrorCode != other.ErrorCode) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Success != false) hash ^= Success.GetHashCode();
+      if (DmChannelId.Length != 0) hash ^= DmChannelId.GetHashCode();
+      if (ErrorMessage.Length != 0) hash ^= ErrorMessage.GetHashCode();
+      if (ErrorCode != 0) hash ^= ErrorCode.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(DmChannelId);
+      }
+      if (ErrorMessage.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ErrorMessage);
+      }
+      if (ErrorCode != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(ErrorCode);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(DmChannelId);
+      }
+      if (ErrorMessage.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ErrorMessage);
+      }
+      if (ErrorCode != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(ErrorCode);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Success != false) {
+        size += 1 + 1;
+      }
+      if (DmChannelId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DmChannelId);
+      }
+      if (ErrorMessage.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ErrorMessage);
+      }
+      if (ErrorCode != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ErrorCode);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DMDeleteResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Success != false) {
+        Success = other.Success;
+      }
+      if (other.DmChannelId.Length != 0) {
+        DmChannelId = other.DmChannelId;
+      }
+      if (other.ErrorMessage.Length != 0) {
+        ErrorMessage = other.ErrorMessage;
+      }
+      if (other.ErrorCode != 0) {
+        ErrorCode = other.ErrorCode;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+          case 18: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 26: {
+            ErrorMessage = input.ReadString();
+            break;
+          }
+          case 32: {
+            ErrorCode = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+          case 18: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 26: {
+            ErrorMessage = input.ReadString();
+            break;
+          }
+          case 32: {
+            ErrorCode = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// DM conversation summary (for list)
+  /// </summary>
+  public sealed partial class DMConversationInfo : pb::IMessage<DMConversationInfo>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DMConversationInfo> _parser = new pb::MessageParser<DMConversationInfo>(() => new DMConversationInfo());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DMConversationInfo> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[44]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMConversationInfo() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMConversationInfo(DMConversationInfo other) : this() {
+      dmChannelId_ = other.dmChannelId_;
+      peerUserId_ = other.peerUserId_;
+      peerNickname_ = other.peerNickname_;
+      peerProfileImage_ = other.peerProfileImage_;
+      peerFrameImage_ = other.peerFrameImage_;
+      peerExtraData_ = other.peerExtraData_;
+      lastMessageContent_ = other.lastMessageContent_;
+      lastMessageTimestamp_ = other.lastMessageTimestamp_;
+      unreadCount_ = other.unreadCount_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DMConversationInfo Clone() {
+      return new DMConversationInfo(this);
+    }
+
+    /// <summary>Field number for the "dm_channel_id" field.</summary>
+    public const int DmChannelIdFieldNumber = 1;
+    private string dmChannelId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DmChannelId {
+      get { return dmChannelId_; }
+      set {
+        dmChannelId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "peer_user_id" field.</summary>
+    public const int PeerUserIdFieldNumber = 2;
+    private string peerUserId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string PeerUserId {
+      get { return peerUserId_; }
+      set {
+        peerUserId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "peer_nickname" field.</summary>
+    public const int PeerNicknameFieldNumber = 3;
+    private string peerNickname_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string PeerNickname {
+      get { return peerNickname_; }
+      set {
+        peerNickname_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "peer_profile_image" field.</summary>
+    public const int PeerProfileImageFieldNumber = 4;
+    private string peerProfileImage_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string PeerProfileImage {
+      get { return peerProfileImage_; }
+      set {
+        peerProfileImage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "peer_frame_image" field.</summary>
+    public const int PeerFrameImageFieldNumber = 5;
+    private string peerFrameImage_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string PeerFrameImage {
+      get { return peerFrameImage_; }
+      set {
+        peerFrameImage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "peer_extra_data" field.</summary>
+    public const int PeerExtraDataFieldNumber = 6;
+    private string peerExtraData_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string PeerExtraData {
+      get { return peerExtraData_; }
+      set {
+        peerExtraData_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "last_message_content" field.</summary>
+    public const int LastMessageContentFieldNumber = 7;
+    private string lastMessageContent_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string LastMessageContent {
+      get { return lastMessageContent_; }
+      set {
+        lastMessageContent_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "last_message_timestamp" field.</summary>
+    public const int LastMessageTimestampFieldNumber = 8;
+    private long lastMessageTimestamp_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long LastMessageTimestamp {
+      get { return lastMessageTimestamp_; }
+      set {
+        lastMessageTimestamp_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "unread_count" field.</summary>
+    public const int UnreadCountFieldNumber = 9;
+    private int unreadCount_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int UnreadCount {
+      get { return unreadCount_; }
+      set {
+        unreadCount_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DMConversationInfo);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DMConversationInfo other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (DmChannelId != other.DmChannelId) return false;
+      if (PeerUserId != other.PeerUserId) return false;
+      if (PeerNickname != other.PeerNickname) return false;
+      if (PeerProfileImage != other.PeerProfileImage) return false;
+      if (PeerFrameImage != other.PeerFrameImage) return false;
+      if (PeerExtraData != other.PeerExtraData) return false;
+      if (LastMessageContent != other.LastMessageContent) return false;
+      if (LastMessageTimestamp != other.LastMessageTimestamp) return false;
+      if (UnreadCount != other.UnreadCount) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (DmChannelId.Length != 0) hash ^= DmChannelId.GetHashCode();
+      if (PeerUserId.Length != 0) hash ^= PeerUserId.GetHashCode();
+      if (PeerNickname.Length != 0) hash ^= PeerNickname.GetHashCode();
+      if (PeerProfileImage.Length != 0) hash ^= PeerProfileImage.GetHashCode();
+      if (PeerFrameImage.Length != 0) hash ^= PeerFrameImage.GetHashCode();
+      if (PeerExtraData.Length != 0) hash ^= PeerExtraData.GetHashCode();
+      if (LastMessageContent.Length != 0) hash ^= LastMessageContent.GetHashCode();
+      if (LastMessageTimestamp != 0L) hash ^= LastMessageTimestamp.GetHashCode();
+      if (UnreadCount != 0) hash ^= UnreadCount.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DmChannelId);
+      }
+      if (PeerUserId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(PeerUserId);
+      }
+      if (PeerNickname.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(PeerNickname);
+      }
+      if (PeerProfileImage.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(PeerProfileImage);
+      }
+      if (PeerFrameImage.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(PeerFrameImage);
+      }
+      if (PeerExtraData.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(PeerExtraData);
+      }
+      if (LastMessageContent.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(LastMessageContent);
+      }
+      if (LastMessageTimestamp != 0L) {
+        output.WriteRawTag(64);
+        output.WriteInt64(LastMessageTimestamp);
+      }
+      if (UnreadCount != 0) {
+        output.WriteRawTag(72);
+        output.WriteInt32(UnreadCount);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (DmChannelId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DmChannelId);
+      }
+      if (PeerUserId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(PeerUserId);
+      }
+      if (PeerNickname.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(PeerNickname);
+      }
+      if (PeerProfileImage.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(PeerProfileImage);
+      }
+      if (PeerFrameImage.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(PeerFrameImage);
+      }
+      if (PeerExtraData.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(PeerExtraData);
+      }
+      if (LastMessageContent.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(LastMessageContent);
+      }
+      if (LastMessageTimestamp != 0L) {
+        output.WriteRawTag(64);
+        output.WriteInt64(LastMessageTimestamp);
+      }
+      if (UnreadCount != 0) {
+        output.WriteRawTag(72);
+        output.WriteInt32(UnreadCount);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (DmChannelId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DmChannelId);
+      }
+      if (PeerUserId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PeerUserId);
+      }
+      if (PeerNickname.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PeerNickname);
+      }
+      if (PeerProfileImage.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PeerProfileImage);
+      }
+      if (PeerFrameImage.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PeerFrameImage);
+      }
+      if (PeerExtraData.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PeerExtraData);
+      }
+      if (LastMessageContent.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(LastMessageContent);
+      }
+      if (LastMessageTimestamp != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(LastMessageTimestamp);
+      }
+      if (UnreadCount != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(UnreadCount);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DMConversationInfo other) {
+      if (other == null) {
+        return;
+      }
+      if (other.DmChannelId.Length != 0) {
+        DmChannelId = other.DmChannelId;
+      }
+      if (other.PeerUserId.Length != 0) {
+        PeerUserId = other.PeerUserId;
+      }
+      if (other.PeerNickname.Length != 0) {
+        PeerNickname = other.PeerNickname;
+      }
+      if (other.PeerProfileImage.Length != 0) {
+        PeerProfileImage = other.PeerProfileImage;
+      }
+      if (other.PeerFrameImage.Length != 0) {
+        PeerFrameImage = other.PeerFrameImage;
+      }
+      if (other.PeerExtraData.Length != 0) {
+        PeerExtraData = other.PeerExtraData;
+      }
+      if (other.LastMessageContent.Length != 0) {
+        LastMessageContent = other.LastMessageContent;
+      }
+      if (other.LastMessageTimestamp != 0L) {
+        LastMessageTimestamp = other.LastMessageTimestamp;
+      }
+      if (other.UnreadCount != 0) {
+        UnreadCount = other.UnreadCount;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 18: {
+            PeerUserId = input.ReadString();
+            break;
+          }
+          case 26: {
+            PeerNickname = input.ReadString();
+            break;
+          }
+          case 34: {
+            PeerProfileImage = input.ReadString();
+            break;
+          }
+          case 42: {
+            PeerFrameImage = input.ReadString();
+            break;
+          }
+          case 50: {
+            PeerExtraData = input.ReadString();
+            break;
+          }
+          case 58: {
+            LastMessageContent = input.ReadString();
+            break;
+          }
+          case 64: {
+            LastMessageTimestamp = input.ReadInt64();
+            break;
+          }
+          case 72: {
+            UnreadCount = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            DmChannelId = input.ReadString();
+            break;
+          }
+          case 18: {
+            PeerUserId = input.ReadString();
+            break;
+          }
+          case 26: {
+            PeerNickname = input.ReadString();
+            break;
+          }
+          case 34: {
+            PeerProfileImage = input.ReadString();
+            break;
+          }
+          case 42: {
+            PeerFrameImage = input.ReadString();
+            break;
+          }
+          case 50: {
+            PeerExtraData = input.ReadString();
+            break;
+          }
+          case 58: {
+            LastMessageContent = input.ReadString();
+            break;
+          }
+          case 64: {
+            LastMessageTimestamp = input.ReadInt64();
+            break;
+          }
+          case 72: {
+            UnreadCount = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
   /// 0xFF01 - Error (server -> client)
   /// </summary>
   public sealed partial class Error : pb::IMessage<Error>
@@ -9907,7 +13651,7 @@ namespace Chat.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[31]; }
+      get { return global::Chat.Protocol.ChatReflection.Descriptor.MessageTypes[45]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

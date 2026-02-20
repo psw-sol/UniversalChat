@@ -32,6 +32,15 @@ namespace UniversalChat.Core
         public event Action<AnnouncementReceive> OnAnnouncementReceived;
         public event Action<UserActionNotificationReceive> OnUserActionNotificationReceived;
 
+        // DM Events
+        public event Action<Chat.Protocol.DMStartResponse> OnDMStartResponse;
+        public event Action<Chat.Protocol.DMListResponse> OnDMListResponse;
+        public event Action<Chat.Protocol.DMMessageReceive> OnDMMessageReceived;
+        public event Action<Chat.Protocol.DMMessageAck> OnDMMessageAck;
+        public event Action<Chat.Protocol.DMReadReceiptNotify> OnDMReadReceiptNotify;
+        public event Action<Chat.Protocol.DMHistoryResponse> OnDMHistoryResponse;
+        public event Action<Chat.Protocol.DMDeleteResponse> OnDMDeleteResponse;
+
         #endregion
 
         #region Properties
@@ -351,6 +360,84 @@ namespace UniversalChat.Core
 
         #endregion
 
+        #region DM Operations
+
+        public async Task SendDMStartAsync(string targetUserId)
+        {
+            if (!IsAuthenticated) { OnError?.Invoke("Not authenticated"); return; }
+
+            var request = new Chat.Protocol.DMStartRequest { TargetUserId = targetUserId };
+            var packet = _serializer.Serialize(PacketType.DMStart, request);
+            await _connection.SendAsync(packet);
+        }
+
+        public async Task SendDMListRequestAsync(int limit = 50, long beforeTimestamp = 0)
+        {
+            if (!IsAuthenticated) { OnError?.Invoke("Not authenticated"); return; }
+
+            var request = new Chat.Protocol.DMListRequest { Limit = limit, BeforeTimestamp = beforeTimestamp };
+            var packet = _serializer.Serialize(PacketType.DMListRequest, request);
+            await _connection.SendAsync(packet);
+        }
+
+        public async Task SendDMMessageAsync(string dmChannelId, string content, MessageType messageType = MessageType.Text)
+        {
+            if (!IsAuthenticated) { OnError?.Invoke("Not authenticated"); return; }
+            if (string.IsNullOrWhiteSpace(content)) return;
+
+            var message = new Chat.Protocol.DMMessageSend
+            {
+                DmChannelId = dmChannelId,
+                Content = content,
+                MessageType = messageType,
+                ClientMessageId = Guid.NewGuid().ToString()
+            };
+
+            var packet = _serializer.Serialize(PacketType.DMMessageSend, message);
+            await _connection.SendAsync(packet);
+        }
+
+        public async Task SendDMReadReceiptAsync(string dmChannelId, string lastReadMessageId, long lastReadTimestamp = 0)
+        {
+            if (!IsAuthenticated) { OnError?.Invoke("Not authenticated"); return; }
+
+            var receipt = new Chat.Protocol.DMReadReceipt
+            {
+                DmChannelId = dmChannelId,
+                LastReadMessageId = lastReadMessageId,
+                LastReadTimestamp = lastReadTimestamp > 0 ? lastReadTimestamp : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+            };
+
+            var packet = _serializer.Serialize(PacketType.DMReadReceipt, receipt);
+            await _connection.SendAsync(packet);
+        }
+
+        public async Task SendDMHistoryRequestAsync(string dmChannelId, long beforeTimestamp = 0, int limit = 30)
+        {
+            if (!IsAuthenticated) { OnError?.Invoke("Not authenticated"); return; }
+
+            var request = new Chat.Protocol.DMHistoryRequest
+            {
+                DmChannelId = dmChannelId,
+                BeforeTimestamp = beforeTimestamp,
+                Limit = limit
+            };
+
+            var packet = _serializer.Serialize(PacketType.DMHistoryRequest, request);
+            await _connection.SendAsync(packet);
+        }
+
+        public async Task SendDMDeleteRequestAsync(string dmChannelId)
+        {
+            if (!IsAuthenticated) { OnError?.Invoke("Not authenticated"); return; }
+
+            var request = new Chat.Protocol.DMDeleteRequest { DmChannelId = dmChannelId };
+            var packet = _serializer.Serialize(PacketType.DMDeleteRequest, request);
+            await _connection.SendAsync(packet);
+        }
+
+        #endregion
+
         #region Heartbeat
 
         private void StartHeartbeat()
@@ -453,6 +540,29 @@ namespace UniversalChat.Core
 
                     case PacketType.UserActionNotificationReceive:
                         HandleUserActionNotificationReceive(data);
+                        break;
+
+                    // DM packet handlers
+                    case PacketType.DMStartResponse:
+                        OnDMStartResponse?.Invoke(_serializer.Deserialize<Chat.Protocol.DMStartResponse>(data));
+                        break;
+                    case PacketType.DMListResponse:
+                        OnDMListResponse?.Invoke(_serializer.Deserialize<Chat.Protocol.DMListResponse>(data));
+                        break;
+                    case PacketType.DMMessageReceive:
+                        OnDMMessageReceived?.Invoke(_serializer.Deserialize<Chat.Protocol.DMMessageReceive>(data));
+                        break;
+                    case PacketType.DMMessageAck:
+                        OnDMMessageAck?.Invoke(_serializer.Deserialize<Chat.Protocol.DMMessageAck>(data));
+                        break;
+                    case PacketType.DMReadReceiptNotify:
+                        OnDMReadReceiptNotify?.Invoke(_serializer.Deserialize<Chat.Protocol.DMReadReceiptNotify>(data));
+                        break;
+                    case PacketType.DMHistoryResponse:
+                        OnDMHistoryResponse?.Invoke(_serializer.Deserialize<Chat.Protocol.DMHistoryResponse>(data));
+                        break;
+                    case PacketType.DMDeleteResponse:
+                        OnDMDeleteResponse?.Invoke(_serializer.Deserialize<Chat.Protocol.DMDeleteResponse>(data));
                         break;
 
                     case PacketType.HeartbeatAck:

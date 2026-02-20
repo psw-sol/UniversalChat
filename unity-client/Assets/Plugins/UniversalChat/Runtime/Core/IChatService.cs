@@ -112,5 +112,25 @@ namespace UniversalChat.Core
         event Action OnChatReady;
 
         #endregion
+
+        #region DM
+
+        Task<DMConversation> StartDMAsync(string targetUserId);
+        Task<List<DMConversation>> GetDMListAsync(int limit = 50);
+        Task SendDMMessageAsync(string dmChannelId, string content, int messageType = 0);
+        Task MarkDMReadAsync(string dmChannelId, string lastMessageId);
+        Task<List<ChannelMessage>> LoadDMHistoryAsync(string dmChannelId, long beforeTimestamp = 0, int limit = 30);
+        Task DeleteDMAsync(string dmChannelId);
+
+        #endregion
+
+        #region Events - DM
+
+        event Action<DMConversation> OnDMStarted;
+        event Action<ChannelMessage> OnDMMessageReceived;
+        event Action<DMReadReceiptData> OnDMReadReceiptReceived;
+        event Action<List<DMConversation>> OnDMListUpdated;
+
+        #endregion
     }
 }
