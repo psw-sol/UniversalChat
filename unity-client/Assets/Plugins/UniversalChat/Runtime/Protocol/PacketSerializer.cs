@@ -36,7 +36,7 @@ namespace UniversalChat.Protocol
         {
             if (data == null || data.Length == 0)
             {
-                return default;
+                return new T();
             }
 
             var parser = new MessageParser<T>(() => new T());

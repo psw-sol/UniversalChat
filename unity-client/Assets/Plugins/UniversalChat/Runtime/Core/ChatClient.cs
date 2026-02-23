@@ -544,25 +544,25 @@ namespace UniversalChat.Core
 
                     // DM packet handlers
                     case PacketType.DMStartResponse:
-                        OnDMStartResponse?.Invoke(_serializer.Deserialize<Chat.Protocol.DMStartResponse>(data));
+                        { var msg = _serializer.Deserialize<Chat.Protocol.DMStartResponse>(data); if (msg != null) OnDMStartResponse?.Invoke(msg); }
                         break;
                     case PacketType.DMListResponse:
-                        OnDMListResponse?.Invoke(_serializer.Deserialize<Chat.Protocol.DMListResponse>(data));
+                        { var msg = _serializer.Deserialize<Chat.Protocol.DMListResponse>(data); if (msg != null) OnDMListResponse?.Invoke(msg); }
                         break;
                     case PacketType.DMMessageReceive:
-                        OnDMMessageReceived?.Invoke(_serializer.Deserialize<Chat.Protocol.DMMessageReceive>(data));
+                        { var msg = _serializer.Deserialize<Chat.Protocol.DMMessageReceive>(data); if (msg != null) OnDMMessageReceived?.Invoke(msg); }
                         break;
                     case PacketType.DMMessageAck:
-                        OnDMMessageAck?.Invoke(_serializer.Deserialize<Chat.Protocol.DMMessageAck>(data));
+                        { var msg = _serializer.Deserialize<Chat.Protocol.DMMessageAck>(data); if (msg != null) OnDMMessageAck?.Invoke(msg); }
                         break;
                     case PacketType.DMReadReceiptNotify:
-                        OnDMReadReceiptNotify?.Invoke(_serializer.Deserialize<Chat.Protocol.DMReadReceiptNotify>(data));
+                        { var msg = _serializer.Deserialize<Chat.Protocol.DMReadReceiptNotify>(data); if (msg != null) OnDMReadReceiptNotify?.Invoke(msg); }
                         break;
                     case PacketType.DMHistoryResponse:
-                        OnDMHistoryResponse?.Invoke(_serializer.Deserialize<Chat.Protocol.DMHistoryResponse>(data));
+                        { var msg = _serializer.Deserialize<Chat.Protocol.DMHistoryResponse>(data); if (msg != null) OnDMHistoryResponse?.Invoke(msg); }
                         break;
                     case PacketType.DMDeleteResponse:
-                        OnDMDeleteResponse?.Invoke(_serializer.Deserialize<Chat.Protocol.DMDeleteResponse>(data));
+                        { var msg = _serializer.Deserialize<Chat.Protocol.DMDeleteResponse>(data); if (msg != null) OnDMDeleteResponse?.Invoke(msg); }
                         break;
 
                     case PacketType.HeartbeatAck:

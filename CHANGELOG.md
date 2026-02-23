@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2026-02-20
+
+### Fixed
+- **서버 Session::doWrite() 버퍼 수명 버그**: async_write 진행 중 로컬 벡터 소멸으로 MSVC Debug "invalidated vector iterator" 크래시 수정 (shared_ptr로 버퍼 수명 보장)
+- **클라이언트 PacketSerializer.Deserialize() null 반환 버그**: Protobuf 메시지가 모든 필드 기본값일 때 0바이트로 직렬화 → 역직렬화 시 null 반환 → NullReferenceException. `return default` → `return new T()` 수정
+- **클라이언트 DM 핸들러 null 체크**: ChatClient의 7개 DM 패킷 핸들러에 역직렬화 결과 null 방어 코드 추가
+
 ## [2.0.1] - 2026-02-20
 
 ### Changed
@@ -73,6 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 월드 채널 자동 샤딩 (WorldChannelManager)
 - Heartbeat, RateLimiter, Snowflake ID, PasswordHasher
 
+[2.0.2]: https://github.com/psw-sol/UniversalChat/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/psw-sol/UniversalChat/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/psw-sol/UniversalChat/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/psw-sol/UniversalChat/compare/v1.0.0-alpha...v1.0.0

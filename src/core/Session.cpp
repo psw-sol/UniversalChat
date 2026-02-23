@@ -364,12 +364,12 @@ void Session::doWrite() {
     }
 
     auto self = shared_from_this();
-    auto data_size = data.size();
+    auto write_buf = std::make_shared<std::vector<char>>(std::move(data));
 
     boost::asio::async_write(
         socket_,
-        boost::asio::buffer(data),
-        [this, self, data_size](const boost::system::error_code& ec, std::size_t bytes) {
+        boost::asio::buffer(*write_buf),
+        [this, self, write_buf](const boost::system::error_code& ec, std::size_t bytes) {
             handleWrite(ec, bytes);
         }
     );
